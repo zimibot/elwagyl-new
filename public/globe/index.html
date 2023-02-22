@@ -1,0 +1,132 @@
+<!doctype html>
+<html class="no-js" lang="" xmlns="http://www.w3.org/1999/xhtml" data-desktop="1" data-mobile="2" data-landscape="3">
+
+<head>
+
+    <meta charset="utf-8">
+    <title>Earth 2050: A glimpse into the future | Kaspersky</title>
+
+    <script>dataLayer = [];</script>
+
+    <script>
+        window.kaspersky = window.kaspersky || {};
+        window.kaspersky.businessType = 'b2c';
+        window.kaspersky.isStaging = 0;
+        window.kaspersky.pageName = '2050.earth > Home';
+        window.kaspersky.pageType = 'special project';
+        window.kaspersky.platformName = 'Micro Site';
+        window.kaspersky.siteLocale = 'en-global';
+    </script>
+
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        .kaspersky-app__map:before {
+            content: none !important;
+        }
+
+        body {
+            background: black;
+        }
+
+        .main-container {
+            background: transparent;
+        }
+    </style>
+
+    <script defer src="assets.js"></script>
+    <script defer src="three.js"></script>
+
+    <!-- <script defer src="/globe/data.js"></script>
+    <script defer src="/globe/globe.js"></script> -->
+
+
+    <!-- Google Tag Manager -->
+
+</head>
+
+<body>
+    <!-- Google Tag Manager (noscript) -->
+    <div class="shadow">
+        <div class="shadow-s"></div>
+    </div>
+
+    <div class="kaspersky-app kaspersky-app__map">
+        <div class="main-container justify-center flex items-center">
+            <script id="earth-popup" type="text/x-handlebars-template">
+    <div class="earth-popup">
+        {{#each this}}
+            <div class="earth-popup__item  earth-popup__item_{{@index}}">
+                <div class="earth-popup__item-shadow"></div>
+                <div class="earth-popup__preview-hexagon">
+                    <div class="earth-popup__preview">
+                        <div class="hexagon__image" style="background-image: url('{{preview}}')"></div>
+                    </div>
+                </div>
+                <div class="earth-popup__content-container">
+                    <div class="earth-popup__content-top">
+                        <div class="earth-popup__name-contry">{{name}}</div>
+                        <div class="earth-popup__flag">
+                            <img class="earth-popup__flag-img" src="https://2050.earth{{country.flag}}" alt="">
+                        </div>
+                    </div>
+                    <div class="earth-popup__content-count">
+                        {{briefs_text}}
+                    </div>
+                    <div class="earth-popup__content-list">
+                        {{#each attack_list}}
+                            <a class="earth-popup__content-link" href="{{link}}">
+                                <span class="earth-popup__content-text">{{name}}</span>
+                            </a>
+                        {{/each}}
+                    </div>
+                </div>
+            </div>
+        {{/each}}
+    </div> 
+</script>
+            <!-- <script id="earth-mobile-tip" type="text/x-handlebars-template">
+    {{#each this}}
+    <div class="mobile-tip">
+        <div class="mobile-tip__top">
+            <div class="mobile-tip__name">{{name}}</div>
+            <div class="mobile-tip__flag">
+                <img class="mobile-tip__flag-img" src="https://2050.earth{{country.flag}}" alt="">
+            </div>
+        </div>
+        <div class="mobile-tip__content-count">{{more_one attack_list briefs_text ""}}</div>
+        <div class="mobile-tip__btn">
+            <span>{{more}}</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+    <path fill-rule="evenodd" d="M9.003 8L6.35 5.349A1.2 1.2 0 0 1 8.05 3.65l3.5 3.5a1.2 1.2 0 0 1 0 1.698l-3.5 3.5A1.2 1.2 0 1 1 6.35 10.65L9.003 8z"/>
+</svg>        </div>
+    </div>
+    {{/each}}
+</script> -->
+            <div class="help">
+                <div class="help__cont" data-localization="index.helper"></div>
+            </div>
+        </div>
+        <!-- <div class="timeline-new"></div> -->
+
+    </div>
+    <!-- <script>
+
+        var kaspersky = window.kaspersky || {},
+            peppers = {};
+        window.langUrl = 'http://localhost:8000/';
+        window.authUser = 0;
+        window.userLang = 'en';
+        window.dateMenu = [2020, 2030, 2040]
+        window.animateZoomIn = 60;
+        window.animateZoomOut = 150;
+        window.currentCoordinate = {
+            lat: -6.200000,
+            lng: 106.816666
+        }
+    </script> -->
+
+</body>
+
+</html>

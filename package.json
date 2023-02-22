@@ -1,0 +1,119 @@
+{
+  "name": "elwagyl",
+  "private": true,
+  "version": "4.0.0",
+  "main": "public/electron.js",
+  "scripts": {
+    "start": "vite",
+    "electron": "wait-on tcp:8000 && electron . ----force-gpu-mem-available-mb=2000",
+    "dev": "concurrently -k \"npm run start\" \"npm:electron\"",
+    "build": "vite build",
+    "preview": "vite preview",
+    "electron:package:mac": "npm run build && electron-builder -m -c.extraMetadata.main=build/electron.js",
+    "electron:package:win": "npm run build  &&  electron-builder -w -c.extraMetadata.main=build/electron.js --publish never && node archiver/archive.js ",
+    "electron:package:linux": "npm run build && electron-builder -l -c.extraMetadata.main=build/electron.js"
+  },
+  "build": {
+    "appId": "com.el-wagyl.myapp",
+    "productName": "EL WAGYL App",
+    "files": [
+      "build/**/*",
+      "node_modules/**/*"
+    ],
+    "directories": {
+      "buildResources": "build",
+      "output": "resource"
+    },
+    "mac": {
+      "target": "dmg"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "./build/logo.png"
+    },
+    "extraFiles": [
+      {
+        "from": "./build/LICENSE",
+        "to": "LICENSE",
+        "filter": [
+          "**/*"
+        ]
+      },
+      {
+        "from": "./build/unnistall.bat",
+        "to": "unnistall.bat",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ],
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false,
+      "artifactName": "${productName}-${version}-win-installer-${arch}.${ext}",
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "runAfterFinish": true,
+      "allowElevation": true,
+      "warningsAsErrors": true
+    },
+    "linux": {
+      "target": "deb"
+    }
+  },
+  "dependencies": {
+    "@ant-design/charts": "^1.4.2",
+    "@ant-design/icons": "^5.0.1",
+    "@electron/remote": "^2.0.9",
+    "@formkit/auto-animate": "^1.0.0-beta.5",
+    "@tweenjs/tween.js": "^18.6.4",
+    "antd": "^5.1.6",
+    "archiver": "^5.3.1",
+    "axios": "^1.2.3",
+    "electron-is-dev": "^2.0.0",
+    "electron-log": "^4.4.8",
+    "electron-reload": "^2.0.0-alpha.1",
+    "electron-wix-msi": "^5.0.0",
+    "exe-icon-extractor": "^1.0.8",
+    "intro.js-react": "^0.7.1",
+    "localforage": "^1.10.0",
+    "match-sorter": "^6.3.1",
+    "moment": "^2.29.4",
+    "ping": "^0.4.2",
+    "ping.js": "^0.3.0",
+    "pusher.color": "^0.2.4",
+    "radash": "^10.7.0",
+    "react": "^18.2.0",
+    "react-detect-offline": "^2.4.5",
+    "react-dom": "^18.2.0",
+    "react-helmet": "^6.1.0",
+    "react-lines-ellipsis": "^0.15.3",
+    "react-motion": "^0.5.2",
+    "react-query": "^3.39.2",
+    "react-router-dom": "^6.7.0",
+    "react-scroll-to-bottom": "^4.2.0",
+    "react-simple-maps": "^1.0.0",
+    "react-slick": "^0.29.0",
+    "react-tooltip": "^5.5.2",
+    "slick-carousel": "^1.8.1",
+    "sound-play": "^1.1.0",
+    "styled-components": "^5.3.6",
+    "three": "^0.148.0",
+    "vec2": "^1.6.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.27",
+    "@types/react-dom": "^18.0.10",
+    "@vitejs/plugin-react": "^3.0.1",
+    "autoprefixer": "^10.4.13",
+    "concurrently": "^7.6.0",
+    "electron": "^22.0.3",
+    "electron-builder": "^22.10.3",
+    "electron-winstaller": "^5.1.0",
+    "postcss": "^8.4.21",
+    "react-error-overlay": "^6.0.11",
+    "tailwindcss": "^3.2.4",
+    "vite": "^4.0.4",
+    "wait-on": "^7.0.1"
+  }
+}

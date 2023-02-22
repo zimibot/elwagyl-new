@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=0.5">
+    <title>Error Alert Elwagyl</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+</head>
+
+<body style="display: none;" id="body">
+    <div class="container">
+        <div class="item">
+            <div class="navbar">
+                <div class="text" id="title"></div>
+                <div class="btn">
+                    <button title="Minimize" id="mini">
+                        <svg width="13" height="2" viewBox="0 0 13 2" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M0 1H12.5" stroke="#14697E" />
+                        </svg>
+                    </button>
+                    <button title="Close" id="close">
+                        <svg width="13" height="13" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M0.5 12.5L12 1" stroke="#ED6A5E" />
+                            <path d="M12 12.5L0.5 1" stroke="#ED6A5E" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <div class="uppercase content">
+                <div id="icon"></div>
+                <div id="content"></div>
+            </div>
+            <div class="main-btn">
+                <button class="button-click" id="network">CHECK NETWORK</button>
+                <button class="button-click uppercase" id="ok">Try Again</button>
+            </div>
+        </div>
+    </div>
+    <script>
+
+        window.onload = () => {
+            setTimeout(async () => {
+
+                let d = window.api.invoke('notifText')
+                let data = await d
+
+                document.getElementById('title').innerHTML = data.title
+                document.getElementById('content').innerHTML = data.content
+                document.getElementById('content').style.color = data.colorContent
+                document.getElementById('icon').innerHTML = data.iconContent
+
+                document.getElementById('body').style.display = "block"
+
+            }, 500);
+        }
+
+        document.getElementById('close').addEventListener('click', () => {
+            window.api.invoke('close', ["1"])
+        })
+        document.getElementById('ok').addEventListener('click', () => {
+            window.api.invoke('tryAgain', ["1"])
+        })
+        document.getElementById('mini').addEventListener('click', () => {
+            window.api.invoke('minimize', ["3"])
+        })
+        document.getElementById('network').addEventListener('click', () => {
+            window.api.invoke('network', ["network"])
+        })
+    </script>
+</body>
+
+</html>
