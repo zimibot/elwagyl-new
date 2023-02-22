@@ -5,7 +5,7 @@ const path = require("path")
 
 module.exports = function ({ title = "NOTIFICATION", content = "NOTIFICATION CONTENT", colorContent = "", iconContent = "", favicon }) {
     let notif = CreateWindow({
-        urlCurrent: "http://localhost:8000/html/notif/index.html", 
+        urlCurrent: "http://localhost:8000/html/notif/index.html",
         prodUrl: "../html/notif/index.html",
         config: {
             width: 500,
@@ -16,6 +16,9 @@ module.exports = function ({ title = "NOTIFICATION", content = "NOTIFICATION CON
             maxHeight: 220,
             transparent: true,
             backgroundColor: false,
+        },
+        webConfig: {
+            zoomFactor: 1.0
         }
     })
 

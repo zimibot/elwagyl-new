@@ -6,10 +6,11 @@ const OtherViewBrowser = require('./other.view')
 const url = require('url');
 const Ping = require("ping")
 
-module.exports = function CreateWindow({ urlCurrent, prodUrl, config = {}, maximize }) {
+module.exports = function CreateWindow({ urlCurrent, prodUrl, config = {}, webConfig = {}, maximize }) {
     const cUrl = urlCurrent ? urlCurrent : "http://localhost:8000/"
     const win = WindowConfig({
-        ...config
+        ...config,
+        ...webConfig
     })
     win.setIcon(path.join(__dirname, "../logo.png"))
 
