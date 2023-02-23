@@ -59,7 +59,8 @@ export default function App() {
         }
 
 
-        <Suspense fallback={<div className="w-full h-full fixed top-0 justify-center flex items-center text-[red] text-5xl">
+        <Suspense fallback={
+        <div className="w-full h-full fixed top-0 justify-center flex items-center text-[red] text-5xl">
           <div className="progress-circle-pulse">
             <div className="big-circle"></div>
             <div className="small-circle"></div>

@@ -9,7 +9,7 @@ const Tables = styled.table`
     min-width: max-content;
     font-weight: 600;
     th {
-        padding: 5px;
+        padding: 10px;
         vertical-align: middle;
     }
 
@@ -17,26 +17,39 @@ const Tables = styled.table`
         background: #152A36;
         text-transform: uppercase;
     }
-
-    tr:hover {
-        background: #00D8FF;
-        color: black;
-        opacity: 1;
-    }
-
-    ${props => props.border && (`
-        td {
-            border-top: 1px solid;
-            border-bottom: 1px solid;
+    ${props => !props.hoverDisable && (`
+        tr:hover {
+            background: #00D8FF;
+            color: black;
+            opacity: 1;
             cursor: pointer;
         }
 
-        td:last-child {
-            border-right: 1px solid;
+    `)}
+    
+    ${props => props.border && (`
+        td {
+            border-top: 1px solid #0B5567;
+            border-bottom: 1px solid #0B5567;
+            
         }
+        ${props.borderLast ? `
+            td:last-child {
+                border-left: 1px solid #0B5567;
+                border-top: 0px;
+                border-bottom: 0px;
+            }
+        ` : `
+        
+            td:last-child {
+                border-right: 1px solid #0B5567;
+            }
+
+        `}
+        
 
         td:first-child {
-            border-left: 1px solid;
+            border-left: 1px solid #0B5567;
         }
 
     
@@ -52,7 +65,7 @@ const Tables = styled.table`
     `}
 
     td {
-        padding: 5px;
+        padding: 10px;
         vertical-align: middle;
         text-transform: uppercase;
     }
@@ -71,6 +84,7 @@ export const TableInline = ({
         {
             title: 'STATISTIC',
             key: 'statistics',
+            columnClass: "",
             rowClass: "w-[160px]",
             html: (d) => {
                 return <div className="w-full h-2 bg-primary">
@@ -107,7 +121,7 @@ export const TableInline = ({
             statistics: 32,
             total: 1240,
         },
-    ], height = "auto", paggination, count = 5, className = "flex-auto flex flex-col", classTable, onClick = () => { }, border, active = null }) => {
+    ], height = "auto", hoverDisable, paggination, borderLast, count = 5, className = "flex-auto flex flex-col", classTable, onClick = () => { }, border, active = null }) => {
 
 
     return (
@@ -116,7 +130,7 @@ export const TableInline = ({
         }}>
             <div className={`flex flex-col flex-1 relative  ${classTable ? classTable : ""}`} >
                 <div className="absolute w-full h-full overflow-auto  table-scroll">
-                    <Tables border={border} className="text-left w-full" active={active}>
+                    <Tables hoverDisable={hoverDisable} border={border} borderLast={borderLast} className="text-left w-full" active={active}>
                         <thead className="sticky top-0">
                             <tr>
                                 {columns.map((column, index) => {

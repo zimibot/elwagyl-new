@@ -14,6 +14,41 @@
 }
 
 
+.ant-select-dropdown {
+  background: #152A36;
+  border-radius: 0;
+}
+
+.ant-select-dropdown .ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
+  background: #101C26;
+  color: #101C26;
+  border-radius: 0;
+  display: flex;
+  align-items: center;
+}
+
+.ant-select-dropdown .ant-select-item-option-content {
+  font-size: 16px;
+  text-transform: uppercase;
+  color: white;
+}
+
+.ant-select:not(.ant-select-customize-input) .ant-select-selector {
+  background: #152A36;
+  border-radius: 0;
+  border: 0;
+  color: #00D8FF;
+  font-size: 16px;
+  text-transform: uppercase;
+}
+
+.ant-select .ant-select-arrow {
+  color: #00D8FF;
+}
+
+.ant-select-single.ant-select-open span.ant-select-selection-item {
+  color: white;
+}
 
 
 .ant-menu-light.ant-menu-horizontal>.ant-menu-item-selected,

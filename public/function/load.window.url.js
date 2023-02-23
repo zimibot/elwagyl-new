@@ -41,68 +41,72 @@ module.exports = function CreateWindow({ urlCurrent, prodUrl, config = {}, webCo
         // Open the DevTools.
 
         win.show()
-      
+
+
+        ipcMain.handle('exit-full-screen', async () => {
+            return new Promise(function () {
+                // do stuff
+                if (true) {
+                    if (win.isMaximized()) {
+                        win.unmaximize();
+                    } else {
+                        win.maximize();
+                    }
+                }
+            });
+        });
+
+
+
+        ipcMain.handle('minimize', async () => {
+            return new Promise(function () {
+                // do stuff
+                if (true) {
+                    win.minimize()
+                }
+            });
+        });
+
+        ipcMain.handle('tryAgain', async () => {
+            return new Promise(function () {
+                // do stuff
+                if (true) {
+                    app.relaunch();
+                    app.quit();
+                }
+            });
+        });
+
+        ipcMain.handle('close', async () => {
+            return new Promise(function () {
+                // do stuff
+                if (true) {
+                    app.quit()
+                }
+            });
+        });
+
+        ipcMain.handle('network', async () => {
+            return new Promise(function () {
+                // do stuff
+                if (true) {
+                    shell.openExternal('ms-settings:network');
+                }
+            });
+        });
+
+        ipcMain.handle('ping-window', async () => {
+            let res = await Ping.promise.probe("10.22.22.6");
+            return res
+        });
 
     })
-    ipcMain.handle('exit-full-screen', async () => {
-        return new Promise(function () {
-            // do stuff
-            if (true) {
-                if (win.isMaximized()) {
-                    win.unmaximize();
-                } else {
-                    win.maximize();
-                }
-            }
-        });
-    });
 
-
-
-    ipcMain.handle('minimize', async () => {
-        return new Promise(function () {
-            // do stuff
-            if (true) {
-                win.minimize()
-            }
-        });
-    });
-
-    ipcMain.handle('tryAgain', async () => {
-        return new Promise(function () {
-            // do stuff
-            if (true) {
-                app.relaunch();
-                app.quit();
-            }
-        });
-    });
-
-    ipcMain.handle('close', async () => {
-        return new Promise(function () {
-            // do stuff
-            if (true) {
-                app.quit()
-            }
-        });
-    });
-
-    ipcMain.handle('network', async () => {
-        return new Promise(function () {
-            // do stuff
-            if (true) {
-                shell.openExternal('ms-settings:network');
-            }
-        });
-    });
-
-    ipcMain.handle('ping-window', async () => {
-        let res = await Ping.promise.probe("10.22.22.6");
-        return res
-    });
     if (isDev) {
         win.webContents.openDevTools({ mode: 'detach' });
     }
+
+
     return win
 
 }

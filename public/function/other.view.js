@@ -14,7 +14,7 @@ module.exports = function OtherViewBrowser(win) {
                     try {
                         mainBrowser.setBrowserView(viewBrowser)
                         // mainBrowser.addBrowserView(viewBrowser)
-                        console.log(arg)
+                        // console.log(arg)
                         viewBrowser.setBounds({ x: 0, ...arg.size })
                         viewBrowser.setAutoResize({
                             width: true,
