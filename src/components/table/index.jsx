@@ -121,7 +121,7 @@ export const TableInline = ({
             statistics: 32,
             total: 1240,
         },
-    ], height = "auto", hoverDisable, paggination, borderLast, count = 5, className = "flex-auto flex flex-col", classTable, onClick = () => { }, border, active = null }) => {
+    ], height = "auto", hoverDisable, paggination, borderLast, style = { columns: {}, row: {} }, count = 5, className = "flex-auto flex flex-col", classTable, onClick = () => { }, border, active = null }) => {
 
 
     return (
@@ -135,7 +135,9 @@ export const TableInline = ({
                             <tr>
                                 {columns.map((column, index) => {
                                     return (
-                                        <th className={column.columnClass} key={index}>{column.title}</th>
+                                        <th className={column.columnClass} key={index} style={{
+                                            ...style.columns
+                                        }}>{column.title}</th>
                                     )
                                 })}
                             </tr>
@@ -147,7 +149,7 @@ export const TableInline = ({
                                         <div className="border py-2">{ERRORCOMPONENT.dataNotAvailable}</div>
                                     </div>
                                 </td>
-                            </tr> : <Data border={border} data={data} onClick={onClick} column={columns}></Data>}
+                            </tr> : <Data style={style.row} border={border} data={data} onClick={onClick} column={columns}></Data>}
 
                         </tbody>
                     </Tables>

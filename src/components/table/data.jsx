@@ -1,14 +1,14 @@
 
-export const Data = ({ data = [], column = [], onClick }) => {
+export const Data = ({ data = [], column = [], onClick, style }) => {
 
     return data.map((d, k) => {
-
         return <tr key={k} onClick={() => onClick(d, k)}>
             {column.map((i, r) => {
+                let className = i.rowClass ? i.rowClass : ""
                 if (i['html']) {
-                    return <td className={`${i.rowClass} relative`} key={r} >{i['html'](d[i.key])}</td>
+                    return <td style={{ ...style }} className={`${className} relative`} key={r} >{i['html'](d[i.key])}</td>
                 } else {
-                    return <td key={r}  className={`${i.rowClass} relative`}>{d[i.key]}</td>
+                    return <td key={r} style={{ ...style }} className={`${className} relative`}>{d[i.key]}</td>
                 }
             })}
 

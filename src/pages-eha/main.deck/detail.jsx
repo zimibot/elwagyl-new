@@ -5,10 +5,13 @@ import { TitleContent } from "../../components/layout/title"
 import { TableInline } from "../../components/table"
 import { SelectComponent } from "../../components.eha/select";
 import { columnItem, dataItems, columnItemRequire } from "./data";
+import { useState } from "react"
 
-export const DetailDeck = () => {
+export const DetailDeck = ({ data }) => {
 
-    return <DrawerMenu>
+    const [subDetail, setSubDetail] = useState()
+
+    return <> <DrawerMenu name={"detail"} show={data.show}>
         <div className="flex flex-col gap-4 text-[16px] flex-1">
             <TitleContent className={"pt-0"}>
                 <div className="text-[24px] uppercase">PROTECTED SITE A</div>
@@ -167,11 +170,109 @@ export const DetailDeck = () => {
                             <div className="text-[24px] uppercase">ASSETS</div>
                         </TitleContent>
                         <div className="relative flex flex-col flex-1">
-                            <TableInline hoverDisable={true} columns={columnItem} data={dataItems} borderLast={true} border={true}></TableInline>
+                            <TableInline hoverDisable={true} columns={columnItem({
+                                data: {
+                                    show: (d) => {
+                                        setSubDetail({
+                                            show: true,
+                                            item: d
+                                        })
+                                    }
+                                }
+                            })} data={dataItems} borderLast={true} border={true}></TableInline>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </DrawerMenu>
+        {subDetail &&
+            <SubDetail item={subDetail}></SubDetail>
+        }
+    </>
+}
+
+
+const SubDetail = ({ item }) => {
+    const column = [
+        {
+            title: "REFERENCE",
+            key: "reference",
+            columnClass: "text-center",
+            rowClass: "w-[100px] text-center"
+        },
+        {
+            title: "RISK LEVEL",
+            key: "risklevel",
+            columnClass: "text-center",
+            rowClass: "w-[150px] text-center"
+        },
+        {
+            title: "FINDING NAME",
+            key: "findingname",
+        },
+        {
+            title: "STAGE",
+            key: "stage",
+            rowClass: "w-[300px]"
+        },
+        {
+            title: "PROTECTED SITE",
+            key: "protectedsite",
+            rowClass: "w-[250px]"
+        },
+        {
+            title: "SITE OWNER",
+            key: "siteowner",
+            columnClass: "text-center",
+            rowClass: "w-[250px] text-center"
+        },
+        {
+            title: "DEADLINE",
+            key: "deadline",
+            rowClass: "w-[250px]"
+        },
+        {
+            title: "RESCAN",
+            key: "rescan",
+            columnClass: "text-center",
+            rowClass: "w-[100px] text-center"
+        },
+    ]
+
+    const data = new Array(15).fill({
+        reference: "H74",
+        risklevel: "HIGH",
+        findingname: "PHP unsupport",
+        stage: "Awaiting remediation",
+        protectedsite: "192.24.22.561",
+        siteowner: "Username",
+        deadline: "overdue 415 day(s)",
+        rescan: 2,
+    })
+
+
+    return (
+        <DrawerMenu placement="right" name={"subdetail"} show={item.show}>
+            <TitleContent className={"pt-0"}>
+                <div className="text-[24px] uppercase">DETAIL PROTECTED SITE A</div>
+            </TitleContent>
+            <TitleContent className={"pt-0"}>
+                <div className="text-[24px] uppercase">192.24.22.561</div>
+            </TitleContent>
+            <div className="flex-1 flex flex-col pb-4">
+                <TableInline
+                    columns={column}
+                    data={data}
+                    hoverDisable={true} style={{
+                        row: {
+                            fontSize: "20px"
+                        },
+                        columns: {
+                            fontSize: "20px"
+                        }
+                    }} border={true}></TableInline>
+            </div>
+        </DrawerMenu>
+    )
 }
