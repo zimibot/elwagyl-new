@@ -6,9 +6,9 @@ export const Data = ({ data = [], column = [], onClick }) => {
         return <tr key={k} onClick={() => onClick(d, k)}>
             {column.map((i, r) => {
                 if (i['html']) {
-                    return <td className={i.rowClass} key={r} >{i['html'](d[i.key])}</td>
+                    return <td className={`${i.rowClass} relative`} key={r} >{i['html'](d[i.key])}</td>
                 } else {
-                    return <td key={r} className={i.rowClass}>{d[i.key]}</td>
+                    return <td key={r}  className={`${i.rowClass} relative`}>{d[i.key]}</td>
                 }
             })}
 

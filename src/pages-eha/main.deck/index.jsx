@@ -10,11 +10,10 @@ import { GetAndUpdateContext } from "../../model/context.function"
 import { SquareFull } from "../../components/decoration/square"
 import { ChartLineTooltip } from "../../components/chart/line.tooltip"
 import { MapHighcharts } from "../../components/maps/higchart.map"
-import { DrawerMenu } from "../../components.eha/drawer.menu"
 import { DetailDeck } from "./detail"
 
 const MainDeck = () => {
-    const { value, maximize } = GetAndUpdateContext()
+    const { value, maximize, setvalue } = GetAndUpdateContext()
 
     return (<>
         <LayoutDashboard>
@@ -181,7 +180,10 @@ const MainDeck = () => {
                                             </div>
                                         </div>
                                         <div className="flex items-center flex-col justify-between pt-2">
-                                            <button>
+                                            <button onClick={() => setvalue(d => ({
+                                                ...d,
+                                                SHOWDETAIL: !d.SHOWDETAIL
+                                            }))}>
                                                 <svg width="167" height="26" viewBox="0 0 167 26" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <rect x="1" width="166" height="26" fill="#152A36" />
                                                     <path d="M166.5 5L166.5 0.5L162.5 0.5" stroke="#00D8FF" />
@@ -251,7 +253,7 @@ const MainDeck = () => {
                 </CardBox>
             </ColumnRight>
         </LayoutDashboard>
-       <DetailDeck></DetailDeck>
+        <DetailDeck></DetailDeck>
     </>
     )
 }

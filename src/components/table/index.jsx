@@ -131,7 +131,7 @@ export const TableInline = ({
             <div className={`flex flex-col flex-1 relative  ${classTable ? classTable : ""}`} >
                 <div className="absolute w-full h-full overflow-auto  table-scroll">
                     <Tables hoverDisable={hoverDisable} border={border} borderLast={borderLast} className="text-left w-full" active={active}>
-                        <thead className="sticky top-0">
+                        <thead className="sticky top-0 z-10">
                             <tr>
                                 {columns.map((column, index) => {
                                     return (
