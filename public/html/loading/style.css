@@ -1,0 +1,86 @@
+html {
+    line-height: 1.15;
+    /* 1 */
+    -webkit-text-size-adjust: 100%;
+    /* 2 */
+    height: 100%;
+    display: flex;
+}
+
+/* Sections
+   ========================================================================== */
+/**
+  * Remove the margin in all browsers.
+  */
+body {
+    margin: 0;
+    color: white;
+    font-family: 'Rajdhani', sans-serif;
+    display: flex;
+    flex: 1;
+}
+
+.svg-container {
+    width: 45%;
+}
+
+.hex {
+    position: relative;
+    animation-duration: 3s;
+    animation-iteration-count: infinite;
+    animation-delay: var(--anim-delay);
+    transform-origin: 50% 50%;
+    animation-name: growIn;
+}
+
+[data-index="1"] {
+    --anim-delay: 300ms;
+}
+
+[data-index="2"] {
+    --anim-delay: 400ms;
+}
+
+[data-index="3"] {
+    --anim-delay: 500ms;
+}
+
+[data-index="4"] {
+    --anim-delay: 600ms;
+}
+
+[data-index="5"] {
+    --anim-delay: 700ms;
+}
+
+[data-index="6"] {
+    --anim-delay: 800ms;
+}
+
+[data-index="7"] {
+    --anim-delay: 900ms;
+}
+
+@keyframes growIn {
+
+    0%,
+    100% {
+        opacity: 0;
+        transform: scale(0.1, 0.1);
+    }
+
+    20%,
+    70% {
+        opacity: 1;
+        transform: scale(1, 1);
+    }
+}
+
+.container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap:20px;
+}
