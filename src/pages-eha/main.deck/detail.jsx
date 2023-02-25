@@ -5,13 +5,13 @@ import { TitleContent } from "../../components/layout/title"
 import { TableInline } from "../../components/table"
 import { SelectComponent } from "../../components.eha/select";
 import { columnItem, dataItems, columnItemRequire } from "./data";
-import { useState } from "react"
+import { GetAndUpdateContext } from "../../model/context.function"
 
 export const DetailDeck = ({ data }) => {
+    const { setvalue } = GetAndUpdateContext()
 
-    const [subDetail, setSubDetail] = useState()
 
-    return <> <DrawerMenu name={"detail"} show={data.show}>
+    return <> <DrawerMenu name={"detail"}>
         <div className="flex flex-col gap-4 text-[16px] flex-1">
             <TitleContent className={"pt-0"}>
                 <div className="text-[24px] uppercase">PROTECTED SITE A</div>
@@ -172,11 +172,14 @@ export const DetailDeck = ({ data }) => {
                         <div className="relative flex flex-col flex-1">
                             <TableInline hoverDisable={true} columns={columnItem({
                                 data: {
-                                    show: (d) => {
-                                        setSubDetail({
-                                            show: true,
-                                            item: d
-                                        })
+                                    show: (v) => {
+                                        setvalue(d => ({
+                                            ...d,
+                                            subdetail: {
+                                                show: !d.subdetail?.show,
+                                                value: v
+                                            }
+                                        }))
                                     }
                                 }
                             })} data={dataItems} borderLast={true} border={true}></TableInline>
@@ -186,14 +189,12 @@ export const DetailDeck = ({ data }) => {
             </div>
         </div>
     </DrawerMenu>
-        {subDetail &&
-            <SubDetail item={subDetail}></SubDetail>
-        }
+        <SubDetail></SubDetail>
     </>
 }
 
 
-const SubDetail = ({ item }) => {
+const SubDetail = () => {
     const column = [
         {
             title: "REFERENCE",
@@ -238,6 +239,21 @@ const SubDetail = ({ item }) => {
             columnClass: "text-center",
             rowClass: "w-[100px] text-center"
         },
+        {
+            title: "EDIT",
+            key: "edit",
+            columnClass: "text-center",
+            rowClass: "w-[150px] text-center",
+            html: () => {
+                return <button className="flex gap-3 items-center justify-center w-full">
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M16 0H2C1.46957 0 0.960859 0.210714 0.585786 0.585786C0.210714 0.960859 0 1.46957 0 2V16C0 16.5304 0.210714 17.0391 0.585786 17.4142C0.960859 17.7893 1.46957 18 2 18H16C17.1 18 18 17.1 18 16V2C18 1.46957 17.7893 0.960859 17.4142 0.585786C17.0391 0.210714 16.5304 0 16 0ZM16 16H2V4H16V16ZM9 7.5C10.84 7.5 12.48 8.46 13.34 10C12.48 11.54 10.84 12.5 9 12.5C7.16 12.5 5.52 11.54 4.66 10C5.52 8.46 7.16 7.5 9 7.5ZM9 6C6.27 6 3.94 7.66 3 10C3.94 12.34 6.27 14 9 14C11.73 14 14.06 12.34 15 10C14.06 7.66 11.73 6 9 6ZM9 11.5C8.17 11.5 7.5 10.83 7.5 10C7.5 9.17 8.17 8.5 9 8.5C9.83 8.5 10.5 9.17 10.5 10C10.5 10.83 9.83 11.5 9 11.5Z" fill="#00D8FF" />
+                    </svg>
+
+                    <span>EDIT</span>
+                </button>
+            }
+        },
     ]
 
     const data = new Array(15).fill({
@@ -249,11 +265,12 @@ const SubDetail = ({ item }) => {
         siteowner: "Username",
         deadline: "overdue 415 day(s)",
         rescan: 2,
+        edit: 4
     })
 
 
     return (
-        <DrawerMenu placement="right" name={"subdetail"} show={item.show}>
+        <DrawerMenu placement="right" name={"subdetail"}>
             <TitleContent className={"pt-0"}>
                 <div className="text-[24px] uppercase">DETAIL PROTECTED SITE A</div>
             </TitleContent>
@@ -264,6 +281,7 @@ const SubDetail = ({ item }) => {
                 <TableInline
                     columns={column}
                     data={data}
+                    paggination={true}
                     hoverDisable={true} style={{
                         row: {
                             fontSize: "20px"

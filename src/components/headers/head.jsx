@@ -32,7 +32,7 @@ export const HeadFunction = (menu, setStatus, VALUEMENU) => {
             } else {
                 height = VALUEMENU.data + 15
             }
-            window.api.invoke('routes', {
+            window.api.invoke('routesItem', {
                 url: menu.url,
                 size: {
                     y: height,
@@ -44,7 +44,7 @@ export const HeadFunction = (menu, setStatus, VALUEMENU) => {
 
     } else {
         setStatus(d => ({ ...d, headHidden: false, loading: false }))
-        window.api.invoke('routes', {
+        window.api.invoke('routesItem', {
             url: null,
             size: {
                 y: 0,

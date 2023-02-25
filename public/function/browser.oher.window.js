@@ -12,7 +12,7 @@ module.exports = function OtherView () {
         }
     })
     
-    
+
     return other
 
 }

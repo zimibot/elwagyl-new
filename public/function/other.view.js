@@ -7,24 +7,24 @@ module.exports = function OtherViewBrowser(win) {
         let viewBrowser = OtherView()
 
 
-        ipcMain.handle('routes', async (event, arg) => {
+        ipcMain.handle('routesItem', async (event, arg) => {
             return new Promise(function () {
                 // do stuff
                 if (true) {
                     if (arg.url) {
-                        try {
-                            mainBrowser.setBrowserView(viewBrowser)
-                            // mainBrowser.addBrowserView(viewBrowser)
-                            // console.log(arg)
+
+                        mainBrowser.setBrowserView(viewBrowser)
+                        // mainBrowser.addBrowserView(viewBrowser)
+                        // console.log(arg)
+                        if (arg) {
                             viewBrowser.setBounds({ x: 0, ...arg.size })
-                            viewBrowser.setAutoResize({
-                                width: true,
-                                height: true
-                            })
-                            viewBrowser.webContents.loadURL(`https://${arg.url}`)
-                        } catch (error) {
-                            console.log(error)
                         }
+                        viewBrowser.setAutoResize({
+                            width: true,
+                            height: true
+                        })
+                        viewBrowser.webContents.loadURL(`https://${arg.url}`)
+
 
                     } else {
                         mainBrowser.removeBrowserView(viewBrowser)

@@ -6,11 +6,10 @@ const Ping = require("ping")
 
 async function checkInternet(cb) {
 
-  let res = await Ping.promise.probe("google.com", {
+  let res = await Ping.promise.probe("10.22.22.6", {
     timeout: 10,
   });
 
-  console.log(res)
   cb(res.alive)
 
 }
@@ -19,16 +18,17 @@ async function checkInternet(cb) {
 // app.disableHardwareAcceleration()
 
 const Loading = () => {
-  let notif = CreateWindow({
+  let load = CreateWindow({
     urlCurrent: "http://localhost:8000/html/loading/index.html",
     prodUrl: "../html/loading/index.html",
     config: {
       width: 250,
-      height: 250,
+      height: 200,
       minWidth: 250,
-      minHeight: 250,
+      minHeight: 200,
       maxWidth: 250,
-      maxHeight: 250,
+      maxHeight: 200,
+      show: true,
       transparent: true,
       backgroundColor: false,
     },
@@ -36,19 +36,19 @@ const Loading = () => {
       zoomFactor: 1.0
     }
   })
-
-  return notif
+  load.focus()
+  return load
 }
 
 
 app.whenReady().then(() => {
-  let load = Loading()
+ let load =  Loading()
   checkInternet(function (isConnected) {
     if (isConnected) {
       try {
-        CreateWindow({ urlCurrent: false, prodUrl: "../index.html", maximize: true })
-        load.close()
+        CreateWindow({ urlCurrent: false, prodUrl: "../index.html", maximize: true, load })
       } catch (error) {
+        console.log(error)
         app.quit()
       }
     } else {
@@ -62,9 +62,8 @@ app.whenReady().then(() => {
         </svg>
         `
       })
-      load.close()
     }
-
+   
   })
 }
 );

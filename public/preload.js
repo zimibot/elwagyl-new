@@ -28,7 +28,7 @@ window.addEventListener('DOMContentLoaded', () => {
  */
 contextBridge.exposeInMainWorld("api", {
         invoke: (channel, data) => {
-            let validChannels = ["close","minimize", "exit-full-screen", "network", "tryAgain", "notifText", "routes", "ping-window"]; // list of ipcMain.handle channels you want access in frontend to
+            let validChannels = ["close","minimize", "exit-full-screen", "network", "tryAgain", "notifText", "routesItem", "ping-window"]; // list of ipcMain.handle channels you want access in frontend to
             if (validChannels.includes(channel)) {
                 // ipcRenderer.invoke accesses ipcMain.handle channels like 'myfunc'
                 // make sure to include this return statement or you won't get your Promise back
