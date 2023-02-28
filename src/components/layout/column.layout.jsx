@@ -2,7 +2,7 @@ import ScrollToBottom from 'react-scroll-to-bottom';
 
 
 export const ColumnRight = ({ children }) => {
-    return <div className="col-span-2 border-r border-primary bg-black bg-opacity-60 relative item  backdrop-blur-sm z-20 " style={{
+    return <div className="col-span-2 border-r border-primary relative item  backdrop-blur-sm z-20 " style={{
         direction: "rtl"
     }}>
         <div className="absolute h-full w-full">
@@ -34,7 +34,7 @@ const MainContainer = ({ children }) => {
 export const ColumnLeft = ({ children }) => {
 
 
-    return <div className="col-span-2 relative item z-50 bg-black bg-opacity-60 backdrop-blur-sm" >
+    return <div className="col-span-2 relative item z-50 backdrop-blur-sm" >
         <div className="absolute h-full w-full">
             <ScrollToBottom className="h-full pb-10">
                 <MainContainer>

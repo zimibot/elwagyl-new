@@ -13,6 +13,14 @@
   border-bottom: 7px solid #00D8FF;
 }
 
+span.ant-select-selection-item {
+  display: flex;
+  align-items: center;
+}
+
+.ant-modal-mask {
+  backdrop-filter: blur(3px);
+}
 
 .ant-select-dropdown {
   background: #152A36;

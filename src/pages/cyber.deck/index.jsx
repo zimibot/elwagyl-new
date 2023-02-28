@@ -60,7 +60,7 @@ const CyberDeck = () => {
             </CardBox>
         </ColumnLeft>
         <ColumnCenter>
-            <div className="bg-black bg-opacity-50 backdrop-blur z-30">
+            <div className=" backdrop-blur z-30">
                 <CardAnimation>
                     {!maximize?.GLOBESHOW && <>
                         <FillterDay data={value.OPTIONALDATE} keyText={"OPTIONALDATE"}></FillterDay>
@@ -156,7 +156,7 @@ const AttactCountry = ({ title = "top attack country source", limit }) => {
             <CardAnimation className="grid grid-cols-3 gap-3">
                 {
                     arr.slice(0, limit ? 3 : arr.length).map((d, k) => {
-                        return <div key={k} className="border px-2 py-1 flex justify-between">
+                        return <div key={k} className="border border-primary px-2 py-1 flex justify-between">
                             <div>{k + 1} // RU</div>
                             <div>{(k + 1) * 24}</div>
                         </div>

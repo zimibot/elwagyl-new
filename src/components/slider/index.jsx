@@ -63,7 +63,7 @@ export const SliderSlick = () => {
                 : <Slider {...settings}>
                     {data.map((d, k) => {
                         return <div key={k} className="uppercase p-1 h-full">
-                            <div className="h-full  !flex justify-between p-2 flex-col border">
+                            <div className="h-full  !flex justify-between p-2 flex-col border border-primary">
 
                                 <div className="flex justify-between items-center" style={{
                                     lineHeight: 1.2

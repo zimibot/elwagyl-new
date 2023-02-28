@@ -53,11 +53,20 @@ export const ColumnChartComponent = () => {
         },
 
     ];
+
+    let last = data.slice(-1)[0]
     const config = {
         data,
         xField: 'date',
         yField: 'total',
-        color: "#0B5567",
+        color: (d) => {
+
+            if (d.date === last.date) {
+                return "#00D8FF"
+            } else {
+                return "#0B5567"
+            }
+        },
         label: {
             // 可手动配置 label 数据标签位置
             position: 'middle',
@@ -109,7 +118,7 @@ export const ColumnChartComponent = () => {
                 }
             }
         },
-     
+
     };
     return <Column {...config} />;
 };

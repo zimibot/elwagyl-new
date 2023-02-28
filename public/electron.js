@@ -1,21 +1,9 @@
 const { app, BrowserWindow, globalShortcut } = require('electron');
 const CreateWindow = require("./function/load.window.url")
 const notif = require("./function/notif")
-const Ping = require("ping")
+const Connection = require("./function/check.connection")
 
 
-async function checkInternet(cb) {
-
-  let res = await Ping.promise.probe("10.22.22.6", {
-    timeout: 10,
-  });
-
-  cb(res.alive)
-
-}
-
-
-// app.disableHardwareAcceleration()
 
 const Loading = () => {
   let load = CreateWindow({
@@ -42,8 +30,8 @@ const Loading = () => {
 
 
 app.whenReady().then(() => {
- let load =  Loading()
-  checkInternet(function (isConnected) {
+  let load = Loading()
+  Connection(function (isConnected) {
     if (isConnected) {
       try {
         CreateWindow({ urlCurrent: false, prodUrl: "../index.html", maximize: true, load })
@@ -52,7 +40,9 @@ app.whenReady().then(() => {
         app.quit()
       }
     } else {
+     
       notif({
+        load: load,
         title: "ERROR NETWORK",
         content: "YOU ARE OFFLINE, PLEASE CHECK YOUR INTERNET NETWORK OR VPN NETWORK",
         colorContent: "#ED6A5E",
@@ -63,7 +53,7 @@ app.whenReady().then(() => {
         `
       })
     }
-   
+
   })
 }
 );

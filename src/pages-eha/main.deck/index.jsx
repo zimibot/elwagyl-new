@@ -16,7 +16,7 @@ const MainDeck = () => {
     const { value, maximize, setvalue } = GetAndUpdateContext()
 
     return (<>
-        <LayoutDashboard>
+        <LayoutDashboard className="bg-[#101C26]">
             <ColumnLeft>
                 <CardBox className={"flex-1"}>
                     <TitleContent>
@@ -59,7 +59,7 @@ const MainDeck = () => {
                 </CardBox>
             </ColumnLeft>
             <ColumnCenter>
-                <div className="bg-black bg-opacity-50 backdrop-blur z-30">
+                <div className=" backdrop-blur z-30">
                     <CardAnimation>
                         {!maximize?.GLOBESHOW && <>
                             <div className="grid grid-cols-8 border-b border-primary">
@@ -123,11 +123,11 @@ const MainDeck = () => {
                         </>}
                     </CardAnimation>
                 </div>
-                <div>
-                    <TitleContent className={"z-20 p-4 bg-black bg-opacity-50 relative"}>
+                <div className="relative overflow-hidden flex-1">
+                    <TitleContent className={"z-20 p-4 backdrop-blur relative"}>
                         <div className="text-[24px] uppercase">AERIAL VIEW</div>
                     </TitleContent>
-                    <MapHighcharts></MapHighcharts>
+                    <MapHighcharts className="absolute"></MapHighcharts>
                 </div>
             </ColumnCenter>
             <ColumnRight>

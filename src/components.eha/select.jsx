@@ -1,30 +1,30 @@
 import { Select } from "antd"
 import {  SquareMedium } from "../components/decoration/square"
 
-export const SelectComponent = () => {
+export const SelectComponent = ({width = 160}) => {
     return <div className="relative">
         <Select
             defaultValue="jack"
             style={{
-                width: 160,
+                width: width,
             }}
             onChange={() => { }}
             options={[
                 {
                     value: 'jack',
-                    label: <span className="flex items-center gap-2">
+                    label: <div className="flex items-center gap-2">
                         <img src="./cube.svg"></img>
 
                         ALL
-                    </span>,
+                    </div>,
                 },
                 {
                     value: 'no',
-                    label: <span className="flex items-center gap-2">
+                    label: <div className="flex items-center gap-2">
                         <img src="./cube.svg"></img>
 
                         NON ALL
-                    </span>,
+                    </div>,
                 },
 
             ]}

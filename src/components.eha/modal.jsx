@@ -1,0 +1,59 @@
+import { Modal } from "antd"
+import styled from "styled-components"
+import { SquareMedium } from "../components/decoration/square"
+import { GetAndUpdateContext } from "../model/context.function"
+
+const ModalItems = styled(Modal)`
+    .ant-modal-content {
+        background: #1C3947;
+        border-radius: 0;
+        padding: 30px;
+        position: relative;
+        margin: 5px;
+    }
+
+    .ant-btn {
+        background: #152A36;
+        border-radius: 0;
+        width: 150px;
+        height: 50px;
+        border: 0;
+        font-size: 16px;
+        text-transform: uppercase;
+    }
+    
+    .ant-btn-primary:not(:disabled):hover {
+        background: #00D8FF;
+        color: black;
+    }
+    
+    .ant-btn-default:not(:disabled):hover {
+        color: red;
+        border: 0;
+    }
+    
+    .ant-btn-default {
+        color: orangered;
+    }
+
+    
+`
+
+
+export const ModalsComponent = ({ children, modalName }) => {
+    const { status, setStatus } = GetAndUpdateContext()
+
+    const hideModal = () => {
+        setStatus(d => ({
+            ...d,
+            [modalName]: !d[modalName]
+        }))
+    };
+
+    return (<ModalItems width={800} okText="SAVE" centered onCancel={hideModal} onOk={hideModal} title={false} closable={false} open={status[modalName]}>
+        <div className="text-[16px] text-blue space-y-5">
+            {children}
+        </div>
+        <SquareMedium></SquareMedium>
+    </ModalItems>)
+}

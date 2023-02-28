@@ -8,7 +8,7 @@ import { GetAndUpdateContext } from "../../model/context.function";
 const geoUrl =
     "api/world-countries.json"
 
-export const MapHighcharts = () => {
+export const MapHighcharts = ({ className = "fixed" }) => {
     const API = API_DATAMAPS()
     const { value } = GetAndUpdateContext()
 
@@ -45,7 +45,7 @@ export const MapHighcharts = () => {
     };
 
 
-    return <div className="fixed w-full left-0 top-0 h-full maps fadein overflow-hidden">
+    return <div className={`${className} w-full left-0 top-0 h-full maps fadein overflow-hidden`}>
         <Motion
             key={1}
             defaultStyle={{

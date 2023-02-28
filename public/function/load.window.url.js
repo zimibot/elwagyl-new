@@ -39,9 +39,8 @@ module.exports = function CreateWindow({ urlCurrent, prodUrl, config = {}, webCo
     
                 OtherViewBrowser(win)
 
-                win.focus
+                win.focus()
     
-                win.show()
         
                 ipcMain.handle('exit-full-screen', async () => {
                     return new Promise(function () {
@@ -67,15 +66,6 @@ module.exports = function CreateWindow({ urlCurrent, prodUrl, config = {}, webCo
                     });
                 });
         
-                ipcMain.handle('tryAgain', async () => {
-                    return new Promise(function () {
-                        // do stuff
-                        if (true) {
-                            app.relaunch();
-                            app.quit();
-                        }
-                    });
-                });
         
                 ipcMain.handle('close', async () => {
                     return new Promise(function () {
@@ -95,8 +85,8 @@ module.exports = function CreateWindow({ urlCurrent, prodUrl, config = {}, webCo
                     });
                 });
         
-                ipcMain.handle('ping-window', async () => {
-                    let res = await Ping.promise.probe("10.22.22.6");
+                ipcMain.handle('ping-window', async (evnt, args) => {
+                    let res = await Ping.promise.probe(args);
                     return res
                 });
         

@@ -13,7 +13,7 @@ import { MenuEha } from "../../components.eha/menu";
 
 export const Heads = ({ eha }) => {
 
-    return <div className="w-full border-t border-t-border_primary border-b border-b-border_second max-w-[2500px] mx-auto z-50 bg-black backdrop-blur bg-opacity-50">
+    return <div className="w-full border-t border-t-border_primary border-b border-b-border_second max-w-[2500px] mx-auto z-50 ">
         <HeadTop eha={eha}></HeadTop>
         <HeadBottom eha={eha}></HeadBottom>
     </div>
@@ -185,9 +185,10 @@ const HeadBottom = ({ eha }) => {
 
 
     useEffect(() => {
+        let ip = "10.22.22.6"
         let int = setInterval(() => {
             if (isTime) {
-                window.api.invoke('ping-window').then(d => {
+                window.api.invoke('ping-window', ip).then(d => {
                     if (d.alive) {
                         let data = parseInt(d.avg)
                         setpingCount(data)
@@ -201,7 +202,7 @@ const HeadBottom = ({ eha }) => {
             }
         }, 1000);
 
-        window.api.invoke('ping-window').then(d => {
+        window.api.invoke('ping-window', ip).then(d => {
 
             setStatus(s => ({
                 ...s,
@@ -226,14 +227,14 @@ const HeadBottom = ({ eha }) => {
                 </div>
                 <div className="p-1 flex-[0.90] relative h-full flex items-center justify-center">
                     <LineNoLabel ping={ping} />
-                    {pingCount === "error" || pingCount === 0 ? <div className="absolute w-full h-full flex items-center justify-center left-0 top-0 z-20"> {pingCount === 0 ? "RECONNECT" : `TIME OUT ${timeOut}s`}</div> : ""}
+                    {pingCount === "error" || pingCount === 0 ? <div className="absolute w-full h-full flex items-center justify-center left-0 top-0 z-20"> {pingCount === 0 ? "CONNECTED" : `RECONNECT ${timeOut}s`}</div> : ""}
                 </div>
                 <div style={{
                     lineHeight: 1.2
                 }}>
-                    <div>HIGH <span>150++</span></div>
-                    <div>AVG <span>30-120</span></div>
-                    <div>LOW <span>1-30</span></div>
+                    <div className="text-red-400">HIGH <span>200++</span></div>
+                    <div className="text-yellow-400">MEDIUM <span>100-200</span></div>
+                    <div>LOW <span>3-100</span></div>
                 </div>
                 <LineBorderLeft className="ml-[11px]" />
                 <LineBorderRight />

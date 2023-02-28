@@ -4,10 +4,10 @@ import { GetAndUpdateContext } from '../../model/context.function';
 
 
 
-export const LayoutDashboard = ({ children, }) => {
+export const LayoutDashboard = ({ children,className = "" }) => {
     const { status } = GetAndUpdateContext()
 
-    return (status.STATUSPING ? <div className="flex flex-1 flex-col">
+    return (status.STATUSPING ? <div className={`flex flex-1 flex-col ${className}`}>
         <div className="grid grid-cols-9 flex-1  mx-auto w-full relative overflow-hidden">
             {children}
         </div>

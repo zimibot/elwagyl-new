@@ -49,7 +49,7 @@ export const HeatmapComponent = () => {
         },
         // sizeField: 'TOTAL',
         heatmapStyle: {
-            stroke: '#000',
+            stroke: '#101C26',
             opacity: 1,
             lineWidth: 10,
         },

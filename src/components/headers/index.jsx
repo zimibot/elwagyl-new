@@ -1,5 +1,6 @@
 import { Drawer, Tooltip } from "antd";
-import { useEffect, useRef } from "react";
+import moment from "moment";
+import { useEffect, useRef, useState } from "react";
 import Logo from "../../assets/images/full.logo.svg";
 import { GetAndUpdateContext } from "../../model/context.function";
 import { TitleContent } from "../layout/title";
@@ -7,14 +8,31 @@ import { Heads } from "./head";
 import MenuItems from "./menu";
 import { TabItem } from "./tab.item";
 
-export const HeadersTop = ({ eha }) => {
+export const HeadersTop = ({ eha, background }) => {
     const { maximize, setmaximize, setvalue, status } = GetAndUpdateContext()
     const refMenu = useRef(null)
+    let date = moment().format("DD/MM/YY")
+    const [time, settime] = useState();
 
+    useEffect(() => {
+
+        const timers = () => {
+            let ml = moment().format("HH:mm:ss")
+            settime(ml)
+        }
+
+        timers()
+
+        let int = setInterval(timers, 1000);
+
+        return () => {
+            clearInterval(int)
+            settime()
+        };
+    }, []);
     useEffect(() => {
         let current = refMenu.current
         if (current) {
-            console.log(refMenu)
             let data = current.clientHeight
             setvalue(d => ({
                 ...d, VALUEMENU: {
@@ -34,7 +52,9 @@ export const HeadersTop = ({ eha }) => {
         };
     }, [status.loading]);
     return <>
-        <div ref={refMenu} className="z-20">
+        <div ref={refMenu} className="z-20" style={{
+            background
+        }}>
             <div className="bg-primary border-t border-t-border_primary flex z-20 relative" >
                 <div className="w-full px-4 flex justify-between items-center max-w-[2500px] mx-auto">
                     <div className="pr-4">
@@ -84,8 +104,13 @@ export const HeadersTop = ({ eha }) => {
                             </div>
                             <div className="pl-4 py-4 w-full h-full">
                                 <div className="bg-border_primary w-full h-full flex items-center p-2 gap-3 justify-between">
-                                    <div className="text-[24px]">10:15:49.32</div>
-                                    <div className="text-[24px]">21/12/22</div>
+                                    {time &&
+                                        <>
+                                            <div className="text-[24px]">{time}</div>
+                                            <div className="text-[24px]">{date}</div>
+                                        </>
+                                    }
+
                                 </div>
                             </div>
                         </div>
