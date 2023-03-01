@@ -3,8 +3,22 @@ import { CardBox } from "../../components/layout/card"
 import { LayoutDashboard } from "../../components/layout/dashboard.layout"
 import { TitleContent } from "../../components/layout/title"
 import { TableInline } from "../../components/table"
+import { ModalsComponent } from "../../components.eha/modal"
+import { GetAndUpdateContext } from "../../model/context.function"
+import { Form } from "../../components.eha/input"
+import { useState } from "react"
+import styled from "styled-components"
+import moment from "moment/moment"
+
 
 const AssetsList = () => {
+    const { setStatus } = GetAndUpdateContext()
+
+    const [arrInput, setArrInput] = useState([
+
+    ])
+
+    console.log(arrInput)
     return (
         <LayoutDashboard className="bg-[#101C26] text-[16px]">
             <div className="col-span-full flex-1 flex flex-col pb-10">
@@ -18,7 +32,12 @@ const AssetsList = () => {
                             <ButtonComponents>
                                 EXPORT
                             </ButtonComponents>
-                            <ButtonComponents>
+                            <ButtonComponents click={() => {
+                                setStatus(d => ({
+                                    ...d,
+                                    ADDASSET: !d.ADDASSET
+                                }))
+                            }}>
                                 [ + ] ADD
                             </ButtonComponents>
                             <ButtonComponents>
@@ -122,8 +141,121 @@ const AssetsList = () => {
                         }></TableInline>
                 </CardBox>
             </div>
+            <ModalsComponent width={null} style={`
+                width: 100%;
+                min-width: 100%;
+                padding: 20px!important;
+                .ant-modal-content {
+                    width: 100%;
+                    min-width: 100%;
+                }
+            `} modalName={"ADDASSET"}>
+                <CardBox className={"gap-9"}>
+                    <TitleContent>
+                        <div className="text-[24px] uppercase">add new asset</div>
+                    </TitleContent>
+                    <div className="grid grid-cols-3 gap-7">
+                        <div className="space-y-8">
+                            <Form.input label={"Asset Name"} />
+                            <Form.input label={"business unit *"} />
+                            <Form.input label={"contains pii data"} />
+                            <Form.input label={"select existing system owner"} />
+                            <Form.input label={"brand"} />
+                            <Form.input label={"server"} />
+                            <Form.texarea label={"description"}></Form.texarea>
+                        </div>
+                        <div className="space-y-8">
+                            <Form.input label={"asset ip / url *"} />
+                            <Form.input label={"asset risk group *"} />
+                            <Form.input label={"system owner"} />
+                            <Form.input label={"hostname (fqdn)"} />
+                            <Form.input label={"application criticality"} />
+                            <Form.input label={"tags"} />
+                            <Form.texarea label={"available scanning windows"}></Form.texarea>
+                        </div>
+                        <div className="space-y-8 flex flex-col">
+                            <Form.input label={"asset id / tag"} />
+                            <Form.input label={"environment"} />
+                            <Form.input label={"system owner email *"} />
+                            <Form.input label={"mac address"} />
+                            <Form.input label={"frontend / backend"} />
+                            <div className="flex-1">
+                                <div className="w-full h-full flex items-end justify-end">
+
+                                </div>
+                            </div>
+                        </div>
+                        <div className="grid grid-cols-5 gap-6 col-span-full">
+                            <div></div>
+                            <div className="col-span-4 space-y-6">
+                                {arrInput.map((d, k) => {
+                                    return (
+                                        <ListInput key={k} className="grid grid-cols-4 gap-6 relative">
+                                            {d.inputRow.map((d, k) => <div key={k}><Form.input label={d.label} /></div>)}
+                                            <div className="col-span-full flex justify-end">
+                                                <div className="delete">
+                                                    <ButtonComponents click={() => {
+                                                        var filtered = arrInput.filter(function (el) { return el.id != d.id; });
+
+                                                        setArrInput(filtered)
+                                                    }}>DELETE</ButtonComponents>
+                                                </div>
+                                            </div>
+                                        </ListInput>
+                                    )
+                                })}
+                                <div className="col-span-full">
+                                    <ButtonComponents className="w-full flex items-center justify-center" click={() => {
+                                        let inputs = `inputRow`
+                                        let momtent = moment().valueOf()
+                                        setArrInput(d => ([
+                                            ...d,
+                                            {
+                                                id: momtent,
+                                                [inputs]: [
+                                                    {
+                                                        label: "CATEGORIES",
+                                                        type: "category"
+                                                    },
+                                                    {
+                                                        label: "NAME",
+                                                        type: "name"
+                                                    },
+                                                    {
+                                                        label: "PORT",
+                                                        type: "port"
+                                                    },
+                                                    {
+                                                        label: "VERSION",
+                                                        type: "version"
+                                                    },
+                                                ]
+                                            }
+                                        ]))
+                                    }}>
+                                        <div className="flex items-center gap-4 py-2 px-5">
+                                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M6 14V8H0V6H6V0H8V6H14V8H8V14H6Z" fill="#00D8FF" />
+                                            </svg>
+
+                                            <div>
+                                                add platform
+                                            </div>
+                                        </div>
+                                    </ButtonComponents>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </CardBox>
+            </ModalsComponent>
         </LayoutDashboard>
     )
 }
+
+const ListInput = styled.div`
+
+`
 
 export default AssetsList

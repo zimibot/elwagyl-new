@@ -16,8 +16,6 @@ export const LineNoLabel = ({ ping = [] }) => {
                 setitems(d => ([...d, ping[key] === undefined ? 0 : ping[key]]))
             }
         }
-
-
         return () => {
             setitems([])
         }
@@ -57,11 +55,11 @@ export const LineNoLabel = ({ ping = [] }) => {
     let percent = ping.length === 0 ? 0 : (ping.slice(-1)[0] / 350) * 100
 
 
-    return <div className="border px-1 border-primary w-full  left-0 absolute">
+    return <div className="border px-1 border-primary w-full  left-0 absolute overflow-hidden">
 
         <div className="absolute w-full h-full top-0 opacity-20 left-0 transition-all" style={{
             width: `${percent}%`,
-            background: `${parseInt(percent) > 30 && parseInt(percent) < 60 ? "#FFBA08" : parseInt(percent) > 60 && parseInt(percent) < 100 ? "#ED6A5E" : "#00D8FF"}`
+            background: `${parseInt(percent) > 30 && parseInt(percent) < 60 ? "#FFBA08" : parseInt(percent) > 60  ? "#ED6A5E" : "#00D8FF"}`
         }}></div>
         {config && <TinyColumn tooltip={false} data={items}  {...config} />}
     </div>;

@@ -4,12 +4,12 @@ import { SquareMedium } from "../components/decoration/square"
 import { GetAndUpdateContext } from "../model/context.function"
 
 const ModalItems = styled(Modal)`
+    ${props => props.styleModal && props.styleModal}
     .ant-modal-content {
         background: #1C3947;
         border-radius: 0;
         padding: 30px;
         position: relative;
-        margin: 5px;
     }
 
     .ant-btn {
@@ -40,7 +40,7 @@ const ModalItems = styled(Modal)`
 `
 
 
-export const ModalsComponent = ({ children, modalName }) => {
+export const ModalsComponent = ({ children, modalName, width = 800, style = `` }) => {
     const { status, setStatus } = GetAndUpdateContext()
 
     const hideModal = () => {
@@ -50,7 +50,7 @@ export const ModalsComponent = ({ children, modalName }) => {
         }))
     };
 
-    return (<ModalItems width={800} okText="SAVE" centered onCancel={hideModal} onOk={hideModal} title={false} closable={false} open={status[modalName]}>
+    return (<ModalItems styleModal={style} width={width} okText="SAVE" centered onCancel={hideModal} onOk={hideModal} title={false} closable={false} open={status[modalName]}>
         <div className="text-[16px] text-blue space-y-5">
             {children}
         </div>

@@ -32,6 +32,7 @@ const Loading = () => {
 app.whenReady().then(() => {
   let load = Loading()
   Connection(function (isConnected) {
+    console.log(isConnected)
     if (isConnected) {
       try {
         CreateWindow({ urlCurrent: false, prodUrl: "../index.html", maximize: true, load })

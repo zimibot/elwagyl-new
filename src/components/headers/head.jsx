@@ -161,6 +161,7 @@ const HeadBottom = ({ eha }) => {
     useEffect(() => {
         let pmnd = setInterval(() => {
             if (pingCount === "error") {
+                setisTime(false)
                 if (incomeTicker > 0) {
                     incomeTicker--;
                     settimeOut(incomeTicker)
@@ -172,6 +173,7 @@ const HeadBottom = ({ eha }) => {
                 }
             } else {
                 clearInterval(pmnd)
+                setisTime(true)
             }
         }, 1000);
 
