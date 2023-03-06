@@ -18,6 +18,51 @@ span.ant-select-selection-item {
   align-items: center;
 }
 
+.ant-modal-confirm.ant-modal-confirm-success.custom-modal .ant-modal-confirm-content {
+  color: #00D8FF;
+  font-size: 24px;
+  padding: 0px;
+  width:100%
+}
+
+.ant-modal-confirm.ant-modal-confirm-success.custom-modal .ant-modal-confirm-btns {
+  margin: 0;
+  border-top: 6px solid #183645;
+}
+
+
+
+.ant-modal-confirm.ant-modal-confirm-success.custom-modal .ant-modal-content {
+  background: #1C3947;
+}
+
+.ant-dropdown.is-error {
+  border-radius: 0;
+}
+
+.ant-dropdown.is-error .ant-dropdown-menu {
+  border-radius: 0;
+  background: #0d2734;
+}
+
+
+.ant-modal-confirm.ant-modal-confirm-success.custom-modal button {
+  background: #152A36;
+  border-radius: 0;
+  font-size: 1.2rem;
+  width: 100px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ant-modal-confirm.ant-modal-confirm-success.custom-modal .ant-modal-confirm-btns {
+  padding: 10px;
+  display: flex;
+  justify-content: end;
+}
+
 .ant-modal-mask {
   backdrop-filter: blur(3px);
 }
@@ -302,8 +347,8 @@ button.ant-pagination-item-link:hover svg {
 }
 
 span.anticon.anticon-check-circle svg {
-  width: 20px;
-  height: 21px;
+  /* width: 20px;
+  height: 21px; */
   fill: #00D8FF;
 }
 

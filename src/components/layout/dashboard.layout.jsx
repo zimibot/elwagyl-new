@@ -1,15 +1,15 @@
 import { Result } from 'antd';
-import { DrawerMenu } from '../../components.eha/drawer.menu';
 import { GetAndUpdateContext } from '../../model/context.function';
 
 
 
-export const LayoutDashboard = ({ children,className = "" }) => {
+export const LayoutDashboard = ({ children, className = "" }) => {
     const { status } = GetAndUpdateContext()
-
     return (status.STATUSPING ? <div className={`flex flex-1 flex-col ${className}`}>
         <div className="grid grid-cols-9 flex-1  mx-auto w-full relative overflow-hidden">
-            {children}
+           
+                {children}
+
         </div>
     </div> : <div className="flex items-center justify-center flex-1">
         <Result

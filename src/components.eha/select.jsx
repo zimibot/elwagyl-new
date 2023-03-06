@@ -1,14 +1,18 @@
 import { Select } from "antd"
-import {  SquareMedium } from "../components/decoration/square"
+import { SquareMedium } from "../components/decoration/square"
 
-export const SelectComponent = ({width = 160}) => {
+export const SelectComponent = ({ width = 160, setValue, name }) => {
     return <div className="relative">
         <Select
             defaultValue="jack"
             style={{
                 width: width,
             }}
-            onChange={() => { }}
+
+            onChange={(d) => {
+                console.log(d)
+                setValue(name, d)
+            }}
             options={[
                 {
                     value: 'jack',

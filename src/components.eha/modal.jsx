@@ -1,4 +1,5 @@
-import { Modal } from "antd"
+import { CheckCircleOutlined } from "@ant-design/icons"
+import { Modal, Result } from "antd"
 import styled from "styled-components"
 import { SquareMedium } from "../components/decoration/square"
 import { GetAndUpdateContext } from "../model/context.function"
@@ -39,8 +40,7 @@ const ModalItems = styled(Modal)`
     
 `
 
-
-export const ModalsComponent = ({ children, modalName, width = 800, style = `` }) => {
+export const ModalsComponent = ({ children, modalName, width = 800, style = ``, footer = true, customButton = true }) => {
     const { status, setStatus } = GetAndUpdateContext()
 
     const hideModal = () => {
@@ -50,10 +50,24 @@ export const ModalsComponent = ({ children, modalName, width = 800, style = `` }
         }))
     };
 
-    return (<ModalItems styleModal={style} width={width} okText="SAVE" centered onCancel={hideModal} onOk={hideModal} title={false} closable={false} open={status[modalName]}>
+    return (<ModalItems footer={footer} styleModal={style} width={width} okText="SAVE" centered onCancel={hideModal} onOk={hideModal} title={false} closable={false} open={status[modalName]}>
         <div className="text-[16px] text-blue space-y-5">
             {children}
         </div>
+
         <SquareMedium></SquareMedium>
     </ModalItems>)
+}
+
+export const ModalSuccess = ({ title = "Successfully Add New Asset!" }) => {
+
+
+    Modal.success({
+        icon: null,
+        content: <Result
+            status="success"
+            title={title}
+        />,
+        className: "custom-modal",
+    })
 }
