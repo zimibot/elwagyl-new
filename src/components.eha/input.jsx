@@ -29,14 +29,14 @@ const Input = styled.input`
 `
 
 export const Form = {
-    input: ({ label, className = "", classNameInput = "", error, customError = false, register, ...props }) => {
+    input: ({ label, rowColumn, className = "", classNameInput = "", error, customError = false, register, ...props }) => {
 
 
         const [showPw, setshowPw] = useState();
 
         let type = props?.type === "password" ? showPw ? "text" : props.type : props.type
 
-        return <div className={`flex flex-col gap-4 text-[16px] ${className} `}>
+        return <div className={rowColumn ? "flex gap-4 whitespace-nowrap items-center" : `flex flex-col gap-4 text-[16px] ${className} `}>
             <label className="uppercase">{label}</label>
             <div className="relative w-full flex items-center justify-end">
                 <Input {...props} type={type} className={`bg-primary w-full p-3 ${classNameInput} ${error && "border border-red-400"}`} {...register} ></Input>
@@ -87,8 +87,8 @@ export const Form = {
             </div>
         </div>
     },
-    check: ({ text, register, ...props }) => {
-        return <Check className="flex items-center gap-3 relative p-3 cursor-pointer">
+    check: ({ text, register, classRoot = "", ...props }) => {
+        return <Check className={`flex items-center gap-3 relative p-3 cursor-pointer ${classRoot}`}>
             <Input className="opacity-0 absolute" type="checkbox" {...register} {...props} />
             {/* <div className="bg-[#101C26] w-full h-full absolute left-0 top-0 bg-ss"></div> */}
             <div className="checkmark h-5 w-5  relative border-[2px] border-blue" />

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Menu } from 'antd';
 import { useNavigate } from "react-router-dom";
 import { MENUDATA } from '../../model/information';
@@ -13,7 +13,7 @@ const MenuItems = () => {
         let menuKey = MENUDATA.findIndex(a => a.key === e.key)
         let menu = MENUDATA[menuKey]
         HeadFunction(menu, setStatus, VALUEMENU)
-        navi(e.key)
+        navi(e.key, { state: { title: menu.label } })
     };
 
     let linkeha = window.location.hash.replace("#", "").split("/")[1]

@@ -16,16 +16,16 @@ const ListMaintenance = () => {
             title: "protected site",
             content: <ListProtectedSite />
         },
-        {
-            key: 2,
-            title: "register user",
-            content: <ListRegisterUser />
-        },
-        {
-            key: 3,
-            title: "manage users",
-            content: <ListManageUser />
-        },
+        // {
+        //     key: 2,
+        //     title: "register user",
+        //     content: <ListRegisterUser />
+        // },
+        // {
+        //     key: 3,
+        //     title: "manage users",
+        //     content: <ListManageUser />
+        // },
         {
             key: 4,
             title: "manage scan",

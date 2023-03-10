@@ -58,7 +58,7 @@ export const HeadFunction = (menu, setStatus, VALUEMENU) => {
 const HeadTop = ({ eha }) => {
     const { setStatus, value } = GetAndUpdateContext()
     const [show, setShow] = useState(false);
-    const { pathname } = useLocation()
+    const { pathname, state } = useLocation()
     const navigate = useNavigate()
     const Menu = MENUDATA
     let menuIndex = Menu.findIndex(d => d.key === pathname)
@@ -66,7 +66,7 @@ const HeadTop = ({ eha }) => {
     const onPrev = () => {
         if (menuIndex > 0) {
             let menu = Menu[menuIndex - 1]
-            navigate(menu.key)
+            navigate(menu.key, { state: { title: menu.label } })
             HeadFunction(menu, setStatus, VALUEMENU)
         }
     }
@@ -74,10 +74,11 @@ const HeadTop = ({ eha }) => {
     const onNext = () => {
         if (Menu.length !== menuIndex) {
             let menu = Menu[menuIndex + 1]
-            navigate(menu.key)
+            navigate(menu.key, { state: { title: menu.label } })
             HeadFunction(menu, setStatus, VALUEMENU)
         }
     }
+
 
     return (
         <div className="grid grid-cols-11 gap-1 border-t border-t-border_primary border-b border-b-border_second">
@@ -103,7 +104,7 @@ const HeadTop = ({ eha }) => {
                     </Tooltip>
                 </div>
                 <div className="text-ellipsis overflow-hidden title-page">
-                    <span className="text-[24px]"> {menuIndex !== -1 && ` ${('0' + (menuIndex + 1)).slice(-2)} // ${Menu[menuIndex].label}`}</span>
+                    <span className="text-[24px] uppercase"> {menuIndex !== -1 ? ` ${('0' + (menuIndex + 1)).slice(-2)} // ${Menu[menuIndex].label}` : state?.title}</span>
                 </div>
                 <LineBorderRight />
             </div>
