@@ -2,10 +2,10 @@ import { TabsMenu, TabsContent } from "./tab"
 import { CardBox } from "../../components/layout/card"
 import { LayoutDashboard } from "../../components/layout/dashboard.layout"
 import { ListProtectedSite } from "./list.protected.site"
-import { ListRegisterUser } from "./list.register.user"
 import { GetAndUpdateContext } from "../../model/context.function"
-import { ListManageUser } from "./list.manage.user"
+import { ListEmailManage } from "./list.manage.email"
 import { ListManageScan } from "./list.manage.scan"
+import ListManageAsset from "./list.manage.asset"
 
 const ListMaintenance = () => {
     const { setStatus } = GetAndUpdateContext()
@@ -34,12 +34,12 @@ const ListMaintenance = () => {
         {
             key: 5,
             title: "manage email",
-            content: <ListRegisterUser />
+            content: <ListEmailManage />
         },
         {
             key: 6,
             title: " manage asset",
-            content: <ListRegisterUser />
+            content: <ListManageAsset />
         },
     ]
 

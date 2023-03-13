@@ -13,7 +13,11 @@ export const ValueContext = () => {
         OPTIONALVIEW: [...VIEWGLOBE],
         OPTIONALDATE: [...DATEVIEW],
         MAPS2DCONFIG: { ...CONFIGMAP2D },
-        PIECHARTVALUE: { ...PIECHARTVVALUE }
+        PIECHARTVALUE: { ...PIECHARTVVALUE },
+        APIURLDEFAULT: {
+            ip: "http://10.22.22.6:8000",
+            timeType: "time_range"
+        },
     });
 
     let data = {
@@ -21,7 +25,7 @@ export const ValueContext = () => {
         data: { value, setvalue },
         update: { status, setStatus }
     }
-    
+
 
     return ({ ...data })
 }

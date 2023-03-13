@@ -11,6 +11,9 @@ import { SquareFull } from "../../components/decoration/square"
 import { ChartLineTooltip } from "../../components/chart/line.tooltip"
 import { MapHighcharts } from "../../components/maps/higchart.map"
 import { DetailDeck } from "./detail"
+import { ChartRadialBar } from "../../components/chart/chart.radial"
+import { max } from "radash"
+import { Tooltip } from "antd"
 
 const MainDeck = () => {
     const { value, maximize, setvalue } = GetAndUpdateContext()
@@ -75,8 +78,23 @@ const MainDeck = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="col-span-2 border-l-primary border-l border-r-primary border-r flex items-center justify-center">
+                                <div className="col-span-2 border-l-primary border-l relative border-r-primary border-r flex flex-col items-center justify-end">
+                                    <div className="absolute w-full h-full top-[-50px] ">
+                                        <ChartRadialBar />
+                                    </div>
+                                    <div className="p-4">
+                                        <div className="grid grid-cols-3 gap-4 text-center">
+                                            {value.CHARTRADIAL && value.CHARTRADIAL.map((d, k) => {
+                                                let color = d.count === max(value.CHARTRADIAL, f => f.count).count ? d.color : ""
+                                                return <div key={k} className="border p-2 border-primary w-full font-bold" style={{
+                                                    borderColor: color,
+                                                    color
 
+                                                }}>{d.name}</div>
+                                            })}
+
+                                        </div>
+                                    </div>
                                 </div>
                                 <div className="col-span-3 flex flex-col">
                                     <TitleContent date={value.DATEVALUE.uniq} className={"border-b border-b-primary"} noBorder={true} subTitle={"E-1"}>

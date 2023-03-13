@@ -60,22 +60,22 @@ app.whenReady().then(() => {
 );
 app.commandLine.appendSwitch('high-dpi-support', 1)
 app.commandLine.appendSwitch('force-device-scale-factor', 1)
-app.on('browser-window-focus', function () {
-  globalShortcut.register("CommandOrControl+0", () => {
-    console.log("CommandOrControl+0 is pressed: Shortcut Disabled");
-  });
-  globalShortcut.register("CommandOrControl+R", () => {
-    console.log("CommandOrControl+R is pressed: Shortcut Disabled");
-  });
-  globalShortcut.register("F5", () => {
-    console.log("F5 is pressed: Shortcut Disabled");
-  });
-});
-app.on('browser-window-blur', function () {
-  globalShortcut.unregister('CommandOrControl+R');
-  globalShortcut.unregister('CommandOrControl+0');
-  globalShortcut.unregister('F5');
-});
+// app.on('browser-window-focus', function () {
+//   globalShortcut.register("CommandOrControl+0", () => {
+//     console.log("CommandOrControl+0 is pressed: Shortcut Disabled");
+//   });
+//   globalShortcut.register("CommandOrControl+R", () => {
+//     console.log("CommandOrControl+R is pressed: Shortcut Disabled");
+//   });
+//   globalShortcut.register("F5", () => {
+//     console.log("F5 is pressed: Shortcut Disabled");
+//   });
+// });
+// app.on('browser-window-blur', function () {
+//   globalShortcut.unregister('CommandOrControl+R');
+//   globalShortcut.unregister('CommandOrControl+0');
+//   globalShortcut.unregister('F5');
+// });
 app.focus()
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {

@@ -11,7 +11,7 @@ export const ProgressVertical = ({ title = "Solved", color = "white", percent = 
         <div className="flex items-center">
             <div className=" h-[95px] w-[40px] flex flex-col-reverse gap-2">
                 {data.map((d, k) => {
-                    let perSquare = (((k + 1) / data.length) * 100)
+                    let perSquare = (((k ) / data.length) * 100)
                     if (percent <= perSquare) {
                         return <div key={k} className="bg-[#152A36]" style={{ height: `${t}%` }}></div>
                     } else {

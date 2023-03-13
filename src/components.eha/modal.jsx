@@ -1,8 +1,8 @@
-import { CheckCircleOutlined } from "@ant-design/icons"
 import { Modal, Result } from "antd"
 import styled from "styled-components"
 import { SquareMedium } from "../components/decoration/square"
 import { GetAndUpdateContext } from "../model/context.function"
+import { ButtonComponents } from "./button"
 
 const ModalItems = styled(Modal)`
     ${props => props.styleModal && props.styleModal}
@@ -59,15 +59,41 @@ export const ModalsComponent = ({ children, modalName, width = 800, style = ``, 
     </ModalItems>)
 }
 
-export const ModalSuccess = ({ title = "Successfully Add New Asset!" }) => {
+export const ModalSuccess = ({ title = "Successfully Add New Asset!", onlyShowOk, type, clickCancel = () => { }, clickOk = () => { } }) => {
 
 
     Modal.success({
         icon: null,
-        content: <Result
-            status="success"
-            title={title}
-        />,
+        maskClosable: true,
+        content: <div className="flex flex-col gap-4">
+            <Result
+                status={type ? type : "success"}
+                title={title}
+            />
+            <div className="flex justify-end p-4 gap-4">
+                {!onlyShowOk && <ButtonComponents click={() => {
+                    if (clickCancel) {
+                        clickCancel()
+                    }
+                    Modal.destroyAll();
+                }} className="py-4">
+                    CANCEL
+                </ButtonComponents>}
+
+                <ButtonComponents className="py-4" click={() => {
+                    Modal.destroyAll();
+                    if (clickOk) {
+                        clickOk()
+                    }
+                }}>
+                    OK
+                </ButtonComponents>
+            </div>
+        </div>,
+        // footer: () => {
+        //     return `<div>Pantek</div>`
+        // },
+        footer: false,
         className: "custom-modal",
     })
 }

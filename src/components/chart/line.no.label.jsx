@@ -36,7 +36,7 @@ export const LineNoLabel = ({ ping = [] }) => {
             columnWidthRatio: 0.7,
             smooth: true,
             yAxis: {
-                max: 350,
+                max: 500,
                 min: 0,
             },
             line: {
@@ -52,12 +52,12 @@ export const LineNoLabel = ({ ping = [] }) => {
         };
     }, [items]);
 
-    let percent = ping.length === 0 ? 0 : (ping.slice(-1)[0] / 350) * 100
+    let percent = ping.length === 0 ? 0 : (ping.slice(-1)[0] / 500) * 100
 
 
     return <div className="border px-1 border-primary w-full  left-0 absolute overflow-hidden">
 
-        <div className="absolute w-full h-full top-0 opacity-20 left-0 transition-all" style={{
+        <div className="absolute w-full h-1 bottom-0 left-0 transition-all" style={{
             width: `${percent}%`,
             background: `${parseInt(percent) > 30 && parseInt(percent) < 60 ? "#FFBA08" : parseInt(percent) > 60  ? "#ED6A5E" : "#00D8FF"}`
         }}></div>

@@ -1,28 +1,45 @@
-import { useForm } from "react-hook-form";
-import { useState } from "react"
+import { useForm, useFieldArray } from "react-hook-form";
 import { Form } from "../../components.eha/input";
 import { ModalsComponent, ModalSuccess } from "../../components.eha/modal";
-import { CardBox } from "../../components/layout/card";
+import { CardAnimation, CardBox } from "../../components/layout/card";
 import { TitleContent } from "../../components/layout/title";
 import { SelectComponent } from "../../components.eha/select"
-import moment from "moment/moment"
 import { ButtonComponents } from "../../components.eha/button";
 import { GetAndUpdateContext } from "../../model/context.function";
+import { useEffect } from "react";
+import { isEmpty } from "radash";
 
 export const FormModal = () => {
 
     const { setStatus } = GetAndUpdateContext()
-
-
-    const [arrInput, setArrInput] = useState([])
-
-
-    const { register, handleSubmit, setValue, unregister, watch, formState: { errors } } = useForm();
+    const { register, handleSubmit, setValue, reset, control, formState: { errors } } = useForm(
+        {
+            defaultValues: {
+                platform: [{ categories: "", name: "", port: "", version: "" }]
+            }
+        }
+    );
+    const {
+        fields,
+        append,
+        remove,
+    } = useFieldArray({
+        control,
+        name: "platform"
+    });
     const onSubmit = data => {
         console.log(data)
-        ModalSuccess()
+        ModalSuccess({ title: "Successfully Add New Asset!", onlyShowOk: true })
     };
 
+    useEffect(() => {
+        console.log(errors)
+        if (!isEmpty(errors)) {
+            ModalSuccess({ title: "sorry there is an empty input!", type: "error", onlyShowOk: true })
+        }
+    }, [errors])
+
+    console.log(fields)
 
     return (
         <ModalsComponent footer={false} width={null} style={`
@@ -79,76 +96,68 @@ export const FormModal = () => {
                                 </div>
                             </div>
                             <div className="col-span-4 space-y-6">
-                                {arrInput.length === 0 ? <div className="flex justify-center p-4 border border-primary">PLATFORM NOT FOUND</div> : arrInput.map((w, s) => {
-                                    return (
-                                        <div key={s} className="grid grid-cols-4 gap-6 relative">
-                                            {w.inputRow.map((d, k) => <div key={k}><Form.input register={register(`platform.${w.id}.${d.type}`)} label={d.label} /></div>)}
-                                            <div className="col-span-full flex justify-end">
-                                                <div className="delete">
-                                                    <ButtonComponents click={() => {
-                                                        var deletid = arrInput.filter((el) => el.id === w.id)
-                                                        w.inputRow.map(d => {
-                                                            unregister(`platform.${deletid[0].id}.${d.type}`)
-                                                        })
+                                <CardAnimation className={"space-y-6"}>
+                                    {fields.map((d, k) => {
+                                        return <div key={d.id} className="flex justify-between gap-4">
+                                            <div className="grid grid-cols-4 gap-4 flex-1" >
+                                                <Form.input register={register(`platform.${k}.categories`)} label={"categories"}></Form.input>
+                                                <Form.input register={register(`platform.${k}.name`)} label={"name"}></Form.input>
+                                                <Form.input register={register(`platform.${k}.port`)} label={"port"}></Form.input>
+                                                <Form.input register={register(`platform.${k}.version`)} label={"version"}></Form.input>
+                                            </div>
+                                            <div className="flex justify-end items-end">
+                                                <ButtonComponents className="py-4" click={() => remove(k)}>DELETE</ButtonComponents>
+                                            </div>
+                                        </div>
+                                    })}
+                                </CardAnimation>
 
-                                                        console.log(watch())
+                                <div className="col-span-full flex gap-4">
+                                    <div className="flex-1">
+                                        <ButtonComponents className="w-full flex items-center justify-center" click={() => {
+                                            append({ categories: "", name: "", port: "", version: "" });
+                                        }}>
+                                            <div className="flex items-center gap-4 py-2 px-5">
+                                                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M6 14V8H0V6H6V0H8V6H14V8H8V14H6Z" fill="#00D8FF" />
+                                                </svg>
 
-                                                        setTimeout(() => {
-                                                            var filtered = arrInput.filter(function (el) { return el.id != w.id; });
-                                                            setArrInput(filtered)
-                                                        }, 300);
-                                                    }}>DELETE</ButtonComponents>
+                                                <div>
+                                                    add platform
                                                 </div>
                                             </div>
-                                        </div>
-                                    )
-                                })}
-                                <div className="col-span-full">
-                                    <ButtonComponents className="w-full flex items-center justify-center" click={() => {
-                                        let inputs = `inputRow`
-                                        let momtent = moment().valueOf()
-                                        setArrInput(d => ([
-                                            ...d,
-                                            {
-                                                id: momtent,
-                                                [inputs]: [
-                                                    {
-                                                        label: "CATEGORIES",
-                                                        type: "category"
-                                                    },
-                                                    {
-                                                        label: "NAME",
-                                                        type: "name"
-                                                    },
-                                                    {
-                                                        label: "PORT",
-                                                        type: "port"
-                                                    },
-                                                    {
-                                                        label: "VERSION",
-                                                        type: "version"
-                                                    },
-                                                ]
-                                            }
-                                        ]))
-                                    }}>
-                                        <div className="flex items-center gap-4 py-2 px-5">
-                                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M6 14V8H0V6H6V0H8V6H14V8H8V14H6Z" fill="#00D8FF" />
-                                            </svg>
+                                        </ButtonComponents>
+                                    </div>
+                                    <div>
+                                        <ButtonComponents className="w-full flex items-center justify-center" click={() => {
+                                            reset({
+                                                platform: [{ categories: "", name: "", port: "", version: "" }]
+                                            })
+                                        }}>
+                                            <div className="flex items-center gap-4 py-2 px-5">
 
-                                            <div>
-                                                add platform
+
+                                                <div>
+                                                    reset platform
+                                                </div>
                                             </div>
-                                        </div>
-                                    </ButtonComponents>
+                                        </ButtonComponents>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div className="flex justify-end gap-4">
                         <div className=" cursor-pointer min-w-[120px] bg-primary py-4 text-center text-red-500" onClick={() => {
-                            setStatus(d => ({ ...d, ADDASSET: false }))
+                            ModalSuccess({
+                                title: "are you sure you want to leave this page!", type: "warning", clickOk: () => {
+                                    setTimeout(() => {
+                                        setStatus(d => ({ ...d, ADDASSET: false }))
+                                    }, 500);
+                                }
+                            })
+
+
                         }}>CANCEL</div>
                         <button type="submit" className=" min-w-[120px] bg-primary py-4">SAVE</button>
                     </div>

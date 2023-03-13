@@ -136,7 +136,7 @@ const HeadTop = ({ eha }) => {
                 <div className="grid gap-2 grid-cols-2 h-full items-center">
                     <div className="text-[24px]">PROTECTION DURATION</div>
                     <div className="h-full items-center relative justify-center flex pregress-license" onMouseEnter={() => setShow(true)} onMouseLeave={() => setShow(false)}>
-                        <div className="w-full bg-[#152A36] text-border_primary font-bold">
+                        <div className="w-full bg-primary text-border_primary font-bold">
                             <div className={`bg-blue h-full px-3 w-1/2 relative  ${show ? "" : "h-3"}`}>
                                 {show && <span>Expired: 100 Days</span>}
                             </div>
@@ -149,19 +149,24 @@ const HeadTop = ({ eha }) => {
     )
 }
 const HeadBottom = ({ eha }) => {
-    const { status, setStatus } = GetAndUpdateContext()
+    const { status, setStatus, setvalue } = GetAndUpdateContext()
 
     const [ping, setping] = useState([]);
     const [pingCount, setpingCount] = useState(0);
     const [timeOut, settimeOut] = useState(0);
     const [isTime, setisTime] = useState(true);
+    const [isSwitch, setisSwitch] = useState({
+        soar: "off",
+        siem: "on",
+        status: true
+    });
 
 
     var incomeTicker = 10;
 
     useEffect(() => {
         let pmnd = setInterval(() => {
-            if (pingCount === "error") {
+            if (pingCount === "error" || pingCount > 600) {
                 setisTime(false)
                 if (incomeTicker > 0) {
                     incomeTicker--;
@@ -176,7 +181,7 @@ const HeadBottom = ({ eha }) => {
                 clearInterval(pmnd)
                 setisTime(true)
             }
-        }, 1000);
+        }, 800);
 
         return () => {
             settimeOut(0)
@@ -206,7 +211,10 @@ const HeadBottom = ({ eha }) => {
         }, 1000);
 
         window.api.invoke('ping-window', ip).then(d => {
-
+            if (!d.alive) {
+                setpingCount("error")
+                setping([])
+            }
             setStatus(s => ({
                 ...s,
                 STATUSPING: d.alive
@@ -219,6 +227,37 @@ const HeadBottom = ({ eha }) => {
             clearInterval(int)
         };
     }, [isTime]);
+
+    let onSwitch = (d) => {
+
+        if (d) {
+            setisSwitch({
+                soar: "off",
+                siem: "on",
+                status: d
+            })
+            setvalue(d => ({
+                ...d,
+                APIURLDEFAULT: {
+                    ip: "http://10.22.22.6:8000",
+                    timeType: "time_range"
+                }
+            }))
+        } else {
+            setisSwitch({
+                soar: "on",
+                siem: "off",
+                status: d
+            })
+            setvalue(d => ({
+                ...d,
+                APIURLDEFAULT: {
+                    ip: "http://10.22.22.6:8000/xsoar",
+                    timeType: "timerange"
+                }
+            }))
+        }
+    }
 
 
     return (!status.headHidden ?
@@ -257,15 +296,16 @@ const HeadBottom = ({ eha }) => {
                     <div className="h-full w-full flex items-center gap-3">
                         <div className="border border-primary p-2 relative switch-item">
                             <SquareMedium></SquareMedium>
-                            <SwitchCustom></SwitchCustom>
+                            <SwitchCustom onChange={onSwitch}></SwitchCustom>
                         </div>
                         <div>
-                            <div className="space-x-2 font-bold">
-                                <span className="border-r border-l px-1">ON</span>
+
+                            <div className={`space-x-2 ${isSwitch.status ? "" : "font-bold"}`}>
+                                <span className="border-r border-l border-primary px-1 uppercase">{isSwitch.soar}</span>
                                 <span>SOAR MODE</span>
                             </div>
-                            <div className="space-x-2">
-                                <span className="border-r border-l px-1">OFF </span>
+                            <div className={`space-x-2 ${isSwitch.status ? "font-bold" : ""}`}>
+                                <span className="border-r border-l border-primary px-1 uppercase">{isSwitch.siem}</span>
                                 <span>SIEM MODE</span>
                             </div>
                         </div>

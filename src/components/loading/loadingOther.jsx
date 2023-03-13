@@ -12,3 +12,9 @@ export const LoadingOther = () => {
         </div>
     </div> : ""
 }
+
+export const Loading = () => {
+    return <div className="text-center h-64 col-span-full flex items-center justify-center">
+        LOADING
+    </div>
+}

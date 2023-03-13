@@ -3,8 +3,7 @@ import { GetAndUpdateContext } from "../../model/context.function"
 
 export const GlobeGl = ({ status, position = "fixed" }) => {
     const { setvalue, value } = GetAndUpdateContext()
-
-
+  
     return <div className={`fadein z-0  ${position}`} style={{
         width: "100%",
         height: "100%",
@@ -13,8 +12,9 @@ export const GlobeGl = ({ status, position = "fixed" }) => {
     }}>
 
 
-
-        <iframe className="w-full h-full bg-black" onLoad={async d => {
+        <iframe className="w-full h-full" style={{
+            background: "transparent"
+        }} allowtransparency="true" onLoad={async d => {
 
             var frame = d.target.contentDocument || d.target.document
             let fnc = d.target.contentWindow
@@ -25,7 +25,7 @@ export const GlobeGl = ({ status, position = "fixed" }) => {
                     item => item.key === 1 ? { ...item, active: true } : { ...item, active: false }
                 );
 
-
+                  
                 setvalue(d => ({
                     ...d, GLOBEVALUE: {
                         value: "detailview"
@@ -81,7 +81,7 @@ export const GlobeGl = ({ status, position = "fixed" }) => {
             await frame.getElementsByTagName("BODY")[0].appendChild(script);
 
 
-        }} src="globe/index.html" display="initial" loading="eager"></iframe>
+        }} src="globe/index.html"></iframe>
 
     </div>
 }

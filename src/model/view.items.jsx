@@ -25,7 +25,7 @@ const VIEWGLOBE = [
 const DATEVIEW = [
     {
         text: "24 HOURS",
-        value: "24hours",
+        value: "24hour",
         uniq: "24 H",
         type: "text",
         active: true,
@@ -33,7 +33,7 @@ const DATEVIEW = [
     },
     {
         text: "30 DAYS",
-        value: "30days",
+        value: "1month",
         uniq: "30 D",
         type: "text",
         active: false,
@@ -50,7 +50,7 @@ const DATEVIEW = [
 ]
 
 const DATEVALUE = {
-    value: "24hours",
+    value: "24hour",
     uniq: "24H"
 }
 

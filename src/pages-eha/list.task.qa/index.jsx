@@ -20,8 +20,8 @@ const TaskQA = () => {
                     </ButtonComponents>
                 </div>
             </div>
-            <div className="grid grid-cols-3 flex-1">
-                <div className="h-full relative flex-1 flex flex-col border-r pr-4 border-primary">
+            <div className="grid grid-cols-3 flex-1 pb-10">
+                <div className="space-y-5 h-full relative flex-1 flex flex-col border-r pr-4 border-primary">
                     <TitleContent>
                         <div className="text-[24px] uppercase">Finding risk level (total: 0)</div>
                     </TitleContent>

@@ -11,7 +11,7 @@ export const CardAnimation = ({ children, className }) => {
     const parent = useRef(null)
 
     useEffect(() => {
-        parent.current && autoAnimate(parent.current, {duration: 400})
+        parent.current && autoAnimate(parent.current)
     }, [parent])
 
 

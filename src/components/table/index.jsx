@@ -121,7 +121,7 @@ export const TableInline = ({
             statistics: 32,
             total: 1240,
         },
-    ], height = "auto", hoverDisable, paggination, borderLast, style = { columns: {}, row: {} }, count = 5, className = "flex-auto flex flex-col", classTable, onClick = () => { }, border, active = null }) => {
+    ], height = "auto", hoverDisable, paggination, borderLast, style = { columns: {}, row: {} }, count = 5, className = "flex-auto flex flex-col", classTable, onClick = () => { }, border, active = null, totalPages=30 }) => {
 
 
     return (
@@ -159,7 +159,7 @@ export const TableInline = ({
             {data && data.length > count && data.length > 0 &&
                 paggination &&
                 <div className="bg-primary px-2 py-1 flex justify-end ">
-                    <Pagination simple defaultCurrent={2} total={50} />
+                    <Pagination simple defaultCurrent={2} total={totalPages} />
                 </div>
             }
         </div>

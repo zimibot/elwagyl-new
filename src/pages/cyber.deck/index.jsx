@@ -15,10 +15,19 @@ import { GlobeGl } from "../../components/globe"
 import { SliderSlick } from "../../components/slider"
 import { GlobalListSource } from "../../components/layout/global/global.list.source"
 import { GetAndUpdateContext } from "../../model/context.function"
+import { API_GET } from "../../api"
+import { Tooltip } from "antd"
+import { Loading } from "../../components/loading/loadingOther"
+import { Formatter } from "../../helper/formater"
 
 
 const CyberDeck = () => {
     const { value, maximize } = GetAndUpdateContext()
+    let API_SEVERITY = API_GET.ALERT_SEVERITY()
+    let API_ALERT_TYPE = API_GET.ALERT_TYPE()
+    let API_DASHBOARD_STATUS = API_GET.DASHBOARD_STATUS()
+
+    console.log(API_DASHBOARD_STATUS)
     return <LayoutDashboard>
         <ColumnLeft>
             <CardAnimation>
@@ -33,10 +42,16 @@ const CyberDeck = () => {
                             </SubtitleInfo>
                         </div>
                         <div className="grid grid-cols-2 gap-3">
-                            <ProgressVertical title="Solved" />
-                            <ProgressVertical title="low" color="#00D8FF" />
-                            <ProgressVertical title="medium" color="#FFBA08" />
-                            <ProgressVertical title="high" color="#ED6A5E" />
+                            {/* <ProgressVertical title="Solved" /> */}
+                            {API_SEVERITY.error ? "ERROR" : API_SEVERITY.isLoading ? <Loading></Loading> : API_SEVERITY.item.map((d, k) => {
+                                return API_SEVERITY.item.length !== 4 && k == 0 ? <div key={k} className="col-span-2">
+                                    <ProgressVertical title={d.name} color={d.color} percent={d.percentage} total={d.total} />
+                                </div> : <div key={k}>
+                                    <ProgressVertical title={d.name} color={d.color} percent={d.percentage} total={d.total} />
+                                </div>
+                            })}
+
+
                         </div>
                     </div>
                 </CardBox>}
@@ -55,7 +70,36 @@ const CyberDeck = () => {
                     <SubtitleInfo title={'LIST threat'}>
                         {STASTISTIC_ALERT_DESC}
                     </SubtitleInfo>
-                    <TableInline height={maximize?.ALERTSHOW ? 'auto' : "150px"} />
+                    {API_ALERT_TYPE.error ? "ERROR" : API_ALERT_TYPE.isLoading ? <Loading></Loading> :
+                        <TableInline columns={[
+                            {
+                                title: "no",
+                                key: "no"
+                            },
+                            {
+                                title: "THREAT CATEGORIES",
+                                key: "name",
+                                rowClass: "w-[165px]",
+                            },
+                            {
+                                title: 'STATISTIC',
+                                key: 'percents',
+                                columnClass: "",
+                                rowClass: "w-[160px]",
+                                html: (d) => {
+                                    return <Tooltip title={`${!isNaN(d) ? d.toFixed(2) : 0}%`}>
+                                        <div className="w-full h-2 bg-primary">
+                                            <div className="h-full bg-blue" style={{ width: `${!isNaN(d) ? d.toFixed(2) : 0}%` }}></div>
+                                        </div>
+                                    </Tooltip>
+                                },
+                            },
+                            {
+                                title: "TOTAL",
+                                key: "total"
+                            },
+                        ]} data={API_ALERT_TYPE.dataItems} hoverDisable height={maximize?.ALERTSHOW ? 'auto' : "150px"} />}
+
                 </div>
             </CardBox>
         </ColumnLeft>
@@ -75,7 +119,9 @@ const CyberDeck = () => {
                                     <div className="py-8 flex items-center justify-center">
                                         <div className="text-[128px]" style={{
                                             lineHeight: 1
-                                        }}>1207</div>
+                                        }}>{
+                                                Formatter(API_DASHBOARD_STATUS.data?.alert)
+                                            }</div>
                                     </div>
                                 </div>
                             </div>
@@ -92,7 +138,7 @@ const CyberDeck = () => {
                                     <div className="py-8 flex items-center justify-center">
                                         <div className="text-[128px]" style={{
                                             lineHeight: 1
-                                        }}>300</div>
+                                        }}>{Formatter(API_DASHBOARD_STATUS.data?.entities_at_risk)}</div>
                                     </div>
                                 </div>
                             </div>
