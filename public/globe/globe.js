@@ -1,50 +1,56 @@
-shaderLink = new THREE.ShaderMaterial({
-	extension: {
-		derivatives: true, // set to use derivatives
-		fragDepth: true, // set to use fragment depth values
-		drawBuffers: true, // set to use draw buffers
-		shaderTextureLOD: true // set to use shader texture LOD
-	},
-	side: THREE.DoubleSide,
-	uniforms: {
-		time: {
-			value: 1.0
+shaderLink = new THREE.ShaderMaterial(
+	{
+		extension: {
+			derivatives: true, // set to use derivatives
+			fragDepth: true, // set to use fragment depth values
+			drawBuffers: true, // set to use draw buffers
+			shaderTextureLOD: true // set to use shader texture LOD
 		},
-		loop: {
-			value: 50.0
+		side: THREE.DoubleSide,
+		uniforms: {
+			time: {
+				value: 1.0
+			},
+			loop: {
+				value: 50.0
+			},
+			color: {
+				value:new THREE.Color(color)
+			},
+			resolution: new THREE.Vector3()
 		},
-		color1: {
-			value: 1.0
-		},
-		color2: {
-			value: 0.6
-		},
-		color3: {
-			value: 0.6
-		},
-		resolution: new THREE.Vector3()
-	},
-	vertexShader: ["varying vec2 vUv;",
-		"void main() {",
-		"vUv = uv;",
-		"gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );",
-		"}"
-	].join("\n"),
-	fragmentShader: [
-		"varying vec2 vUv;",
-		"uniform float time;",
-		"uniform float loop;",
-		"uniform float color1;",
-		"uniform float color2;",
-		"uniform float color3;",
-		"void main() {",
-		"float dash = sin(vUv.x*loop + time);",
-		"if(dash>0.0) discard;",
-		"gl_FragColor = vec4(1, color1, color2, color3);",
-
-		"}"
-	].join("\n")
-})
+		// vertexShader: ["varying vec2 vUv;",
+		// 	"void main() {",
+		// 	"vUv = uv;",
+		// 	"gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );",
+		// 	"}"
+		// ].join("\n"),
+		vertexShader: [
+			"varying vec2 vUv;",
+			"attribute float alpha;", 
+			"varying float vAlpha;", 
+			"void main() {", 
+			"vAlpha = alpha;", 
+			"vUv = uv;",
+			"gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );",	
+			// "gl_PointSize = 4.0;", 
+			// "gl_Position = projectionMatrix * mvPosition;", 
+			"}"].join("\n"),
+		
+		fragmentShader: [
+			"varying vec2 vUv;", 
+			"uniform float time;",
+			"uniform float loop;",
+			"uniform vec3 color;",  
+			"varying float vAlpha;", 
+			"void main() {",
+				"float dash = sin(vUv.x*loop + time);",
+				"if(dash>0.0) discard;",
+				"gl_FragColor = vec4( color, vAlpha * ( gl_FragCoord.z ) );", 
+			"}"
+		].join("\n")
+	}
+)
 
 function PRingBufferGeometry(e, t, a, i, n, r) {
 	THREE.BufferGeometry.call(this), this.type = "PRingBufferGeometry", this.parameters = {
@@ -145,10 +151,10 @@ function Planet(e, t, a, i) {
 		var a, i = t.desc[PlanetData.YEAR_ID];
 		var ds = t;
 		a = "brief" === i.type ? langUrl + i.brief_id : langUrl + "locations/" + PlanetData.YEAR_ID + "/" + t.location_id, h.state = h.ANIMATED,
-		e.controls.detach(), f.style.cursor = "default", 
-		h.deactivateHexagon(), 
-		h.commentToggle(!1), 
-		U.lookAt(t.position);
+			e.controls.detach(), f.style.cursor = "default",
+			h.deactivateHexagon(),
+			h.commentToggle(!1),
+			U.lookAt(t.position);
 		var n = U.quaternion.clone();
 		U.lookAt(e.camera.position);
 		var r = U.quaternion.clone();
@@ -165,12 +171,12 @@ function Planet(e, t, a, i) {
 					z: 1.15 * v,
 					ease: Sine.easeIn,
 					onComplete: function () { }
-				}), 
-				setTimeout(kaspersky.Transition.fadeIn, 400), 
-				setTimeout(function () {
-					redirect({lat: ds.planet_u, lon: ds.planet_v, ...ds})
-					// kaspersky.navigateTo(a)
-				}, 1000)
+				}),
+					setTimeout(kaspersky.Transition.fadeIn, 400),
+					setTimeout(function () {
+						redirect({ lat: ds.planet_u, lon: ds.planet_v, ...ds })
+						// kaspersky.navigateTo(a)
+					}, 1000)
 			}
 		})
 	}
@@ -187,11 +193,11 @@ function Planet(e, t, a, i) {
 	var g = this.static_container = new THREE.Object3D;
 	p.add(g), g.matrixAutoUpdate = !1;
 	this.textureLoader = new THREE.TextureLoader;
-	this.planet_color = 0x00d8ff, this.water_color = 0x00d8ff, h.LOADING = "loading", h.IDLE = "idle", h.ANIMATED = "animated", h.state = h.LOADING, h.data = t, t.countries_by_id = {};
-	for (var T = 0; T < t.countries.length; T++) {
-		var x = t.countries[T];
-		t.countries_by_id[x.country_id] = x
-	}
+	this.planet_color = color, this.water_color = color, h.LOADING = "loading", h.IDLE = "idle", h.ANIMATED = "animated", h.state = h.LOADING, h.data = t, t.countries_by_id = {};
+	// for (var T = 0; T < t.countries.length; T++) {
+	// 	var x = t.countries[T];
+	// 	t.countries_by_id[x.country_id] = x
+	// }
 	t.locations_by_id = {};
 	for (var T = 0; T < t.locations.length; T++) {
 		var x = t.locations[T];
@@ -204,9 +210,9 @@ function Planet(e, t, a, i) {
 			n = a.brief_list;
 		if (n) return void (!1 != !!n[PlanetData.YEAR_ID] && t(n[PlanetData.YEAR_ID].briefs));
 		h.locationsFullData ? (n = a.brief_list = h.locationsFullData[e] || {}, !1 != !!n[PlanetData.YEAR_ID] && t(n[PlanetData.YEAR_ID].briefs)) : i()
-			.done(function (i) {
-				h.locationsFullData = i, n = a.brief_list = h.locationsFullData[e] || {}, !1 != !!n[PlanetData.YEAR_ID] && t(n[PlanetData.YEAR_ID].briefs)
-			})
+		// .done(function (i) {
+		// 	h.locationsFullData = i, n = a.brief_list = h.locationsFullData[e] || {}, !1 != !!n[PlanetData.YEAR_ID] && t(n[PlanetData.YEAR_ID].briefs)
+		// })
 	}, this.drawPoints(1.1 * v), this.drawParticles(v),
 		// this.drawBG()
 		this.drawSputniks(), this.drawOrbitas(), this.planetLocations = new PlanetLocations(this), this.planetPointed = new PlanetPointed(this), this.planetContour = new PlanetContour(this);
@@ -356,8 +362,8 @@ function Planet(e, t, a, i) {
 }
 
 // function Hexagon(e) {
-// 	var t = new THREE.Color(0x00d8ff),
-// 		a = (new THREE.Color(0x00d8ff), Utils.createHexagon(.5)),
+// 	var t = new THREE.Color(color),
+// 		a = (new THREE.Color(color), Utils.createHexagon(.5)),
 // 		i = a.material;
 // 	return i.transparent = !0, i.opacity = .4, i.blending = THREE.AdditiveBlending, i.depthWrite = !1, a._anim_progress = .001, a.scale.set(a._anim_progress, a._anim_progress, a._anim_progress), a.setToLocation = function (n) {
 // 		a.location = n, a.position.copy(n.position), a.lookAt(new THREE.Vector3), i.color = t, e.add(a), a.matrixAutoUpdate = !0, TweenLite.killTweensOf(a), TweenLite.to(a, .2, {
@@ -462,7 +468,7 @@ function PlanetLocations(e) {
 		c = new THREE.MeshBasicMaterial({
 			transparent: !0,
 			opacity: 0,
-			color: new THREE.Color(0x00d8ff),
+			color: new THREE.Color(color),
 			blending: THREE.AdditiveBlending,
 			side: THREE.DoubleSide,
 			depthWrite: !1
@@ -490,9 +496,10 @@ function PlanetLocations(e) {
 		for (var d, h = new THREE.Geometry, f = new THREE.Geometry, qol = new THREE.Geometry, r = 0; r < n.length; r++) {
 			var o = n[r];
 			let type = {
-				secure: "secure",
-				attention: "attention",
-				redcode: "redcode",
+				secure: "low",
+				attention: "medium",
+				redcode: "high",
+				critical: "critical",
 			}
 			if (!1 != !!o.desc[t]) {
 				var w = o.desc[t];
@@ -504,10 +511,11 @@ function PlanetLocations(e) {
 							coordinates: p.position.clone(),
 							other: o.other
 						})
+
 					p.lookAt(E),
 						p.updateMatrix(),
 						p.updateMatrixWorld(),
-						d = w.typeAttack === type.secure ? f : w.typeAttack === type.attention ? h : w.typeAttack === type.redcode ? qol : "",
+						d = w.typeAttack === type.secure ? f : w.typeAttack === type.attention ? h : w.typeAttack === type.redcode ? qol : w.typeAttack === type.critical && h,
 						d.merge(p.geometry, p.matrixWorld),
 						d.merge(m.geometry, m.matrixWorld),
 						o.position = p.position.clone(),
@@ -523,7 +531,8 @@ function PlanetLocations(e) {
 		var ds = e.googlePosToUV(lat, lng);
 
 		let coordinate = Utils.setFromSpherical(v, ds.v, ds.u, p.position)
-		data.map((d,k )=> {
+		
+		data.map((d, k) => {
 			Utils.arcLink({
 				fnc: a,
 				cor1: coordinate,
@@ -575,11 +584,12 @@ function PlanetLocations(e) {
 function PlanetPointed(e) {
 	var t = e.textureLoader.load(PlanetData.textures_path + "dot.png");
 	t.generateMipalphaMaps = !1, t.magFilter = THREE.LinearFilter, t.minFilter = THREE.LinearFilter;
+	console.log(color)
 	for (var a = [], i = 0; i < 2; i++) {
 		var n = new THREE.PointsMaterial({
 			size: .15 / e.ratio
 		});
-		n.color = new THREE.Color(0x00d8ff), n.map = t, n.depthWrite = !1, n.transparent = !0, n.opacity = 0, n.blending = THREE.AdditiveBlending;
+		n.color = new THREE.Color(color), n.map = t, n.depthWrite = !1, n.transparent = !0, n.opacity = 0, n.blending = THREE.AdditiveBlending;
 		var r = i / 2;
 		n.t_ = r * Math.PI * 2, n.speed_ = .04, n.min_ = .2 * Math.random() + .5, n.delta_ = .1 * Math.random() + .1, n.opacity_coef_ = 1, a.push(n)
 	}
@@ -611,7 +621,7 @@ function PlanetPointed(e) {
 		s = new THREE.MeshBasicMaterial({
 			transparent: !0,
 			opacity: 0,
-			color: new THREE.Color(0x00d8ff),
+			color: new THREE.Color(color),
 			blending: THREE.AdditiveBlending,
 			depthWrite: !1
 		});
@@ -835,16 +845,16 @@ function ProjectiveImage(e, t) {
 }, THREE.AlphaColorShader = {
 	uniforms: {
 		color: {
-			value: new THREE.Color(0x00d8ff)
+			value: new THREE.Color(color)
 		},
 		fogType: {
 			value: 1
 		},
 		fogNear: {
-			value: 10
+			value: 30
 		},
 		fogFar: {
-			value: 30
+			value: 50
 		}
 	},
 	vertexShader: ["attribute float alpha;", "varying float vAlpha;", "void main() {", "vAlpha = alpha;", "vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );", "gl_PointSize = 4.0;", "gl_Position = projectionMatrix * mvPosition;", "}"].join("\n"),
@@ -1140,10 +1150,10 @@ function ProjectiveImage(e, t) {
 				value: e.alphaProportion || .5
 			},
 			diffuse: {
-				value: e.color || new THREE.Color(0x00d8ff)
+				value: e.color || new THREE.Color(color)
 			},
 			opacity: {
-				value: e.opacity || 1
+				value: 0.5
 			},
 			gridOffset: {
 				value: 0
@@ -1228,10 +1238,6 @@ function ProjectiveImage(e, t) {
 						}, t), a()
 					}, 500)
 				})
-				.fail(function () {
-					console.log("error")
-				})
-				.always(function () { })
 		}, $(document)
 			.trigger("panetMainLoaded");
 		var g, T = !1,
@@ -1252,17 +1258,17 @@ function ProjectiveImage(e, t) {
 			e = e || 3, TweenLite.to(v, e, {
 				autoRotateSpeed: -.002,
 				ease: Sine.easeOut
-			}), u.updateProjectionMatrix(), 
+			}), u.updateProjectionMatrix(),
 				TweenLite.to(u, e, {
-				fov: animateZoomIn,
-				ease: Sine.easeInOut,
-				onUpdate: function () {
-					u.updateProjectionMatrix()
-				},
-				onComplete: function () {
-					t && t()
-				}
-			})
+					fov: animateZoomIn,
+					ease: Sine.easeInOut,
+					onUpdate: function () {
+						u.updateProjectionMatrix()
+					},
+					onComplete: function () {
+						t && t()
+					}
+				})
 		}, this.animateOut = function (e, t) {
 			e = e || 2, TweenLite.to(u, e, {
 				fov: animateZoomOut,
@@ -1308,13 +1314,13 @@ Planet.prototype.getClosestLocation = function (e) {
 		a = new THREE.XRayMaterial({
 			map: this.textureLoader.load(PlanetData.textures_path + "clouds.jpg"),
 			alphaProportion: .5,
-			color: new THREE.Color(0x00d8ff),
+			color: new THREE.Color(color),
 			opacity: 1,
 			gridOffsetSpeed: .6
 		}),
 		i = new THREE.Mesh(t, a);
 	i.matrixAutoUpdate = !1, this.container.add(i);
-	for (var n = 3 * t.vertices.length, r = new Float32Array(n), o = new Float32Array(n), s = new Float32Array(n), l = new THREE.Color(0x00d8ff), d = 0; d < t.vertices.length; d++) {
+	for (var n = 3 * t.vertices.length, r = new Float32Array(n), o = new Float32Array(n), s = new Float32Array(n), l = new THREE.Color(color), d = 0; d < t.vertices.length; d++) {
 		var u = t.vertices[d],
 			c = 3 * d;
 		r[c] = u.x, r[c + 1] = u.y, r[c + 2] = u.z, o[c] = l.r, o[c + 1] = l.g, o[c + 2] = l.b, s[Math.floor(c / 3)] = .3 * Math.random() + .5
@@ -1327,7 +1333,7 @@ Planet.prototype.getClosestLocation = function (e) {
 	p.matrixAutoUpdate = !1, this.grid_shpere.add(p)
 },
 	Planet.prototype.drawParticles = function (e) {
-		for (var t = new Float32Array(1800), a = new THREE.Color(0x00d8ff), i = new THREE.Spherical, n = new THREE.Vector3, r = 0; r < 600; r++) {
+		for (var t = new Float32Array(1800), a = new THREE.Color(color), i = new THREE.Spherical, n = new THREE.Vector3, r = 0; r < 600; r++) {
 			var o = 3 * r;
 			i.radius = e * (1 + .6 * Math.random()), i.theta = 8 * Math.random(), i.phi = .3 + 2.2 * Math.random(), n.setFromSpherical(i), t[o] = n.x, t[o + 1] = n.y, t[o + 2] = n.z
 		}
@@ -1445,7 +1451,7 @@ Planet.prototype.getClosestLocation = function (e) {
 		var n = .8,
 			r = new THREE.SphereGeometry(.995 * e.radius, 32, 32, 0, Math.PI),
 			o = new THREE.MeshBasicMaterial;
-		o.color = new THREE.Color(0x00d8ff), o.fog = !1, o.transparent = !0, o.blending = THREE.AdditiveBlending, o.depthWrite = !1;
+		o.color = new THREE.Color(color), o.fog = !1, o.transparent = !0, o.blending = THREE.AdditiveBlending, o.depthWrite = !1;
 		var s = new THREE.Mesh(r, o);
 		s.visible = !1, s.matrixAutoUpdate = !1, s.updateMatrix(), e.container.add(s), s.matrixAutoUpdate = !1;
 		var l = o.clone(),
@@ -1456,7 +1462,10 @@ Planet.prototype.getClosestLocation = function (e) {
 				var r = n.contour_url;
 				n.contour_texture = [t(r[0]), t(r[1])]
 			}
-			o.map = n.contour_texture[0], o.map.generateMipalphaMaps = !1, o.map.magFilter = THREE.LinearFilter, o.map.minFilter = THREE.LinearFilter, o.needsUpdate = !0, l.map = n.contour_texture[1], l.map.generateMipalphaMaps = !1, l.map.magFilter = THREE.LinearFilter, l.map.minFilter = THREE.LinearFilter, l.needsUpdate = !0, a(s, i), a(d, i)
+			o.map = n.contour_texture[0],
+				o.map.generateMipalphaMaps = !1,
+				o.map.magFilter = THREE.LinearFilter,
+				o.map.minFilter = THREE.LinearFilter, o.needsUpdate = !0, l.map = n.contour_texture[1], l.map.generateMipalphaMaps = !1, l.map.magFilter = THREE.LinearFilter, l.map.minFilter = THREE.LinearFilter, l.needsUpdate = !0, a(s, i), a(d, i)
 		}, this.hide = function (e) {
 			i(s, e), i(d, e)
 		}
@@ -1469,7 +1478,7 @@ var PlanetData = function () {
 			contour_url: [this.textures_path + "contour1_1.png", this.textures_path + "contour2_1.png"],
 			min_locations: 100
 		},
-	
+
 	}, this.year_ids = [];
 	for (var t in this.desc) this.year_ids.push(t);
 	return this.hasLocationAnyBriefs = function (t, a) {
@@ -1517,7 +1526,7 @@ Planet.prototype.showYear = function (e, t) {
 		a.font_height = a.font_propotion * d.canvas_vis_height, n.font = a.fontStyle + " " + a.font_height + "px " + a.font, n.fillStyle = a.fillStyle, n.textBaseline = "middle"
 	}
 	var a = this;
-	a.offset_x = e.offset_x || 0, a.border_x = e.border_x || 0, a.offset_y = e.offset_y || 0, a.font = e.font || "Arial", a.font_propotion = e.font_propotion || 20, a.fillStyle = e.fillStyle || "rgba(255,0,0, 0.95)", a.fontStyle = e.fontStyle || "";
+	a.offset_x = e.offset_x || 0, a.border_x = e.border_x || 0, a.offset_y = e.offset_y || 0, a.font = e.font || "Arial", a.font_propotion = e.font_propotion || 20, a.fillStyle = e.fillStyle || "rgba(255,22,11, 1)", a.fontStyle = e.fontStyle || "";
 	var i = a.canvas = document.createElement("canvas"),
 		n = a.context = i.getContext("2d");
 	e.debug && (document.body.appendChild(i), i.style.position = "absolute", i.style.top = 0, i.style.left = 0);
@@ -1585,7 +1594,7 @@ var Utils = new function () {
 					.makeRotationY(Utils.PI2 / 6 / 2), n.applyMatrix(r)
 		}
 		if (!a) var a = new THREE.MeshBasicMaterial({
-			color: 0x00d8ff
+			color: color
 		});
 		a.side = THREE.BackSide;
 		var o = new THREE.Mesh(n, a);
@@ -1623,6 +1632,8 @@ Utils.arcLink = function (data) {
 	var spline = new THREE.CatmullRomCurve3(point);
 
 	const material = data.material;
+
+	material.color = new THREE.Color(color)
 
 	const geometry = new THREE.TubeGeometry(spline, 20, 0.02, 10, false);
 

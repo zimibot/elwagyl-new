@@ -26,11 +26,16 @@
         }
 
         body {
-            background: black;
+            background: linear-gradient(90deg, #101C26 21px, transparent 1%) center, linear-gradient(#101C26 21px, transparent 1%) center, #3c5972;
+            background-size: 22px 22px;
+
         }
 
         .main-container {
             background: transparent;
+        }
+        .hexagon__image {
+            background-size: cover;
         }
     </style>
 
@@ -47,9 +52,9 @@
 
 <body>
     <!-- Google Tag Manager (noscript) -->
-    <div class="shadow">
+    <!-- <div class="shadow">
         <div class="shadow-s"></div>
-    </div>
+    </div> -->
 
     <div class="kaspersky-app kaspersky-app__map">
         <div class="main-container justify-center flex items-center">
@@ -67,7 +72,7 @@
                     <div class="earth-popup__content-top">
                         <div class="earth-popup__name-contry">{{name}}</div>
                         <div class="earth-popup__flag">
-                            <img class="earth-popup__flag-img" src="https://2050.earth{{country.flag}}" alt="">
+                            <img class="earth-popup__flag-img" src="{{flag}}" alt="">
                         </div>
                     </div>
                     <div class="earth-popup__content-count">

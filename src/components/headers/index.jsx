@@ -1,14 +1,16 @@
-import { Drawer, Tooltip } from "antd";
+import { Drawer, Popover, Tooltip } from "antd";
 import moment from "moment";
 import { useEffect, useRef, useState } from "react";
+import { NavLink } from "react-router-dom";
 import Logo from "../../assets/images/full.logo.svg";
 import { GetAndUpdateContext } from "../../model/context.function";
+import { SquareMedium } from "../decoration/square";
 import { TitleContent } from "../layout/title";
 import { Heads } from "./head";
 import MenuItems from "./menu";
-import { TabItem } from "./tab.item";
+import { MassagesDrawer } from "./messages.drawer";
 
-export const HeadersTop = ({ eha, background }) => {
+export const HeadersTop = ({ background }) => {
     const { maximize, setmaximize, setvalue, status } = GetAndUpdateContext()
     const refMenu = useRef(null)
     let date = moment().format("DD/MM/YY")
@@ -56,7 +58,7 @@ export const HeadersTop = ({ eha, background }) => {
             background
         }}>
             <div className="bg-primary border-t border-t-border_primary flex z-20 relative" >
-                <div className="w-full px-4 flex justify-between items-center max-w-[2500px] mx-auto">
+                <div className="w-full px-4 flex justify-between items-center  mx-auto">
                     <div className="pr-4">
                         <img src={Logo}></img>
                     </div>
@@ -70,6 +72,8 @@ export const HeadersTop = ({ eha, background }) => {
                             <Tooltip title="MESSAGES">
                                 <button className="alert-notif w-full h-full items-center justify-center flex  border-b-[6px] border-border_primary" onClick={() => {
                                     setmaximize(d => ({ ...d, MESSAGES: !d.MESSAGES }))
+                                    window.api.invoke('message-open', maximize.MESSAGES)
+
                                 }}>
                                     <svg width="22" height="19" viewBox="0 0 22 19" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M12 12H10V7H12M12 16H10V14H12M0 19H22L11 0L0 19Z" fill="#00D8FF" />
@@ -84,11 +88,29 @@ export const HeadersTop = ({ eha, background }) => {
                             </div>
                         </div>
                         <div className="h-full min-w-[70px] flex items-center justify-center px-1 border-r border-r-border_primary relative">
-                            <button className="menu-setting w-full h-full items-center justify-center flex  border-b-[6px] border-border_primary">
-                                <svg width="22" height="19" viewBox="0 0 18 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M0 12H18V10H0V12ZM0 7H18V5H0V7ZM0 0V2H18V0H0Z" fill="#00D8FF" />
-                                </svg>
-                            </button>
+                            <Popover rootClassName="min-w-[200px]" trigger={"click"} placement="bottomRight" content={
+                                <>
+                                    <SquareMedium />
+                                    <div className="text-[16px] space-y-4 text-blue">
+                                        <div className="border-b pb-2 border-blue hover:text-white hover:border-white cursor-pointer">
+                                            LICENSE
+                                        </div>
+                                        <NavLink state={{ ums: true, title: "USER MANAGEMENT", key: "dashboard" }} to={"/ums/dashboard"} className="border-b pb-2 border-blue hover:text-white hover:border-white block">
+                                            USER MANAGEMENT
+                                        </NavLink>
+                                        <div className="border-b pb-2 border-blue hover:text-white hover:border-white cursor-pointer">
+                                            LOG OUT
+                                        </div>
+
+                                    </div>
+                                </>
+                            }>
+                                <button className="menu-setting w-full h-full items-center justify-center flex  border-b-[6px] border-border_primary">
+                                    <svg width="22" height="19" viewBox="0 0 18 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M0 12H18V10H0V12ZM0 7H18V5H0V7ZM0 0V2H18V0H0Z" fill="#00D8FF" />
+                                    </svg>
+                                </button>
+                            </Popover>
                             <div className="absolute left-[-3px]">
                                 <svg width="6" height="19" viewBox="0 0 6 19" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M0 3L3 0V19L0 16V3Z" fill="#101C26" />
@@ -117,17 +139,8 @@ export const HeadersTop = ({ eha, background }) => {
                     </div>
                 </div>
             </div>
-            <Heads eha={eha} />
+            <Heads />
         </div>
-        <Drawer title={false} width={610} placement="right" onClose={() => {
-            setmaximize(d => ({ ...d, MESSAGES: !d.MESSAGES }))
-        }} closable={false} open={maximize.MESSAGES}>
-            <TitleContent maximizeItem={"MESSAGES"} className={"pt-0"}>
-                <div className="text-[24px] uppercase">MESSAGES</div>
-            </TitleContent>
-            <div className="flex-1 pt-4 ml-[-23px] mr-[-23px] flex flex-col">
-                <TabItem></TabItem>
-            </div>
-        </Drawer>
     </>
 }
+

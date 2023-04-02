@@ -27,7 +27,7 @@ export const ListRegisterUser = () => {
     return (
         <CardBox className="flex-1">
             <TitleContent>
-                <div className="text-[24px] uppercase">register user</div>
+                <div className="text-[24px] uppercase text-blue">register user</div>
             </TitleContent>
             <CardBox className={"p-6 bg-[#1C3947]"}>
                 <form className="space-y-8" onSubmit={handleSubmit(Onsubmit)}>

@@ -7,14 +7,12 @@ import { SelectComponent } from "../../components.eha/select";
 import { columnItem, dataItems, columnItemRequire } from "./data";
 import { GetAndUpdateContext } from "../../model/context.function"
 
-export const DetailDeck = ({ data }) => {
+export const DetailDeck = () => {
     const { setvalue } = GetAndUpdateContext()
-
-
     return <> <DrawerMenu name={"detail"}>
         <div className="flex flex-col gap-4 text-[16px] flex-1">
             <TitleContent className={"pt-0"}>
-                <div className="text-[24px] uppercase">PROTECTED SITE A</div>
+                <div className="text-[24px] uppercase text-blue">PROTECTED SITE A</div>
             </TitleContent>
             <div className="grid grid-cols-7 gap-6 flex-1">
                 <div className="col-span-4">
@@ -167,7 +165,7 @@ export const DetailDeck = ({ data }) => {
                     </div>
                     <div className="flex flex-col flex-1 gap-4 pb-4">
                         <TitleContent className={"pt-0"}>
-                            <div className="text-[24px] uppercase">ASSETS</div>
+                            <div className="text-[24px] uppercase text-blue">ASSETS</div>
                         </TitleContent>
                         <div className="relative flex flex-col flex-1">
                             <TableInline hoverDisable={true} columns={columnItem({
@@ -272,10 +270,10 @@ const SubDetail = () => {
     return (
         <DrawerMenu placement="right" name={"subdetail"}>
             <TitleContent className={"pt-0"}>
-                <div className="text-[24px] uppercase">DETAIL PROTECTED SITE A</div>
+                <div className="text-[24px] uppercase text-blue">DETAIL PROTECTED SITE A</div>
             </TitleContent>
             <TitleContent className={"pt-0"}>
-                <div className="text-[24px] uppercase">192.24.22.561</div>
+                <div className="text-[24px] uppercase text-blue">192.24.22.561</div>
             </TitleContent>
             <div className="flex-1 flex flex-col pb-4">
                 <TableInline

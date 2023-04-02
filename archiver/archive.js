@@ -24,7 +24,7 @@ function zipDirectory(sourceDir, outPath) {
 } 
 
 let sourceDir = path.join("./", "resource")
-let win = path.join(sourceDir, "win-unpacked")
+let win = path.join(sourceDir, "win-ia32-unpacked")
 let outPath = path.join(sourceDir, `elwagyl-v-${pkg.version}.zip`)
 
 zipDirectory(win, outPath)

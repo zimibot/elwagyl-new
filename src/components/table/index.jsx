@@ -72,6 +72,7 @@ const Tables = styled.table`
 `
 
 export const TableInline = ({
+    Loading,
     columns = [
         {
             title: 'No',
@@ -87,7 +88,7 @@ export const TableInline = ({
             columnClass: "",
             rowClass: "w-[160px]",
             html: (d) => {
-                return <div className="w-full h-2 bg-primary">
+                return <div className="w-full h-2 bg-primary static">
                     <div className="h-full bg-blue" style={{ width: `${d}%` }}></div>
                 </div>
             },
@@ -121,14 +122,14 @@ export const TableInline = ({
             statistics: 32,
             total: 1240,
         },
-    ], height = "auto", hoverDisable, paggination, borderLast, style = { columns: {}, row: {} }, count = 5, className = "flex-auto flex flex-col", classTable, onClick = () => { }, border, active = null, totalPages=30 }) => {
+    ], height = "auto", currentPage = 1, onChange, hoverDisable, paggination, borderLast, tooltip, style = { columns: {}, row: {} }, onLoad = () => { }, className = "flex-auto flex flex-col", classTable, onClick = () => { }, border, active = null, totalPages = 30 }) => {
 
 
     return (
-        <div className={`${className} relative`} style={{
+        <div className={`${className} relative flex-col`} style={{
             height: height
         }}>
-            <div className={`flex flex-col flex-1 relative  ${classTable ? classTable : ""}`} >
+            <div className={`flex flex-col flex-1 relative text-blue ${classTable ? classTable : ""}`} >
                 <div className="absolute w-full h-full overflow-auto  table-scroll">
                     <Tables hoverDisable={hoverDisable} border={border} borderLast={borderLast} className="text-left w-full" active={active}>
                         <thead className="sticky top-0 z-10">
@@ -143,23 +144,29 @@ export const TableInline = ({
                             </tr>
                         </thead>
                         <tbody>
-                            {!data || data.length === 0 ? <tr>
+                            {Loading ? <tr className="!border-primary" >
+                                <td colSpan={columns.length}>
+                                    <div className="text-center py-4">
+                                        <div className="border py-2">LOADING</div>
+                                    </div>
+                                </td>
+                            </tr> : !data || data.length === 0 ? <tr>
                                 <td colSpan={columns.length}>
                                     <div className="text-center py-4 text-[#fff]">
                                         <div className="border py-2">{ERRORCOMPONENT.dataNotAvailable}</div>
                                     </div>
                                 </td>
-                            </tr> : <Data style={style.row} border={border} data={data} onClick={onClick} column={columns}></Data>}
+                            </tr> : <Data onLoad={onLoad} style={style.row} tooltip={tooltip} border={border} data={data} onClick={onClick} column={columns}></Data>}
+
 
                         </tbody>
                     </Tables>
                 </div>
             </div>
 
-            {data && data.length > count && data.length > 0 &&
-                paggination &&
-                <div className="bg-primary px-2 py-1 flex justify-end ">
-                    <Pagination simple defaultCurrent={2} total={totalPages} />
+            {paggination &&
+                <div className="bg-primary px-2 py-1 flex text-[16px] justify-center ">
+                    {!Loading ? <Pagination onChange={onChange} simple defaultCurrent={currentPage} total={totalPages} /> : "LOADING"}
                 </div>
             }
         </div>

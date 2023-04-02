@@ -7,7 +7,7 @@ module.exports = function CreateWindow() {
     const win = WindowConfig()
     win.loadURL(
         isDev
-            ? 'http://localhost:8000/'
+            ? 'http://localhost:3000/'
             : `file://${path.join(__dirname, '../build/index.html')}`
     );
 

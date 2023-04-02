@@ -13,7 +13,7 @@ const MenuItems = () => {
         let menuKey = MENUDATA.findIndex(a => a.key === e.key)
         let menu = MENUDATA[menuKey]
         HeadFunction(menu, setStatus, VALUEMENU)
-        navi(e.key, { state: { title: menu.label } })
+        navi(e.key, { state: { title: menu.label, eha: menu.label === "EHA" ? true : false } })
     };
 
     let linkeha = window.location.hash.replace("#", "").split("/")[1]

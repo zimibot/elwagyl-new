@@ -8,7 +8,7 @@ const NavPage = ({ to, title, dropdown, noTop, icons = () => { }, ...param }) =>
     let resolved = useResolvedPath(to);
     let match = useMatch({ path: resolved.pathname, end: true });
     let matchUrl = match?.pathname === to
-    return <NavLink state={{ title: `10 // eha // ${title}` }} to={to} {...param}>
+    return <NavLink state={{ title: `10 // eha // ${title}`, eha: true }} to={to} {...param}>
 
         <div className="flex items-center gap-4">
             {icons({ match: matchUrl })}

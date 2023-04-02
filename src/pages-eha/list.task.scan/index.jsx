@@ -35,7 +35,7 @@ const ListTask = () => {
                 </CardBox>
                 <CardBox className="flex-1">
                     <TitleContent>
-                        <div className="text-[24px] uppercase">TASK</div>
+                        <div className="text-[24px] uppercase text-blue">TASK</div>
                     </TitleContent>
                     <TableInline border paggination hoverDisable columns={[
                         {

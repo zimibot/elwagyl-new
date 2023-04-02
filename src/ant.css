@@ -276,9 +276,9 @@ li.ant-menu-overflow-item.ant-menu-overflow-item-rest.ant-menu-submenu.ant-menu-
 
 .ant-popover .ant-popover-inner {
   border-radius: 0;
-  background: black;
-  color: white;
-  border: 1px solid #00d8ff;
+  background: #152A36;
+  color: cyan;
+  border: 0px solid ;
 }
 
 .ant-popover .ant-popover-title {
@@ -414,11 +414,11 @@ span.anticon.anticon-check-circle svg {
 .ant-result .ant-result-title {
   color: white;
 }
-
+/* 
 .ant-result-icon svg {
   width: 100px;
   height: 100px;
-}
+} */
 
 .ant-tabs .ant-tabs-tab {
   border-right: 1px solid #18313D;

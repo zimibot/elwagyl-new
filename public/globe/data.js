@@ -2044,14 +2044,21 @@ function(e, t, n, i, o) {
 				for (key in t) t.hasOwnProperty(key) && s.append(key, t[key]);
 				a.processData = !1, a.contentType = !1, a.cache = !1, a.data = s
 			} else a.data = t;
+			const ksm = async () => {
+				let locations_by_id = {};
+				for (var T = 0; T < dataGlobe.length; T++) {
+					var x = dataGlobe[T];
+					locations_by_id[x.location_id] = x
+				}
+				return {
+					countries_by_id: {},
+					locations: dataGlobe,
+					locations_by_id
+				}
+			}
+
 			var c = o.ajax(e, a);
-			return c.then(function(e) {
-				return e._token && o.ajaxSetup({
-					headers: {
-						"X-CSRF-TOKEN": e._token
-					}
-				}), e
-			}), c
+			return ksm()
 		}
 
 		function d() {
@@ -2072,53 +2079,8 @@ function(e, t, n, i, o) {
 			m = "work-save" == e;
 		return p = "api/" + "locations.json",
 			function(n, r, l) {
-				function u(e, t) {
-					for (var n in e)
-						if (e.hasOwnProperty(n))
-							if (t || /^(?:image|photo|preview|flag|url)s?$/.test(n)) switch (typeof e[n]) {
-								case "string":
-									/^backend\//.test(e[n]) && (e[n] = "/" + e[n]);
-									break;
-								case "object":
-									u(e[n], !0)
-							} else "object" == typeof e[n] && u(e[n]);
-					return e
-				}
-
-				function h(e) {
-					switch (!0) {
-						case "string" == typeof e:
-							k.reject(e);
-							break;
-						case !1 === e.success:
-							var t = e.text || e.message || e.error;
-							k.reject(t);
-							break;
-						case e.hasOwnProperty("error"):
-							k.reject(e.text || e.error);
-							break;
-						case e.hasOwnProperty("errors"):
-							var n = [];
-							for (var i in e.errors) n.push(e.errors[i].join(", "));
-							k.reject(n.join("<br>"));
-							break;
-						case e[0] && !1 === e[0].success:
-							k.reject(e[0].message);
-							break;
-						default:
-							d(), k.resolve(e)
-					}
-				}
-				var g = p;
-				if ("localization" === e && (n = void 0), v.hasOwnProperty(g)) return v[g];
-				n && w[e] && (g = g.replace(/\/\{([^\}]+)\}/g, function() {
-					var e = arguments[1];
-					if (n.hasOwnProperty(e)) {
-						var t = n[e];
-						return delete n[e], t ? "/" + t : ""
-					}
-					return ""
-				}));
+				
+				
 				var b;
 				switch (typeof n) {
 					case "object":
@@ -2132,15 +2094,7 @@ function(e, t, n, i, o) {
 				}
 				var k = o.Deferred(),
 					_ = k.promise();
-				return (c(e) ? s : f)(g, b, l || a || (b ? "post" : "get"), m).then(function(t) {
-					return "localization" !== e ? u(t) : t
-				}).then(t).then(r).done(function(e) {
-					h(e)
-				}).fail(function(e) {
-					e.responseJSON ? h(e.responseJSON) : k.reject(e.message || e.responseText || "ERROR")
-				}), !0 === i && (v[p] = _, _.fail(function() {
-					delete v[p]
-				})), _
+				return (c(e) ? s : f)( b, l || a || (b ? "post" : "get"), m)
 			}
 	}
 

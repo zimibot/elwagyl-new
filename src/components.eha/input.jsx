@@ -37,7 +37,7 @@ export const Form = {
         let type = props?.type === "password" ? showPw ? "text" : props.type : props.type
 
         return <div className={rowColumn ? "flex gap-4 whitespace-nowrap items-center" : `flex flex-col gap-4 text-[16px] ${className} `}>
-            <label className="uppercase">{label}</label>
+            {label && <label className="uppercase">{label}</label>}
             <div className="relative w-full flex items-center justify-end">
                 <Input {...props} type={type} className={`bg-primary w-full p-3 ${classNameInput} ${error && "border border-red-400"}`} {...register} ></Input>
 
@@ -50,7 +50,7 @@ export const Form = {
                         }}
                         placement="left"
                     >
-                        <button className="absolute right-0 px-4 text-[20px]" onClick={() => setshowPw(d => !d)}>
+                        <div className="absolute right-0 px-4 text-[20px]" onClick={() => setshowPw(d => !d)}>
                             {showPw ?
                                 <Tooltip title="HIDE PASSWORD">
                                     <EyeInvisibleFilled />
@@ -60,7 +60,7 @@ export const Form = {
                                     <EyeFilled />
                                 </Tooltip>
                             }
-                        </button>
+                        </div>
                     </Dropdown>
 
 

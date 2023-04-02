@@ -1,24 +1,10 @@
 import { Line } from '@ant-design/plots';
-import { useEffect, useState } from 'react';
 import { ERRORCOMPONENT } from '../../model/information';
 import barIcon from '../../assets/images/icon/bar-chart.png'
+import moment from 'moment';
+import { Formatter } from '../../helper/formater';
 
-export const ChartLineTooltip = ({ height = 115, mode = "", className="" }) => {
-    const [data, setData] = useState([]);
-
-
-    useEffect(() => {
-        asyncFetch();
-    }, []);
-
-    const asyncFetch = () => {
-        fetch('https://gw.alipayobjects.com/os/bmw-prod/1d565782-dde4-4bb6-8946-ea6a38ccf184.json')
-            .then((response) => response.json())
-            .then((json) => setData(json))
-            .catch((error) => {
-                console.log('fetch data failed', error);
-            });
-    };
+export const ChartLineTooltip = ({ height = 115, mode = "", className = "", data = [], date, xField = "date", yField = "count" }) => {
 
     height = height === "auto" ? {
         autoFit: true,
@@ -28,13 +14,23 @@ export const ChartLineTooltip = ({ height = 115, mode = "", className="" }) => {
     const config = {
         data,
         ...height,
-        xField: 'Date',
-        yField: 'scales',
+        xField: xField,
+        yField: yField,
         color: "#00D8FF",
-        tooltip: false,
         renderer: 'svg',
         padding: [10, 30, 30, 45],
         stepType: mode,
+        tooltip: {
+            customContent: (title, data) => {
+                console.log(data)
+                let date = moment(title).format("lll")
+                let value = Formatter(parseInt(data[0]?.value))
+                return `<div class="bg-primary p-2 space-y-2">
+                    <div>DATE: ${date}</div>
+                    <div>TOTAL: ${value}</div>
+                </div>`;
+            }
+        },
         lineStyle: {
             lineWidth: 1,
             // lineDash: [3, 3],
@@ -46,6 +42,9 @@ export const ChartLineTooltip = ({ height = 115, mode = "", className="" }) => {
                     fill: '#00D8FF',
                     opacity: 0.6,
                     fontSize: 14
+                },
+                formatter: (d) => {
+                    return Formatter(d)
                 },
                 rotate: false
             },
@@ -62,12 +61,16 @@ export const ChartLineTooltip = ({ height = 115, mode = "", className="" }) => {
         },
         xAxis: {
             tickCount: 4,
-            // tickMethod: 'wilkinson-extended',
+            // tickMethod: 'time-cat'   ,
             label: {
                 style: {
                     fill: '#00D8FF',
                     opacity: 0.6,
                     fontSize: 14
+                },
+                formatter: (d) => {
+                    let time = date ? moment(d).format("l") : moment(d).format("LTS")
+                    return time
                 },
                 rotate: false
             },

@@ -63,7 +63,7 @@ export const FillterDay = ({ text = "GLOBAL FILTER", globe, noBorder, decoration
         {contextHolder}
         <div className="flex items-center justify-center gap-9">
             <div className={`${slime ? "" : "py-3 "} px-5 flex gap-4 relative items-center`}>
-                <div className="absolute left-[-5vw]">{text}</div>
+                <div className="absolute left-[-5vw] text-blue">{text}</div>
                 <LineBorderLeft />
                 <LineBorderRight />
                 {data.map((d, k) => {
@@ -86,7 +86,7 @@ export const FillterDay = ({ text = "GLOBAL FILTER", globe, noBorder, decoration
                                     <rect width="13" height="13" fill={!d.active ? "#0B5567" : "#00D8FF"} />
                                 </svg>
                             </div>
-                            <div className="top-[1px] relative uppercase">{d.text}</div>
+                            <div className="top-[1px] relative uppercase text-blue">{d.text}</div>
                         </CoreDay> : ""
                     }
                 })}

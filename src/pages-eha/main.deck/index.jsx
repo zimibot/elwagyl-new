@@ -13,7 +13,6 @@ import { MapHighcharts } from "../../components/maps/higchart.map"
 import { DetailDeck } from "./detail"
 import { ChartRadialBar } from "../../components/chart/chart.radial"
 import { max } from "radash"
-import { Tooltip } from "antd"
 
 const MainDeck = () => {
     const { value, maximize, setvalue } = GetAndUpdateContext()
@@ -23,7 +22,7 @@ const MainDeck = () => {
             <ColumnLeft>
                 <CardBox className={"flex-1"}>
                     <TitleContent>
-                        <div className="text-[24px] uppercase">FINDING RISK STATUS</div>
+                        <div className="text-[24px] uppercase text-blue">FINDING RISK STATUS</div>
                     </TitleContent>
                     <div className="flex justify-between items-center">
                         <SubtitleInfo className="btn-information" title={'LEGEND'} />
@@ -49,7 +48,7 @@ const MainDeck = () => {
                     </div>
                     <HeatmapComponent></HeatmapComponent>
                     <TitleContent>
-                        <div className="text-[24px] uppercase">FINDING MONTHLY REPORT</div>
+                        <div className="text-[24px] uppercase text-blue">FINDING MONTHLY REPORT</div>
                     </TitleContent>
                     <SubtitleInfo className="btn-information" title={'ALL TOOLS'} >
                         {OBSERVATION_SEVERITY_DESC}
@@ -68,7 +67,7 @@ const MainDeck = () => {
                             <div className="grid grid-cols-8 border-b border-primary">
                                 <div className="col-span-3">
                                     <TitleContent date={value.DATEVALUE.uniq} className={"border-b border-b-primary"} noBorder={true} subTitle={"A-3"}>
-                                        <div className="text-[24px] uppercase">REMEDIATION STATISTIC</div>
+                                        <div className="text-[24px] uppercase text-blue">REMEDIATION STATISTIC</div>
                                         <SquareFull onlyTop={true}></SquareFull>
                                     </TitleContent>
                                     <div className="relative">
@@ -98,7 +97,7 @@ const MainDeck = () => {
                                 </div>
                                 <div className="col-span-3 flex flex-col">
                                     <TitleContent date={value.DATEVALUE.uniq} className={"border-b border-b-primary"} noBorder={true} subTitle={"E-1"}>
-                                        <div className="text-[24px] uppercase">MONITORED ASSET</div>
+                                        <div className="text-[24px] uppercase text-blue">MONITORED ASSET</div>
                                         <SquareFull onlyTop={true}></SquareFull>
                                     </TitleContent>
                                     <div className="relative flex-1 ">
@@ -143,7 +142,7 @@ const MainDeck = () => {
                 </div>
                 <div className="relative overflow-hidden flex-1">
                     <TitleContent className={"z-20 p-4 backdrop-blur relative"}>
-                        <div className="text-[24px] uppercase">AERIAL VIEW</div>
+                        <div className="text-[24px] uppercase text-blue">AERIAL VIEW</div>
                     </TitleContent>
                     <MapHighcharts className="absolute"></MapHighcharts>
                 </div>
@@ -151,7 +150,7 @@ const MainDeck = () => {
             <ColumnRight>
                 <CardBox className={" flex-1"}>
                     <TitleContent>
-                        <div className="text-[24px] uppercase">PROTECTED SITE</div>
+                        <div className="text-[24px] uppercase text-blue">PROTECTED SITE</div>
                     </TitleContent>
                     <div className="space-y-4">
                         {
@@ -238,7 +237,7 @@ const MainDeck = () => {
                         }
                     </div>
                     <TitleContent>
-                        <div className="text-[24px] uppercase">OVERDUE FINDING </div>
+                        <div className="text-[24px] uppercase text-blue">OVERDUE FINDING </div>
                     </TitleContent>
                     <div className="flex-1 relative ">
                         <div className="space-y-4 overflow-auto absolute h-full w-full pr-2 pb-3">

@@ -9,7 +9,7 @@ const path = require("path")
 
 module.exports = function ({ title = "NOTIFICATION", content = "NOTIFICATION CONTENT", colorContent = "", iconContent = "", favicon, load }) {
     let notif = CreateWindow({
-        urlCurrent: "http://localhost:8000/html/notif/index.html",
+        urlCurrent: "http://localhost:3000/html/notif/index.html",
         prodUrl: "../html/notif/index.html",
         config: {
             width: 500,

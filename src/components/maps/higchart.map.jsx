@@ -2,39 +2,23 @@ import { ComposableMap, Geographies, Geography, ZoomableGroup, Line, Marker } fr
 import { Modal, Tooltip } from 'antd';
 import { Motion, spring } from "react-motion";
 import { useEffect, useState } from "react";
-import { API_DATAMAPS } from "../../api";
+import { API_GET } from "../../api";
 import { GetAndUpdateContext } from "../../model/context.function";
 
 const geoUrl =
     "api/world-countries.json"
 
 export const MapHighcharts = ({ className = "fixed" }) => {
-    const API = API_DATAMAPS()
+    const API = API_GET.THREATSMAP_GLOBE()
     const { value } = GetAndUpdateContext()
 
-    const [state, setstate] = useState([]);
     const [open, setOpen] = useState({
         active: false,
         content: null
     });
 
-    useEffect(() => {
-        if (!API.isLoading && !API.error) {
 
-            let data = API.data
-            setstate(data.locations.map(d => ({
-                ...d,
-                color: "#aa1a0c",
-                markerOffset: -10,
-                coordinates: [d.planet_v, d.planet_u]
-            })))
-        }
 
-        return () => {
-            setstate([])
-        }
-
-    }, [API.data, API.error, API.isLoading]);
 
 
     const showDrawer = (desc, preview) => {
@@ -45,7 +29,7 @@ export const MapHighcharts = ({ className = "fixed" }) => {
     };
 
 
-    return <div className={`${className} w-full left-0 top-0 h-full maps fadein overflow-hidden`}>
+    return API.isLoading ? "" : <div className={`${className} w-full left-0 top-0 h-full maps fadein overflow-hidden`}>
         <Motion
             key={1}
             defaultStyle={{
@@ -99,41 +83,36 @@ export const MapHighcharts = ({ className = "fixed" }) => {
                         </Geographies>
 
 
-                        {state.map(({ name, coordinates, markerOffset, color, desc, preview }, k) => {
+                        {API.map2d.map(({ name, coordinates, markerOffset, color, desc, preview }, k) => {
 
-                            const Markers = <Tooltip title="click to see details                            ">
-                                <Marker className="marker-custom" coordinates={coordinates} onClick={() => showDrawer(desc, preview)}>
-                                    <circle id="radar" r={2} fill={`${color}ad`} strokeWidth={0} />
-                                    <circle id="core" r={2} fill={`${color}`} strokeWidth={0} />
+                            const Markers = <Marker className="marker-custom" coordinates={coordinates} onClick={() => showDrawer(desc, preview)}>
+                                <circle id="radar" r={2} fill={`${color}ad`} strokeWidth={0} />
+                                <circle id="core" r={2} fill={`${color}`} strokeWidth={0} />
 
-                                    <text
-                                        textAnchor="middle"
-                                        y={markerOffset + 3}
-                                        style={{ fill: "white", fontSize: 6, fontWeight: 600 }}
-                                    >
-                                        {name}
-                                    </text>
-                                </Marker>
-                            </Tooltip>
+                                <text
+                                    textAnchor="middle"
+                                    y={markerOffset + 3}
+                                    style={{ fill: "white", fontSize: 6, fontWeight: 600 }}
+                                >
+                                    {name}
+                                </text>
+                            </Marker>
 
                             if (name === "Jakarta") {
                                 return Markers
                             } else {
 
                                 return (<svg key={k}>
-                                    <Tooltip title={`${name} Attack Kejaksaan Jakarta`}>
-                                        <Line
-                                            className="line cursor-pointer"
-                                            style={{
-                                                animationDelay: `${k * 300}ms`,
-                                                animationDuration: `${(k + 1) * 2000}ms`
-                                            }}
-                                            from={[106.816666, -6.200000]}
-                                            to={coordinates}
-                                            stroke={`${color}`}
-                                            strokeWidth={2}
-                                        />
-                                    </Tooltip>
+                                    <Line
+                                        className="line cursor-pointer"
+                                        style={{
+                                            animationDuration: `2000ms`
+                                        }}
+                                        from={[106.816666, -6.200000]}
+                                        to={coordinates}
+                                        stroke={`${color}`}
+                                        strokeWidth={2}
+                                    />
                                     {Markers}
                                 </svg>
                                 )

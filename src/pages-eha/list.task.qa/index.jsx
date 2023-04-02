@@ -9,7 +9,7 @@ const TaskQA = () => {
     return <LayoutDashboard className="bg-[#101C26] text-[16px]">
         <CardBox className="flex-1 col-span-full pb-14">
             <TitleContent>
-                <div className="text-[24px] uppercase">quality control</div>
+                <div className="text-[24px] uppercase text-blue">quality control</div>
             </TitleContent>
             <div className="flex gap-10 border-t border-primary pt-4">
                 <Form.input rowColumn type="date" label={"start date"}></Form.input>
@@ -23,7 +23,7 @@ const TaskQA = () => {
             <div className="grid grid-cols-3 flex-1 pb-10">
                 <div className="space-y-5 h-full relative flex-1 flex flex-col border-r pr-4 border-primary">
                     <TitleContent>
-                        <div className="text-[24px] uppercase">Finding risk level (total: 0)</div>
+                        <div className="text-[24px] uppercase text-blue">Finding risk level (total: 0)</div>
                     </TitleContent>
                     <TableInline border paggination hoverDisable columns={[
                         {
@@ -67,7 +67,7 @@ const TaskQA = () => {
                 </div>
                 <div className="space-y-5 h-full relative flex-1 flex flex-col px-4 border-r border-primary">
                     <TitleContent>
-                        <div className="text-[24px] uppercase">FINDING AWAITING RESCAN (total: 0)</div>
+                        <div className="text-[24px] uppercase text-blue">FINDING AWAITING RESCAN (total: 0)</div>
                     </TitleContent>
                     <TableInline border paggination hoverDisable columns={[
                         {
@@ -115,7 +115,7 @@ const TaskQA = () => {
                 </div>
                 <div className="space-y-5 h-full relative flex-1 flex flex-col pl-4">
                     <TitleContent>
-                        <div className="text-[24px] uppercase">FINDING RESCAN (total: 1)</div>
+                        <div className="text-[24px] uppercase text-blue">FINDING RESCAN (total: 1)</div>
                     </TitleContent>
                     <TableInline border paggination hoverDisable columns={[
                         {

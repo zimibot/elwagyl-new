@@ -8,7 +8,7 @@ const TargetReady = () => {
     return <LayoutDashboard className="bg-[#101C26] text-[16px]">
         <CardBox className="flex-1 col-span-full pb-14">
             <TitleContent>
-                <div className="text-[24px] uppercase">targets ready for qa</div>
+                <div className="text-[24px] uppercase text-blue">targets ready for qa</div>
             </TitleContent>
             <TableInline border paggination hoverDisable columns={[
                 {

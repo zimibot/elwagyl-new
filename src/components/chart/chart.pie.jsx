@@ -2,53 +2,19 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Pie } from '@ant-design/plots';
 import { sum } from 'radash'
 import { Loadings } from '../loading'
-import { GetAndUpdateContext } from '../../model/context.function';
 
-export const PieChart = () => {
+export const PieChart = ({ data = [] }) => {
     const [config, setconfig] = useState();
-    const { setvalue } = GetAndUpdateContext()
 
-    const [isLoad, setisLoad] = useState();
 
 
     useEffect(() => {
-        const data = [
-            {
-                type: 'solved',
-                value: 27,
-            },
-            {
-                type: 'low',
-                value: 100,
-            },
-            {
-                type: 'high',
-                value: 18,
-            },
-            {
-                type: 'medium',
-                value: 15,
-            },
-        ];
-
-        let totalRes = sum(data, f => f.value)
-
-
-        data.map(s => {
-            setvalue(d => ({
-                ...d, PIECHARTVALUE: ({
-                    data: [...d.PIECHARTVALUE.data, {
-                        value: s.value, type: s.type, color: color(s.type)
-                    }],
-                    total: totalRes
-                })
-            }))
-        })
 
 
 
-        const color = (type) => {
-            switch (type) {
+
+        const color = (name) => {
+            switch (name) {
                 case "solved":
                     return '#fff';
                 case "medium":
@@ -66,7 +32,7 @@ export const PieChart = () => {
             appendPadding: 10,
             data,
             autoFit: true,
-            angleField: 'value',
+            angleField: 'count',
             pieStyle: {
                 stroke: "transparent"
             },
@@ -74,19 +40,19 @@ export const PieChart = () => {
             radius: 1,
             innerRadius: 0.8,
             label: false,
-            colorField: 'type', // or seriesField in some cases
-            color: ({ type }) => {
+            colorField: 'name', // or seriesField in some cases
+            color: ({ name }) => {
 
-                return color(type)
+                return color(name)
             },
 
 
             interactions: [
                 {
-                    type: 'element-selected',
+                    name: 'element-selected',
                 },
                 {
-                    type: 'element-active',
+                    name: 'element-active',
                 },
             ],
             legend: false,
@@ -99,23 +65,19 @@ export const PieChart = () => {
             },
         };
 
-        let tm = setTimeout(() => {
-            setisLoad(true)
-            setconfig(config)
-        }, 1000);
+        setconfig(config)
 
         return () => {
-            clearTimeout(tm)
-            setconfig({})
-            setvalue(d => ({
-                ...d,
-                PIECHARTVALUE: ({
-                    data: [],
-                    total: 0
-                })
-            }))
+            setconfig()
+            // setvalue(d => ({
+            //     ...d,
+            //     PIECHARTVALUE: ({
+            //         data: [],
+            //         total: 0
+            //     })
+            // }))
         };
-    }, []);
-    return isLoad ? <Pie {...config} animation={false} /> : <div className='h-full w-full flex items-center justify-center'><Loadings></Loadings></div>;
+    }, [data]);
+    return config ? <Pie {...config} animation={false} /> : "";
 };
 

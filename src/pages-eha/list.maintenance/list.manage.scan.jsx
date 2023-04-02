@@ -8,7 +8,7 @@ export const ListManageScan = () => {
     return (
         <CardBox className="flex-1">
             <TitleContent>
-                <div className="text-[24px] uppercase">manage scan profiles</div>
+                <div className="text-[24px] uppercase text-blue">manage scan profiles</div>
             </TitleContent>
             <TableInline border paggination hoverDisable columns={[
                 {

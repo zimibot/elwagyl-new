@@ -35,7 +35,7 @@ export const ListView = () => {
             </CardBox>
             <CardBox className="flex-1">
                 <TitleContent>
-                    <div className="text-[24px] uppercase">UNCONFIRMED ASSET LIST</div>
+                    <div className="text-[24px] uppercase text-blue">UNCONFIRMED ASSET LIST</div>
                 </TitleContent>
                 <TableInline border paggination hoverDisable columns={[
                     {

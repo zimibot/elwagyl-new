@@ -35,7 +35,7 @@ export const ListDetail = () => {
             </CardBox>
             <CardBox className="flex-1">
                 <TitleContent>
-                    <div className="text-[24px] uppercase">DETAIL PROTECTED SITE A</div>
+                    <div className="text-[24px] uppercase text-blue">ASSETS LIST DATA</div>
                 </TitleContent>
                 <TableInline border paggination hoverDisable columns={[
                     {

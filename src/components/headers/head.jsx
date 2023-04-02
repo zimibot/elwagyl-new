@@ -1,6 +1,7 @@
 
 import { useEffect, useState } from "react"
 import { LineBorderLeft, LineBorderRight } from "../decoration/line.border";
+import { ReactSVG } from 'react-svg'
 import Banner from "../../assets/images/banner.svg";
 import { LineNoLabel } from "../chart/line.no.label";
 import { SquareMedium } from "../decoration/square";
@@ -10,12 +11,13 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Tooltip } from "antd";
 import { GetAndUpdateContext } from "../../model/context.function";
 import { MenuEha } from "../../components.eha/menu";
+import { API_GET, path } from "../../api";
 
-export const Heads = ({ eha }) => {
+export const Heads = () => {
 
-    return <div className="w-full border-t border-t-border_primary border-b border-b-border_second max-w-[2500px] mx-auto z-50 ">
-        <HeadTop eha={eha}></HeadTop>
-        <HeadBottom eha={eha}></HeadBottom>
+    return <div className="w-full border-t border-t-border_primary border-b border-b-border_second text-blue mx-auto z-50 ">
+        <HeadTop></HeadTop>
+        <HeadBottom></HeadBottom>
     </div>
 }
 
@@ -55,7 +57,7 @@ export const HeadFunction = (menu, setStatus, VALUEMENU) => {
     }
 }
 
-const HeadTop = ({ eha }) => {
+const HeadTop = () => {
     const { setStatus, value } = GetAndUpdateContext()
     const [show, setShow] = useState(false);
     const { pathname, state } = useLocation()
@@ -63,6 +65,8 @@ const HeadTop = ({ eha }) => {
     const Menu = MENUDATA
     let menuIndex = Menu.findIndex(d => d.key === pathname)
     let VALUEMENU = value.VALUEMENU
+    let API_SEVERITY = API_GET.ALERT_SEVERITY()
+    let location = useLocation().state
     const onPrev = () => {
         if (menuIndex > 0) {
             let menu = Menu[menuIndex - 1]
@@ -79,10 +83,12 @@ const HeadTop = ({ eha }) => {
         }
     }
 
+    let param = API_SEVERITY.error ? "ERROR" : API_SEVERITY.isLoading ? "" : API_SEVERITY.system.name
+    let color = API_SEVERITY.error ? "ERROR" : API_SEVERITY.isLoading ? "" : API_SEVERITY.system.color
 
     return (
         <div className="grid grid-cols-11 gap-1 border-t border-t-border_primary border-b border-b-border_second">
-            <div className="col-span-3 flex items-center gap-5 relative pr-4">
+            <div className={` ${location?.ums ? "col-span-8" : "col-span-3"} flex items-center gap-5 relative pr-4`}>
                 <div className="flex gap-[1px] menu-prev">
                     <Tooltip placement="bottom" title="Previous Pages">
                         <button className={`w-[72px] h-[43px] flex items-center justify-center ${menuIndex === 0 ? "bg-opacity-50 cursor-no-drop" : "hover:bg-[#fff]"} bg-primary `} onClick={onPrev}>
@@ -104,29 +110,35 @@ const HeadTop = ({ eha }) => {
                     </Tooltip>
                 </div>
                 <div className="text-ellipsis overflow-hidden title-page">
-                    <span className="text-[24px] uppercase"> {menuIndex !== -1 ? ` ${('0' + (menuIndex + 1)).slice(-2)} // ${Menu[menuIndex].label}` : state?.title}</span>
+                    <span className="text-[24px] uppercase text-blue"> {menuIndex !== -1 ? ` ${('0' + (menuIndex + 1)).slice(-2)} // ${Menu[menuIndex].label}` : state?.title}</span>
                 </div>
-                <LineBorderRight />
+                {!location?.ums && <LineBorderRight />}
+                
             </div>
-            <div className="col-span-5 p-1">
-                {!eha && <div className="w-full py-2 px-4 bg-primary h-full flex items-center gap-16">
+            <div className={location?.ums ? "hidden"  :"col-span-5 p-1"}>
+                {!location?.eha && !location?.ums && <div className="w-full py-2 px-4 bg-primary h-full flex items-center gap-16">
                     <div> SYSTEM HEALTH INDICATOR</div>
                     <div className="flex items-center gap-14 flex-1">
+
                         <div className="flex items-center gap-2">
                             <div className="h-[13px] w-[13px] bg-[#666666]"></div>
                             <span className="text-[16px] top-[1px] relative">NORMAL</span>
                         </div>
                         <div className="flex items-center gap-2">
-                            <div className="h-[13px] w-[13px] bg-blue"></div>
-                            <span className="font-bold  text-[16px] top-[1px] relative">SECURE</span>
+                            <div className={`h-[13px] w-[13px] bg-blue ${param === "low" ? "" : "bg-opacity-60"} `}></div>
+                            <span className={` ${param === "low" ? "font-bold" : ""}  text-[16px] top-[1px] relative`}>SECURE</span>
                         </div>
                         <div className="flex items-center gap-2">
-                            <div className="h-[13px] w-[13px] bg-[#614A11]"></div>
-                            <span className="text-[16px] top-[1px] relative">ATTENTION</span>
+                            <div className="h-[13px] w-[13px] bg-[#614A11]" style={{
+                                backgroundColor: param === "medium" ? color : ""
+                            }}></div>
+                            <span className={` ${param === "medium" ? "font-bold" : ""}  text-[16px] top-[1px] relative`}>ATTENTION</span>
                         </div>
                         <div className="flex items-center gap-2">
-                            <div className="h-[13px] w-[13px] bg-[#682E29]"></div>
-                            <span className="text-[16px] top-[1px] relative">RED-CODE</span>
+                            <div className="h-[13px] w-[13px] bg-[#682E29]" style={{
+                                backgroundColor: param === "high" ? color : ""
+                            }}></div>
+                            <span className={` ${param === "high" ? "font-bold" : ""}  text-[16px] top-[1px] relative`}>RED-CODE</span>
                         </div>
                     </div>
                 </div>}
@@ -143,14 +155,18 @@ const HeadTop = ({ eha }) => {
                         </div>
                     </div>
                 </div>
-                <LineBorderLeft />
+                {!location?.ums && <LineBorderLeft />}
+
+                
             </div>
         </div>
     )
 }
-const HeadBottom = ({ eha }) => {
-    const { status, setStatus, setvalue } = GetAndUpdateContext()
-
+const HeadBottom = () => {
+    const { status, setvalue } = GetAndUpdateContext()
+    let API_SEVERITY = API_GET.ALERT_SEVERITY()
+    const param = API_SEVERITY.error ? "ERROR" : API_SEVERITY.isLoading ? "" : API_SEVERITY.system.name
+    const indicator = param === "high" ? "RED-CODE" : param === "medium" ? "ATTENTION" : param === "low" ? "SECURE" : "NORMAL"
     const [ping, setping] = useState([]);
     const [pingCount, setpingCount] = useState(0);
     const [timeOut, settimeOut] = useState(0);
@@ -161,8 +177,13 @@ const HeadBottom = ({ eha }) => {
         status: true
     });
 
+    let location = useLocation().state
+
 
     var incomeTicker = 10;
+
+    const PING_API = API_GET.API_PING()
+
 
     useEffect(() => {
         let pmnd = setInterval(() => {
@@ -193,7 +214,7 @@ const HeadBottom = ({ eha }) => {
 
 
     useEffect(() => {
-        let ip = "10.22.22.6"
+        let ip = import.meta.env.VITE_CURRENT_IP
         let int = setInterval(() => {
             if (isTime) {
                 window.api.invoke('ping-window', ip).then(d => {
@@ -210,16 +231,6 @@ const HeadBottom = ({ eha }) => {
             }
         }, 1000);
 
-        window.api.invoke('ping-window', ip).then(d => {
-            if (!d.alive) {
-                setpingCount("error")
-                setping([])
-            }
-            setStatus(s => ({
-                ...s,
-                STATUSPING: d.alive
-            }))
-        })
 
         return () => {
             setping([])
@@ -239,7 +250,7 @@ const HeadBottom = ({ eha }) => {
             setvalue(d => ({
                 ...d,
                 APIURLDEFAULT: {
-                    ip: "http://10.22.22.6:8000",
+                    ip: path,
                     timeType: "time_range"
                 }
             }))
@@ -252,8 +263,8 @@ const HeadBottom = ({ eha }) => {
             setvalue(d => ({
                 ...d,
                 APIURLDEFAULT: {
-                    ip: "http://10.22.22.6:8000/xsoar",
-                    timeType: "timerange"
+                    ip: `${path}/xsoar`,
+                    timeType: "time_range"
                 }
             }))
         }
@@ -261,8 +272,8 @@ const HeadBottom = ({ eha }) => {
 
 
     return (!status.headHidden ?
-        <div className="grid grid-cols-11 gap-1">
-            <div className="col-span-3 flex items-center gap-5 relative px-7">
+        <div className="grid grid-cols-11 gap-1 ">
+            {!location?.ums && <div className="col-span-3 flex items-center gap-5 relative px-7 py-2">
                 <div>
                     <div>PING</div>
                     <div className="text-[24px]">{pingCount} <span className="text-[11px]">MS</span></div>
@@ -280,15 +291,15 @@ const HeadBottom = ({ eha }) => {
                 </div>
                 <LineBorderLeft className="ml-[11px]" />
                 <LineBorderRight />
-            </div>
-            {eha && <MenuEha></MenuEha>}
-            {!eha && <>
+            </div>}
+
+            {location?.eha && <MenuEha></MenuEha>}
+            {!location?.eha && !location?.ums && <>
                 <div className="col-span-5 p-1">
                     <div className="relative flex items-center justify-center h-full">
-
-                        <img src={Banner} className="w-full"></img>
+                        <ReactSVG src={Banner} className="banner" />
                         <div className="absolute w-full h-full left-0 top-0 items-center flex justify-center text-[48px] text-border_primary font-bold">
-                            SYSTEM SECURE
+                            SYSTEM {indicator}
                         </div>
                     </div>
                 </div>
@@ -312,6 +323,7 @@ const HeadBottom = ({ eha }) => {
                     </div>
                     <LineBorderLeft />
                 </div>
+
             </>}
 
         </div> : ""

@@ -6,7 +6,7 @@ export const ColumnRight = ({ children }) => {
         direction: "rtl"
     }}>
         <div className="absolute h-full w-full">
-            <ScrollToBottom className="h-full pb-10">
+            <ScrollToBottom className="h-full">
                 <MainContainer>
                     {children}
                 </MainContainer>
@@ -36,7 +36,7 @@ export const ColumnLeft = ({ children }) => {
 
     return <div className="col-span-2 relative item z-50 backdrop-blur-sm" >
         <div className="absolute h-full w-full">
-            <ScrollToBottom className="h-full pb-10">
+            <ScrollToBottom className="h-full">
                 <MainContainer>
                     {children}
                 </MainContainer>

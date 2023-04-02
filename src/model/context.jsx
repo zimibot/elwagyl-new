@@ -14,6 +14,11 @@ export const ValueContext = () => {
         OPTIONALDATE: [...DATEVIEW],
         MAPS2DCONFIG: { ...CONFIGMAP2D },
         PIECHARTVALUE: { ...PIECHARTVVALUE },
+        PAGECOUNT: 1,
+        SENSOR: {
+            PAGE: 1,
+            PAUSE: false
+        },
         APIURLDEFAULT: {
             ip: "http://10.22.22.6:8000",
             timeType: "time_range"

@@ -7,7 +7,7 @@ const Connection = require("./function/check.connection")
 
 const Loading = () => {
   let load = CreateWindow({
-    urlCurrent: "http://localhost:8000/html/loading/index.html",
+    urlCurrent: "http://localhost:3000/html/loading/index.html",
     prodUrl: "../html/loading/index.html",
     config: {
       width: 250,
@@ -29,19 +29,21 @@ const Loading = () => {
 }
 
 
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
   let load = Loading()
   Connection(function (isConnected) {
     console.log(isConnected)
     if (isConnected) {
       try {
-        CreateWindow({ urlCurrent: false, prodUrl: "../index.html", maximize: true, load })
+
+         CreateWindow({ urlCurrent: false, prodUrl: "../index.html", maximize: true, load })
+
       } catch (error) {
         console.log(error)
         app.quit()
       }
     } else {
-     
+
       notif({
         load: load,
         title: "ERROR NETWORK",

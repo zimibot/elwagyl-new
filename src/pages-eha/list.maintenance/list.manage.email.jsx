@@ -5,7 +5,7 @@ import { TitleContent } from "../../components/layout/title"
 export const ListEmailManage = () => {
     return <CardBox className={"flex-1"}>
         <TitleContent>
-            <div className="text-[24px] uppercase">MANAGE EMAIL NOTIFICATIONS</div>
+            <div className="text-[24px] uppercase text-blue">MANAGE EMAIL NOTIFICATIONS</div>
         </TitleContent>
         <div className="space-y-4">
             <div className="text-[16px]">

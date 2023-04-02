@@ -1,25 +1,25 @@
 import moment from "moment/moment"
 import { API_GET } from "../../../api"
-import { STASTISTIC_ALERT_DESC } from "../../../model/information"
-import { Column, Row } from "../../../pages/cyber.deck/data"
-import { Loading } from "../../loading/loadingOther"
+import { GetAndUpdateContext } from "../../../model/context.function"
+import { LIST_SOURCE_IP, STASTISTIC_ALERT_DESC } from "../../../model/information"
 import { TableInline } from "../../table"
 import { SubtitleInfo } from "../subtitle.info"
 
 export const GlobalListSource = ({ h = "350px", className = "", otherClass, tableClass }) => {
 
     let APILISTATTACK = API_GET.LISTATTACK()
-    console.log(APILISTATTACK)
+    const { setvalue, value } = GetAndUpdateContext()
 
-    return APILISTATTACK.error ? "ERROR" : APILISTATTACK.isLoading ? <Loading></Loading> : <div className={className}>
+    return <div className={className}>
         <div className={otherClass}>
             <SubtitleInfo title={'list source attacker'}>
-                {STASTISTIC_ALERT_DESC}
+                {LIST_SOURCE_IP}
             </SubtitleInfo>
-            <TableInline className={tableClass} columns={[
+            <TableInline hoverDisable className={tableClass} columns={[
                 {
                     title: "Location",
-                    key: "region"
+                    key: "region",
+                    rowClass: "w-[100px]"
                 },
                 {
                     title: "SOURCE IP",
@@ -43,7 +43,14 @@ export const GlobalListSource = ({ h = "350px", className = "", otherClass, tabl
                         </span>
                     }
                 },
-            ]} data={APILISTATTACK.data.data} paggination={true} height={h} />
+            ]} data={APILISTATTACK?.data?.data} totalPages={APILISTATTACK.data?.pagination?.total_page} onChange={s => {
+                setvalue(d => ({
+                    ...d,
+                    PAGECOUNT: s
+                }))
+            }} currentPage={value.PAGECOUNT} Loading={APILISTATTACK.isLoading} paggination={true} height={h} />
         </div>
     </div>
+    // return APILISTATTACK.error ? "ERROR" : APILISTATTACK.isLoading ? <Loading></Loading> : 
+
 }

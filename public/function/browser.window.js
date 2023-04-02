@@ -25,19 +25,17 @@ module.exports = function WindowConfig(mainConfig = {}, webPreferences = {}) {
     backgroundColor: "#101C26",
     ...mainConfig,
     webPreferences: {
-      ...webPreferences,
       nodeIntegration: false, // is default value after Electron v5
       contextIsolation: true, // protect against prototype pollution
       enableRemoteModule: true,
       zoomFactor: size.width < 1500 ? 0.64 : size.width < 2000 ? 0.89 : size.width < 3000 ? 1.1 : 1.4,
-      preload: path.join(__dirname, "../preload.js") // path to your preload.js file
+      preload: path.join(__dirname, "../preload.js"), // path to your preload.js file
+      ...webPreferences,
 
     },
   });
 
-  
   enable(win)
-  win.webContents.setFrameRate(60)
 
   return win
 }

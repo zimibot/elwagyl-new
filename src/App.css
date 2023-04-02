@@ -11,7 +11,7 @@
   color-scheme: light dark;
   color: #00D8FF;
   /* background-color: #101C26; */
-  background: linear-gradient(90deg, #000 21px, transparent 1%) center, linear-gradient(#000 21px, transparent 1%) center, #3c5972;
+  background: linear-gradient(90deg, #101C26 21px, transparent 1%) center, linear-gradient(#101C26 21px, transparent 1%) center, #3c5972;
   background-size: 22px 22px;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -32,6 +32,9 @@ input:focus-visible {
   outline: none;
 }
 
+#trs {
+  background-color: transparent;
+}
 
 .animated-line {
   stroke-dasharray: 8;
@@ -159,7 +162,7 @@ button:focus-visible {
 
 .introjs-tooltip {
   background: transparent;
-  max-width: 500px;
+  max-width: 700px;
   width: max-content;
 }
 
@@ -249,30 +252,27 @@ button:focus-visible {
 }
 
 .introjs-tooltip-header {
-  background: #000000d1;
+  background: #152A36;
   display: flex;
   align-items: center;
 }
 
 .introjs-tooltiptext {
-  background: #000000d1;
+  background: #152A36;
   backdrop-filter: blur(5px);
   text-align: center;
   padding: 10px;
   font-size: 19px;
-  border-top: 1px solid;
 }
 
 .introjs-bullets {
-  background: #000000d1;
+  background: #152A36;
   margin-top: 5px;
-  border-top: 2px solid;
 }
 
 .introjs-tooltipbuttons {
-  background: #000000d1;
+  background: #152A36;
   margin-top: 0;
-  border-bottom: 2px solid;
   border-top: 0;
 }
 

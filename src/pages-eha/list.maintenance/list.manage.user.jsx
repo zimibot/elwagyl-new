@@ -8,7 +8,7 @@ export const ListManageUser = () => {
     return (
         <CardBox className="flex-1">
             <TitleContent>
-                <div className="text-[24px] uppercase">MANAGE user</div>
+                <div className="text-[24px] uppercase text-blue">MANAGE user</div>
             </TitleContent>
             <TableInline border paggination hoverDisable columns={[
                 {

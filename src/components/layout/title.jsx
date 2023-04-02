@@ -8,6 +8,7 @@ export const TitleContent = ({ className, noBorder, children, date = "24H", subT
     let updateMaximize = useCallback(
         () => {
             setmaximize(d => ({ ...d, [maximizeItem]: !d[maximizeItem] }))
+            window.api.invoke('message-close') 
         },
         [],
     )
@@ -26,7 +27,7 @@ export const TitleContent = ({ className, noBorder, children, date = "24H", subT
     )
 
     return <div className={`${className ? className : "pt-4"}`}>
-        <div className={`relative w-full h-full p-4 flex justify-between items-center `}>
+        <div className={`relative w-full h-full p-4 flex justify-between items-center text-blue`}>
             {children}
             <div className="flex gap-3 items-center">
                 {search && <Tooltip title="Search">
@@ -50,7 +51,7 @@ export const TitleContent = ({ className, noBorder, children, date = "24H", subT
                 </div>}
                 {time &&
                     <Tooltip title="Time">
-                        <div className=" px-2 bg-blue text-border_primary font-bold">
+                        <div className=" px-2 bg-blue text-border_primary font-bold timer">
                             {date}
                         </div>
                     </Tooltip>

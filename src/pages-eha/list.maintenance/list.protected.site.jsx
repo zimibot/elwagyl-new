@@ -6,7 +6,7 @@ export const ListProtectedSite = () => {
     return (
         <CardBox className="flex-1">
             <TitleContent>
-                <div className="text-[24px] uppercase">protected site</div>
+                <div className="text-[24px] uppercase text-blue">protected site</div>
             </TitleContent>
             <TableInline border paggination hoverDisable columns={[
                 {

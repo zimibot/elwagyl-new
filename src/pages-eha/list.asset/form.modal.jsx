@@ -54,7 +54,7 @@ export const FormModal = () => {
             <CardBox>
                 <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
                     <TitleContent>
-                        <div className="text-[24px] uppercase">add new asset</div>
+                        <div className="text-[24px] uppercase text-blue">add new asset</div>
                     </TitleContent>
                     <div className="grid grid-cols-3 gap-7">
                         <div className="space-y-8">
