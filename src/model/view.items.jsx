@@ -48,6 +48,32 @@ const DATEVIEW = [
         key: 2
     },
 ]
+const DATEVIEWSIEM = [
+    {
+        text: "24 HOURS",
+        value: "24hour",
+        uniq: "24 H",
+        type: "text",
+        active: true,
+        key: 0
+    },
+    {
+        text: "48 HOURS",
+        value: "48hour",
+        uniq: "48 H",
+        type: "text",
+        active: false,
+        key: 1
+    },
+    {
+        text: "7 DAYS",
+        value: "7days",
+        uniq: "7 D",
+        type: "text",
+        active: false,
+        key: 2
+    },
+]
 
 const DATEVALUE = {
     value: "24hour",
@@ -81,5 +107,6 @@ export {
     GLOBEVALUE,
     GLOBEFRAME,
     CONFIGMAP2D,
-    PIECHARTVVALUE
+    PIECHARTVVALUE,
+    DATEVIEWSIEM
 }

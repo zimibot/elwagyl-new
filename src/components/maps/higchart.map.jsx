@@ -29,7 +29,7 @@ export const MapHighcharts = ({ className = "fixed" }) => {
     };
 
 
-    return API.isLoading ? "" : <div className={`${className} w-full left-0 top-0 h-full maps fadein overflow-hidden`}>
+    return API.error ? "ERROR" : API.isLoading ? "" : <div className={`${className} w-full left-0 top-0 h-full maps fadein overflow-hidden`}>
         <Motion
             key={1}
             defaultStyle={{

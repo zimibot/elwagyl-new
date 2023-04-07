@@ -138,7 +138,7 @@ const MENUDATA = [
         </div>
     },
     {
-        label: 'SOAR',
+        label: 'XSOAR',
         key: '/dashboard/soar',
         url: "google.com",
         icon: <div className="absolute w-full h-full left-0 top-0">

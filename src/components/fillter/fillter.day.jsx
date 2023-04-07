@@ -25,7 +25,8 @@ export const FillterDay = ({ text = "GLOBAL FILTER", globe, noBorder, decoration
                 setTimeout(messageApi.destroy, 3000);
                 setTimeout(() => {
                     setvalue(d => ({
-                        ...d, [keyText]: (d[keyText].map(
+                        ...d, 
+                        [keyText]: (d[keyText].map(
                             item => item.key === 2 ? { ...item, active: false } : item.key === 1 ? { ...item, active: true } : item.key === 0 && { ...item, active: false }
                         ))
                     }))
@@ -68,7 +69,6 @@ export const FillterDay = ({ text = "GLOBAL FILTER", globe, noBorder, decoration
                 <LineBorderRight />
                 {data.map((d, k) => {
                     if (d.value === "resetmaps") {
-
                         return value.MAPS2DCONFIG.zoom > 1 && d.type === "text" ? <CoreDay onClick={() => btnUpdate({ key: k, value: d.value, uniq: d.uniq })} key={d.key} className={`${d.active ? "font-bold" : ""} flex items-center gap-3 py-1 px-4 border border-primary relative`}>
                             <SquareMedium />
                             <div>

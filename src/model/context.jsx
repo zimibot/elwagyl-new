@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { CONFIGMAP2D, DATEVALUE, DATEVIEW, GLOBEFRAME, GLOBEVALUE, VIEWGLOBE, PIECHARTVVALUE } from "./view.items";
+import { CONFIGMAP2D, DATEVALUE,  GLOBEFRAME, GLOBEVALUE, VIEWGLOBE, PIECHARTVVALUE, DATEVIEWSIEM } from "./view.items";
 
 export const ValueContext = () => {
     const [maximize, setmaximize] = useState({});
@@ -11,7 +11,7 @@ export const ValueContext = () => {
         GLOBEVALUE: { ...GLOBEVALUE },
         GLOBEFRAME: { ...GLOBEFRAME },
         OPTIONALVIEW: [...VIEWGLOBE],
-        OPTIONALDATE: [...DATEVIEW],
+        OPTIONALDATE: [...DATEVIEWSIEM],
         MAPS2DCONFIG: { ...CONFIGMAP2D },
         PIECHARTVALUE: { ...PIECHARTVVALUE },
         PAGECOUNT: 1,
@@ -20,7 +20,7 @@ export const ValueContext = () => {
             PAUSE: false
         },
         APIURLDEFAULT: {
-            ip: "http://10.22.22.6:8000",
+            ip: "http://165.22.50.184:8000",
             timeType: "time_range"
         },
     });

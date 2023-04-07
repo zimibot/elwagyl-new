@@ -33,7 +33,8 @@ export const GlobeGl = ({ status, position = "fixed" }) => {
     let API_SEVERITY = API_GET.ALERT_SEVERITY()
     let API_GLOBE = API_GET.THREATSMAP_GLOBE()
 
-    return API_GLOBE.isLoading ? <div className="flex w-full h-full bottom-0 absolute items-center justify-center text-[24px]">
+
+    return API_GLOBE.error ? "ERROR" :  API_GLOBE.isLoading ? <div className="flex w-full h-full bottom-0 absolute items-center justify-center text-[24px]">
         <div className="space-y-6 text-center">
             <Earth></Earth>
             <div>LOADING GLOBE DATA</div>

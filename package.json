@@ -48,6 +48,13 @@
         ]
       },
       {
+        "from": "./build/update_app",
+        "to": "update_app",
+        "filter": [
+          "**/*"
+        ]
+      },
+      {
         "from": "./build/sound/error.wav",
         "to": "sound/error.wav",
         "filter": [

@@ -23,7 +23,7 @@ module.exports = function OtherViewBrowser(win) {
                             width: true,
                             height: true
                         })
-                        viewBrowser.webContents.loadURL(`https://${arg.url}`)
+                        viewBrowser.webContents.loadURL(arg.url)
 
 
                     } else {

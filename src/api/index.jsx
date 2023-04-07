@@ -38,7 +38,7 @@ const API_DATAMAPS = () => {
         }
     )
 
-    return { data, error, isLoading }
+    return { data, error: data?.detail, isLoading }
 }
 
 export const getCookie = (name) => {
@@ -92,7 +92,7 @@ const API_GET = {
     API_PING: () => {
 
         const { isLoading, error, data, ...props } = useQuery(['ping'], () =>
-            window.api.invoke('ping-window', "10.22.22.6"),
+            window.api.invoke('ping-window', "165.22.50.184"),
             {
                 refetchOnWindowFocus: true,
                 refetchInterval: 1000
@@ -100,7 +100,7 @@ const API_GET = {
         )
 
 
-        return {  isLoading, error, data, ...props }
+        return { isLoading, error, data, ...props }
 
     },
     ALERT_SEVERITY: () => {
@@ -113,9 +113,9 @@ const API_GET = {
                 return res.json()
             }
             ), {
-                refetchOnWindowFocus: false,
-                refetchInterval: false
-            }
+            refetchOnWindowFocus: false,
+            refetchInterval: false
+        }
         )
 
         for (const key in data) {
@@ -138,9 +138,12 @@ const API_GET = {
             color: "#00D8FF"
         } : max(item, d => d.count)
 
+        // if (data?.detail) {
+        //     window.localStorage.removeItem("token")
+        // }
 
 
-        return { item, error, isLoading, props, system }
+        return { item, error: data?.detail, isLoading, props, system }
     },
     ALERT_TYPE: () => {
         const { value } = GetAndUpdateContext()
@@ -171,7 +174,7 @@ const API_GET = {
             percents: (d.total / sum(item, d => d.total)) * 100
         }))
 
-        return { dataItems, error, isLoading, props }
+        return { dataItems, error: data?.detail, isLoading, props }
     },
     AFFECTED_ENTITY: () => {
         const { value } = GetAndUpdateContext()
@@ -196,7 +199,7 @@ const API_GET = {
             })
         }
 
-        return { item, error, isLoading, props }
+        return { item, error: data?.detail, isLoading, props }
     },
     DASHBOARD_STATUS: () => {
         const { value } = GetAndUpdateContext()
@@ -214,7 +217,7 @@ const API_GET = {
             }
         )
 
-        return { data, error, isLoading, props }
+        return { data, error: data?.detail, isLoading, props }
     },
     LISTATTACK: () => {
         const { value } = GetAndUpdateContext()
@@ -230,12 +233,12 @@ const API_GET = {
             }
         )
 
-        return { data, error, isLoading, props }
+        return { data, error: data?.detail, isLoading, props }
     },
     EXECUTIVE_SERVICE_ALIVE: () => {
         const { value } = GetAndUpdateContext()
-        const { isLoading, error, data, ...props } = useQuery(['executiveServiceAlive', value.APIURLDEFAULT, value.DATEVALUE.value, value.PAGECOUNT], () =>
-            fetch(`${path}/full_executive/service-alive?time_range=24hour`, {
+        const { isLoading, error, data, ...props } = useQuery(['executiveServiceAlive',  value.DATEVALUE.value], () =>
+            fetch(`${path}/full_executive/service-alive?timerange=24hour`, {
                 ...Options()
             }).then(res => {
                 return res.json()
@@ -246,12 +249,12 @@ const API_GET = {
             }
         )
 
-        return { data, error, isLoading, props }
+        return { data, error: data?.detail, isLoading, props }
     },
     EXECUTIVE_SERVICE_HISTORY: () => {
         const { value } = GetAndUpdateContext()
         const { isLoading, error, data, ...props } = useQuery(['executiveServiceHistory', value.APIURLDEFAULT, value.DATEVALUE.value, value.PAGECOUNT], () =>
-            fetch(`${path}/full_executive/service-history?time_range=24hour`, {
+            fetch(`${path}/full_executive/service-history?timerange=7days`, {
                 ...Options()
             }).then(res => {
                 return res.json()
@@ -262,7 +265,7 @@ const API_GET = {
             }
         )
 
-        return { data, error, isLoading, props }
+        return { data, error: data?.detail, isLoading, props }
     },
     EXECUTIVE_SERVICE_LIST: () => {
         const { value } = GetAndUpdateContext()
@@ -290,7 +293,7 @@ const API_GET = {
 
 
 
-        return { data, error, isLoading, props, graph }
+        return { data, error: data?.detail, isLoading, props, graph }
     },
     EXECUTIVE_HOST_LIST: () => {
         const { value } = GetAndUpdateContext()
@@ -318,7 +321,7 @@ const API_GET = {
         }
 
 
-        return { dataitem, error, isLoading, props }
+        return { dataitem, error: data?.detail, isLoading, props }
     },
     EXECUTIVE_ACTIVE_TIME: () => {
         const { value } = GetAndUpdateContext()
@@ -336,12 +339,12 @@ const API_GET = {
 
 
 
-        return { data, error, isLoading, props }
+        return { data, error: data?.detail, isLoading, props }
     },
     EXECUTIVE_OVERAL_STATUS: () => {
         const { value } = GetAndUpdateContext()
-        const { isLoading, error, data, ...props } = useQuery(['overalStatus', value.APIURLDEFAULT, value.DATEVALUE.value, value.PAGECOUNT], () =>
-            fetch(`${path}/full_executive/overall-status?time_range=24hour`, {
+        const { isLoading, error, data, ...props } = useQuery(['overalStatus', value.APIURLDEFAULT, value.DATEVALUE.value], () =>
+            fetch(`${path}/full_executive/overall-status?${value.APIURLDEFAULT.timeType}=${value.DATEVALUE.value}`, {
                 ...Options()
             }).then(res => {
                 return res.json()
@@ -354,13 +357,13 @@ const API_GET = {
 
 
 
-        return { data, error, isLoading, props }
+        return { data, error: data?.detail, isLoading, props }
     },
     AVAILABILITY_ANOMALIES_SUMMARY: () => {
         const { value } = GetAndUpdateContext()
         // let item = []
         const { isLoading, error, data, ...props } = useQuery(['anomaliesSummary', value.APIURLDEFAULT, value.DATEVALUE.value], () =>
-            fetch(`${value.APIURLDEFAULT.ip}/availability/anomalies-summary?time_range=${value.DATEVALUE.value}`, {
+            fetch(`${value.APIURLDEFAULT.ip}/availability/anomalies-summary?timerange=${value.DATEVALUE.value}`, {
                 ...Options()
             }).then(res => {
                 return res.json()
@@ -384,7 +387,7 @@ const API_GET = {
         }
 
 
-        return { item, error, isLoading, props }
+        return { item, error: data?.detail, isLoading, props }
     },
     AVAILABILITY_ASSET_LIST: () => {
         const { value } = GetAndUpdateContext()
@@ -405,13 +408,13 @@ const API_GET = {
 
 
 
-        return { data, error, isLoading, props }
+        return { data, error: data?.detail, isLoading, props }
     },
     AVAILABILITY_SENSOR: () => {
         const { value } = GetAndUpdateContext()
         // let item = []
-        const { isLoading, error, data, ...props } = useQuery(['realtime', value.APIURLDEFAULT, value.DATEVALUE.value], () =>
-            fetch(`${path}/availability/summary?time_range=${value.DATEVALUE.value}`, {
+        const { isLoading, error, data, ...props } = useQuery(['realtime'], () =>
+            fetch(`${path}/availability/summary?timerange=24hour`, {
                 ...Options()
             }).then(res => {
                 return res.json()
@@ -426,13 +429,13 @@ const API_GET = {
 
 
 
-        return { data, error, isLoading, props }
+        return { data, error: data?.detail, isLoading, props }
     },
     AVAILABILITY_SERVER_LIST: () => {
         const { value } = GetAndUpdateContext()
         // let item = []
         const { isLoading, error, data, ...props } = useQuery(['serverList', value.SENSOR], () =>
-            fetch(`${path}/availability/server-list?time_range=24hour&limit=9&page=${value.SENSOR ? value.SENSOR.PAGE : 1}`, {
+            fetch(`${path}/availability/server-list?timerange=24hour&limit=9&page=${value.SENSOR ? value.SENSOR.PAGE : 1}`, {
                 ...Options()
             }).then(res => {
                 return res.json()
@@ -447,13 +450,13 @@ const API_GET = {
 
 
 
-        return { data, error, isLoading, props }
+        return { data, error: data?.detail, isLoading, props }
     },
     THREATSMAP_CYBER_ATTACK_STATISTIC: () => {
         const { value } = GetAndUpdateContext()
         // let item = []
         const { isLoading, error, data, ...props } = useQuery(['cyberAttack', value.DATEVALUE.value], () =>
-            fetch(`${path}/threats_map/cyber-attack-statistic?time_range=${value.DATEVALUE.value}`, {
+            fetch(`${path}/threats_map/cyber-attack-statistic?timerange=${value.DATEVALUE.value}`, {
                 ...Options()
             }).then(res => {
                 return res.json()
@@ -468,13 +471,13 @@ const API_GET = {
 
 
 
-        return { data, error, isLoading, props }
+        return { data, error: data?.detail, isLoading, props }
     },
     THREATSMAP_GLOBE: () => {
         const { value } = GetAndUpdateContext()
         // let item = []
         const { isLoading, error, data, ...props } = useQuery(['globe', value.DATEVALUE.value, value.APIURLDEFAULT.ip], () =>
-            fetch(`${value.APIURLDEFAULT.ip}/threats_map/geolocation?time_range=${value.DATEVALUE.value}&limit=10000&page=1`, {
+            fetch(`${value.APIURLDEFAULT.ip}/threats_map/geolocation?timerange=${value.DATEVALUE.value}&limit=100&page=1`, {
                 ...Options()
             }).then(res => {
                 return res.json()
@@ -487,60 +490,61 @@ const API_GET = {
         )
         let item = []
         if (data) {
-
-            let t = sum(data.country_attack, f => f.jumlahDuplikasi)
-            let s = data.country_attack.map((d, k) => {
-                let from = `${d.from}`.replace("INDO", "ID")
-                let currentDes = data.country_target.filter(s => s.text === from)
-                let Country = CountryId.filter(s => s.countryNameEn === currentDes[0].country)
-                return ({
-                    "location_id": `${from}-${k}`,
-                    "country_id": k,
-                    "name": `${currentDes[0].country}`,
-                    "preview": "/assets/attack.jpg",
-                    "planet_u": parseFloat(d.startLat),
-                    "planet_v": parseFloat(d.startLng),
-                    "flag": `/assets/flag/${Country[0]?.countryCode.toLowerCase()}.svg`,
-                    "other": true,
-                    "desc": {
-                        "attack": {
-                            "briefs": k,
-                            "briefs_text": `${d.jumlahDuplikasi !== 0 ? d.jumlahDuplikasi : 1} THREATS TO KEJAKSAAN`,
-                            "works": true,
-                            "typeAttack": d.status,
-                            "brief_id": "artworks\/smart-flat-2030",
-                            "type": "brief",
-                            "attack_list": [],
+            if (!data.detail) {
+                let t = sum(data.country_attack, f => f.jumlahDuplikasi)
+                let s = data?.country_attack.map((d, k) => {
+                    let from = `${d.from}`.replace("INDO", "ID")
+                    let currentDes = data.country_target.filter(s => s.text === from)
+                    let Country = CountryId.filter(s => s.countryNameEn === currentDes[0].country)
+                    return ({
+                        "location_id": `${from}-${k}`,
+                        "country_id": k,
+                        "name": `${currentDes[0].country}`,
+                        "preview": "/assets/attack.jpg",
+                        "planet_u": parseFloat(d.startLat),
+                        "planet_v": parseFloat(d.startLng),
+                        "flag": `/assets/flag/${Country[0]?.countryCode.toLowerCase()}.svg`,
+                        "other": true,
+                        "desc": {
+                            "attack": {
+                                "briefs": k,
+                                "briefs_text": `${d.jumlahDuplikasi !== 0 ? d.jumlahDuplikasi : 1} THREATS TO KEJAKSAAN`,
+                                "works": true,
+                                "typeAttack": d.status,
+                                "brief_id": "artworks\/smart-flat-2030",
+                                "type": "brief",
+                                "attack_list": [],
+                            }
                         }
-                    }
+                    })
                 })
-            })
 
-            s.push(({
-                location_id: "id",
-                country_id: 9999,
-                from: "ID",
-                tO: "ID",
-                status: "low",
-                flag: "/assets/flag/id.svg",
-                name: "Kejaksaan",
-                preview: "https://pbs.twimg.com/profile_images/1477557361107632132/Nw62UPGK_400x400.jpg",
-                planet_u: -6.200000,
-                planet_v: 106.816666,
-                other: true,
-                desc: {
-                    attack: {
-                        briefs: 2,
-                        briefs_text: `TOTAL ${t} THREATS`,
-                        typeAttack: "low",
-                        attack_list: [],
+                s.push(({
+                    location_id: "id",
+                    country_id: 9999,
+                    from: "ID",
+                    tO: "ID",
+                    status: "low",
+                    flag: "/assets/flag/id.svg",
+                    name: "Kejaksaan",
+                    preview: "https://pbs.twimg.com/profile_images/1477557361107632132/Nw62UPGK_400x400.jpg",
+                    planet_u: -6.200000,
+                    planet_v: 106.816666,
+                    other: true,
+                    desc: {
+                        attack: {
+                            briefs: 2,
+                            briefs_text: `TOTAL ${t} THREATS`,
+                            typeAttack: "low",
+                            attack_list: [],
+                        }
+
                     }
 
-                }
+                }))
 
-            }))
-
-            item = s
+                item = s
+            }
         }
 
 
@@ -559,11 +563,10 @@ const API_GET = {
         }
 
 
-        return { item, map2d, error, isLoading, props }
+        return { item, map2d, error: data?.detail, isLoading, props }
     },
     THREATSMAP_CYBER_ATTACK_THREATS: () => {
         const { value } = GetAndUpdateContext()
-
         let fetchData = async (limit, page) => {
             let fets = await fetch(`${value.APIURLDEFAULT.ip}/threats_map/cyber-threat?${value.APIURLDEFAULT.timeType}=${value.DATEVALUE.value}&limit=${limit}&page=${page ? page : 1}`, {
                 ...Options()
@@ -595,7 +598,7 @@ const API_GET = {
 
 
 
-        // return { data, error, isLoading, props }
+        // return { data, error : data?.detail, isLoading, props }
         return {
             status,
             data,

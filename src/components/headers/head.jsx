@@ -12,6 +12,7 @@ import { Tooltip } from "antd";
 import { GetAndUpdateContext } from "../../model/context.function";
 import { MenuEha } from "../../components.eha/menu";
 import { API_GET, path } from "../../api";
+import { DATEVALUE, DATEVIEW, DATEVIEWSIEM } from "../../model/view.items";
 
 export const Heads = () => {
 
@@ -113,9 +114,9 @@ const HeadTop = () => {
                     <span className="text-[24px] uppercase text-blue"> {menuIndex !== -1 ? ` ${('0' + (menuIndex + 1)).slice(-2)} // ${Menu[menuIndex].label}` : state?.title}</span>
                 </div>
                 {!location?.ums && <LineBorderRight />}
-                
+
             </div>
-            <div className={location?.ums ? "hidden"  :"col-span-5 p-1"}>
+            <div className={location?.ums ? "hidden" : "col-span-5 p-1"}>
                 {!location?.eha && !location?.ums && <div className="w-full py-2 px-4 bg-primary h-full flex items-center gap-16">
                     <div> SYSTEM HEALTH INDICATOR</div>
                     <div className="flex items-center gap-14 flex-1">
@@ -157,7 +158,7 @@ const HeadTop = () => {
                 </div>
                 {!location?.ums && <LineBorderLeft />}
 
-                
+
             </div>
         </div>
     )
@@ -182,7 +183,6 @@ const HeadBottom = () => {
 
     var incomeTicker = 10;
 
-    const PING_API = API_GET.API_PING()
 
 
     useEffect(() => {
@@ -249,6 +249,8 @@ const HeadBottom = () => {
             })
             setvalue(d => ({
                 ...d,
+                OPTIONALDATE: [...DATEVIEWSIEM],
+                DATEVALUE: DATEVALUE,
                 APIURLDEFAULT: {
                     ip: path,
                     timeType: "time_range"
@@ -262,9 +264,11 @@ const HeadBottom = () => {
             })
             setvalue(d => ({
                 ...d,
+                OPTIONALDATE: [...DATEVIEW],
+                DATEVALUE: DATEVALUE,
                 APIURLDEFAULT: {
                     ip: `${path}/xsoar`,
-                    timeType: "time_range"
+                    timeType: "timerange"
                 }
             }))
         }

@@ -33,13 +33,11 @@ export const FormModal = () => {
     };
 
     useEffect(() => {
-        console.log(errors)
         if (!isEmpty(errors)) {
             ModalSuccess({ title: "sorry there is an empty input!", type: "error", onlyShowOk: true })
         }
     }, [errors])
 
-    console.log(fields)
 
     return (
         <ModalsComponent footer={false} width={null} style={`
@@ -59,9 +57,9 @@ export const FormModal = () => {
                     <div className="grid grid-cols-3 gap-7">
                         <div className="space-y-8">
                             <Form.input register={register("asset_name")} label={"Asset Name"} />
-                            <Form.input error={errors.business_unit} register={register("business_unit", { required: true })} label={"business unit *"} />
+                            <Form.input error={errors.protected_site} register={register("protected_site", { required: true })} label={"PROTECTED SITE *"} />
                             <Form.input register={register("contains_pii_data")} label={"contains pii data"} />
-                            <Form.input register={register("select_existing_system_owner")} label={"select existing system owner"} />
+                            <SelectComponent control={control} label={"select existing system owner"} height={45} name={"select_existing_system_owner"} width={"100%"}></SelectComponent>
                             <Form.input register={register("brand")} label={"brand"} />
                             <Form.input register={register("server")} label={"server"} />
                             <Form.texarea register={register("description")} label={"description"}></Form.texarea>
@@ -85,7 +83,7 @@ export const FormModal = () => {
                         <div className="grid grid-cols-5 gap-10 col-span-full relative">
                             <div>
                                 <div className="sticky top-5 space-y-6">
-                                    <SelectComponent name={"platform_select"} setValue={setValue} width={"100%"}></SelectComponent>
+                                    <SelectComponent name={"platform_select"} control={control} width={"100%"}></SelectComponent>
                                     <div className="space-y-3">
                                         <span>INTERNET FACING :</span>
                                         <div>
