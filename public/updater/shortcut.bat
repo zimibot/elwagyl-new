@@ -2,12 +2,9 @@
 setlocal
 SET parent=%~dp0
 Set "ShortcutName=EL WAGYL App"
-
 FOR %%a IN ("%parent:~0,-1%") DO SET grandparent=%%~dpa
-
 Set "TargetPath=%grandparent%\EL WAGYL App.exe"
 Set "IconLocation=%grandparent%\icon.ico"
-
 IF EXIST "%USERPROFILE%\Desktop\EL WAGYL App.lnk" (
   del "%USERPROFILE%\Desktop\EL WAGYL App.lnk"
    Call :Create_Shortcut "%ShortcutName%" "%TargetPath%" "%IconLocation%"
@@ -48,3 +45,4 @@ IF EXIST "%USERPROFILE%\Desktop\EL WAGYL App.lnk" (
     cscript //nologo "%VBS_Shortcut%" "%~1" "%~2" "%~3"
     If Exist "%VBS_Shortcut%" Del "%VBS_Shortcut%"     
 )
+
