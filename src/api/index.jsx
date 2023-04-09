@@ -237,7 +237,7 @@ const API_GET = {
     },
     EXECUTIVE_SERVICE_ALIVE: () => {
         const { value } = GetAndUpdateContext()
-        const { isLoading, error, data, ...props } = useQuery(['executiveServiceAlive',  value.DATEVALUE.value], () =>
+        const { isLoading, error, data, ...props } = useQuery(['executiveServiceAlive', value.DATEVALUE.value], () =>
             fetch(`${path}/full_executive/service-alive?timerange=24hour`, {
                 ...Options()
             }).then(res => {
@@ -564,6 +564,28 @@ const API_GET = {
 
 
         return { item, map2d, error: data?.detail, isLoading, props }
+    },
+    ATTACK_GROUP: () => {
+        const { value } = GetAndUpdateContext()
+        const { isLoading, data, ...props } = useQuery(['group_attack', value.APIURLDEFAULT, value.DATEVALUE.value], () =>
+            fetch(`${value.APIURLDEFAULT.ip}/main/attacker-region-grouping?${value.APIURLDEFAULT.timeType}=${value.DATEVALUE.value}`, {
+                ...Options()
+            }).then(res => {
+                return res.json()
+            }
+            ),
+            {
+                refetchOnWindowFocus: false,
+                refetchInterval: false
+            }
+        )
+
+     
+
+
+        return {
+            isLoading, ...data, props, error: data?.detail,
+        }
     },
     THREATSMAP_CYBER_ATTACK_THREATS: () => {
         const { value } = GetAndUpdateContext()

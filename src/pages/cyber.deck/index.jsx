@@ -20,7 +20,9 @@ import { API_GET } from "../../api"
 import { Tooltip } from "antd"
 import { Loading } from "../../components/loading/loadingOther"
 import { Formatter } from "../../helper/formater"
+import { Typography } from 'antd';
 
+const { Text } = Typography;
 
 const CyberDeck = () => {
     const { value, maximize } = GetAndUpdateContext()
@@ -28,6 +30,7 @@ const CyberDeck = () => {
     let API_ALERT_TYPE = API_GET.ALERT_TYPE()
     let API_DASHBOARD_STATUS = API_GET.DASHBOARD_STATUS()
     let AFFECTED_ENTITY = API_GET.AFFECTED_ENTITY()
+    let API_ATTACK_GROUP = API_GET.ATTACK_GROUP()
 
     return <LayoutDashboard>
         <ColumnLeft>
@@ -192,6 +195,8 @@ const CyberDeck = () => {
 }
 
 const AttactCountry = ({ title = "top attack country source", limit }) => {
+    let API_ATTACK_GROUP = API_GET.ATTACK_GROUP()
+    console.log(API_ATTACK_GROUP)
     let arr = new Array(50).fill("")
     return <>
         <SubtitleInfo title={title}>
@@ -201,14 +206,13 @@ const AttactCountry = ({ title = "top attack country source", limit }) => {
             {ERRORCOMPONENT.dataNotAvailable}
         </div> : <div className="max-h-[500px] text-blue overflow-y-auto overflow-x-hidden pb-1 pr-3">
             <CardAnimation className="grid grid-cols-3 gap-3">
-                {
-                    arr.slice(0, limit ? 3 : arr.length).map((d, k) => {
-                        return <div key={k} className="border border-primary px-2 py-1 flex justify-between">
-                            <div>{k + 1} // RU</div>
-                            <div>{(k + 1) * 24}</div>
-                        </div>
-                    })
-                }
+                {API_ATTACK_GROUP.error ? "" : API_ATTACK_GROUP.isLoading ? "Loading" : API_ATTACK_GROUP.data.length === 0 ? "Data not found" : API_ATTACK_GROUP.data.slice(0, limit ? 3 : API_ATTACK_GROUP.data.length).map((d,k) => {
+                    return <div key={k} className="border border-primary px-2 py-1 flex justify-between items-center">
+                    <Text className="text-blue" ellipsis={true}>{k + 1} // {d.region}</Text>
+                    <div>{Formatter(d.count)}</div>
+                </div>
+                })}
+                
             </CardAnimation>
         </div>}
 

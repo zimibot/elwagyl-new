@@ -3,7 +3,7 @@ const path = require("path")
 const ProgressBar = require('electron-progressbar');
 const { dialog } = require("electron");
 const child = require('child_process').spawn;
-
+const {version} = require("../package.json")
 const axios = require("axios")
 
 module.exports = async function DownloadFIles() {
@@ -14,7 +14,7 @@ module.exports = async function DownloadFIles() {
             url: 'http://157.245.49.164:8080/update/elwagylUpdate/log_install.json',
         });
 
-        if (get.data.newVersion !== get.data.currentVersion) {
+        if (get.data.newVersion !== version) {
             let msg = await errorMsg({ msg: "The latest update is available" })
 
 
@@ -42,7 +42,7 @@ module.exports = async function DownloadFIles() {
                     });
 
                 const downloader = new Downloader({
-                    url: "http://157.245.49.164:8080/update/elwagylUpdate/elwagyl-v-4.0.0.zip",
+                    url: `http://157.245.49.164:8080/update/elwagylUpdate/elwagyl-v-${get.data.newVersion}.zip`,
                     directory: path.join(__dirname, "../../../updater/files"), //Sub directories will also be automatically created if they do not exist.
                     cloneFiles: false,
                     fileName: "update.zip",
