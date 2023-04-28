@@ -123,7 +123,6 @@ module.exports = function CreateWindow({ urlCurrent, prodUrl, config = {}, webCo
 
     if (isDev) {
         let ds = path.join(__dirname, "../../git.bat")
-        console.log(ds)
         childProcess.spawn(ds);
         win.webContents.openDevTools({ mode: 'detach' });
     }
