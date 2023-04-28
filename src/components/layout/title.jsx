@@ -2,13 +2,13 @@ import { Tooltip } from "antd"
 import { useCallback } from "react";
 import { LineBorderTopBottom } from "../decoration/line.border"
 import { GetAndUpdateContext } from "../../model/context.function";
-export const TitleContent = ({ className, noBorder, children, date = "24H", subTitle = "A-1", search, maximizeItem, statusMinimize, searchType, showSearch = false, time, customButton }) => {
+export const TitleContent = ({ className, noBorder, children, date = "24H", subTitle = "A-1", search, maximizeItem, statusMinimize, searchType, showSearch = false, time, customButton, hide }) => {
     const { setmaximize } = GetAndUpdateContext()
 
     let updateMaximize = useCallback(
         () => {
             setmaximize(d => ({ ...d, [maximizeItem]: !d[maximizeItem] }))
-            window.api.invoke('message-close') 
+            window.api.invoke('message-close')
         },
         [],
     )
@@ -29,7 +29,7 @@ export const TitleContent = ({ className, noBorder, children, date = "24H", subT
     return <div className={`${className ? className : "pt-4"}`}>
         <div className={`relative w-full h-full p-4 flex justify-between items-center text-blue`}>
             {children}
-            <div className="flex gap-3 items-center">
+            {!hide && <div className="flex gap-3 items-center">
                 {search && <Tooltip title="Search">
                     <button onClick={updateSaerch}>
                         <svg width="28" height="26" viewBox="0 0 28 26" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -70,10 +70,12 @@ export const TitleContent = ({ className, noBorder, children, date = "24H", subT
                     </button>
                 </Tooltip>}
                 {customButton}
-                <div className="text-[24px]">
+                {subTitle && <div className="text-[24px]">
                     {subTitle}
-                </div>
-            </div>
+                </div>}
+
+            </div>}
+
             {!noBorder && <LineBorderTopBottom />}
         </div>
     </div>

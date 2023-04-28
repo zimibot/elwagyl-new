@@ -1,11 +1,18 @@
+import { GET_API_EHA } from "../../api/eha/GET"
 import { ButtonComponents } from "../../components.eha/button"
 import { CardBox } from "../../components/layout/card"
 import { TitleContent } from "../../components/layout/title"
 import { TableInline } from "../../components/table"
 import { GetAndUpdateContext } from "../../model/context.function"
+import { ErrorHtml, Loading } from "../list.maintenance"
 
 export const ListDetail = () => {
     const { setStatus } = GetAndUpdateContext()
+
+    const API = GET_API_EHA.root([{
+        active: "assetsList"
+    }])
+
 
     return (
         <div className="col-span-full flex-1 flex flex-col pb-10">
@@ -37,41 +44,44 @@ export const ListDetail = () => {
                 <TitleContent>
                     <div className="text-[24px] uppercase text-blue">ASSETS LIST DATA</div>
                 </TitleContent>
-                <TableInline border paggination hoverDisable columns={[
+                {API.msg || API.error ? <ErrorHtml error={API.msg}></ErrorHtml> : API.loading ? <Loading></Loading> : <TableInline Loading={API.loading} border hoverDisable columns={[
                     {
                         title: 'ID',
                         key: 'id',
                         rowClass: "w-[50px]"
                     },
                     {
-                        title: 'NAME',
+                        title: 'ASSET NAME',
                         key: 'name',
-                        rowClass: "w-[150px]"
-                    },
-                    {
-                        title: 'IP/DOMAIN',
-                        rowClass: "w-[150px]",
-                        key: 'ip',
                     },
                     {
                         title: 'PROTECTED SITE',
-                        rowClass: "w-[200px]",
-                        key: 'protect',
+                        key: 'site_name',
+                    },
+                    {
+                        title: 'IP/DOMAIN',
+                        rowClass: "w-[300px]",
+                        key: 'url_ip',
                     },
                     {
                         title: 'LAST SCAN',
-                        key: 'lastScan',
-                        rowClass: "w-[100px]",
+                        key: 'updated_at',
+                        rowClass: "w-[200px]",
                     },
                     {
-                        title: 'ARCHIVED',
-                        rowClass: "text-center w-[100px]",
-                        columnClass: "text-center",
-                        key: 'archived',
+                        title: 'Name Server',
+                        key: 'server',
+                        rowClass: "w-[150]",
                     },
                     {
-                        title: null,
-                        key: null,
+                        title: 'target RISK',
+                        key: 'risk_group',
+                        rowClass: "w-[150]",
+                    },
+                    {
+                        title: 'application criticality',
+                        key: 'application_criticality',
+                        rowClass: "w-[200px]",
                     },
                     {
                         title: 'CRIT',
@@ -121,19 +131,25 @@ export const ListDetail = () => {
                     }
                 ]}
                     data={
-                        new Array(20).fill({
-                            id: "EH-1",
-                            name: "ASSETNAME_1",
-                            ip: "HTTP://192.168.1.1",
-                            protect: "PROTECTED SITE A",
-                            lastScan: "2023/02/14",
-                            archived: "false",
-                            crit: 2,
-                            high: 2,
-                            med: 2,
-                            low: 2,
-                        })
-                    }></TableInline>
+                        API.data.assetsList.result.map(d => ({
+                            ...d.protected_site,
+                            ...d
+                        }))
+
+                        // new Array(20).fill({
+                        //     id: "EH-1",
+                        //     name: "ASSETNAME_1",
+                        //     ip: "HTTP://192.168.1.1",
+                        //     protect: "PROTECTED SITE A",
+                        //     lastScan: "2023/02/14",
+                        //     archived: "false",
+                        //     crit: 2,
+                        //     high: 2,
+                        //     med: 2,
+                        //     low: 2,
+                        // })
+                    }></TableInline>}
+
             </CardBox>
         </div>
     )

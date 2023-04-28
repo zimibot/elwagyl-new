@@ -15,10 +15,11 @@ import { TableCstm } from "./table";
 import { ReloadOutlined } from '@ant-design/icons';
 import { Tooltip } from "antd";
 import { GetAndUpdateContext } from "../../model/context.function";
-import { API_GET } from "../../api";
+import { API_GET } from "../../api/elwagyl";
 import { Loading } from "../../components/loading/loadingOther";
 import { counting } from 'radash'
 import { GaugeChartIndicator } from "../../components/chart/gauge.indicator";
+import { LineNoLabel } from "../../components/chart/line.no.label";
 
 export const ItemData = ({ d, arInactive, arActive, totalActive }) => ({
     id: d.ip,
@@ -101,10 +102,9 @@ const Executive = () => {
     const API_SERVICE_HISTORY = API_GET.EXECUTIVE_SERVICE_HISTORY()
     const API_SERVICE_LIST = API_GET.EXECUTIVE_SERVICE_LIST()
     const API_HOST_LIST = API_GET.EXECUTIVE_HOST_LIST()
+    const API_HOST_LIST_REALTIME = API_GET.EXECUTIVE_HOST_REALTIME()
     const API__ACTIVE_TIME = API_GET.EXECUTIVE_ACTIVE_TIME()
-    const API_OVERAL_STATUS = API_GET.EXECUTIVE_OVERAL_STATUS()
-
-    console.log(API_HOST_LIST)
+    const API_HOST_TOTAL = API_GET.EXECUTIVE_TOTAL_SERVER()
 
     const [refresh, setrefresh] = useState({ status: false });
     const [Row, setRow] = useState([]);
@@ -155,17 +155,36 @@ const Executive = () => {
                     {OBSERVATION_SEVERITY_DESC}
                 </SubtitleInfo>
                 <div className="flex-1 flex flex-col border-r border-r-primary text-blue">
-                    <div className="bg-primary p-1 px-4">GAUGE SERVICE CONNECTION</div>
+                    <div className="bg-primary p-1 px-4"> SERVICE CONNECTION</div>
                     <div className="overflow-auto flex-1 relative">
-                        <div className="grid grid-cols-3 gap-4 p-3 absolute left-0 top-0  w-full">
-                            {API_HOST_LIST.error ? "ERROR" : API_HOST_LIST.isLoading ? "LOADING" : API_HOST_LIST.dataitem.map((d, k) => {
-                                return <div key={k} className="p-2 border border-primary">
-                                    <div className="uppercase">
-                                        {d.name}
+                        <div className="grid  gap-4 p-3 absolute left-0 top-0  w-full">
+                            {API_HOST_LIST_REALTIME.error ? "ERROR" : API_HOST_LIST_REALTIME.isLoading ? "LOADING" : API_HOST_LIST_REALTIME.items.map((d, k) => {
+                                let percent = d.ping.length === 0 ? 0 : (d.ping.slice(-1)[0] / 500) * 100;
+                                percent = Math.min(percent, 100);
+                               
+                               return <div key={k} className="p-2 border border-primary space-y-4">
+                                    <div className="uppercase flex justify-between">
+                                        <span>
+
+                                            {d.hostname}
+                                        </span>
+                                        {d.alive && <span>
+                                            {d.lastData} MS
+                                        </span>}
+
                                     </div>
-                                    <div className="px-3">
-                                        <GaugeChart ping={d.ping} />
-                                    </div>
+                                    <CardAnimation className="px-3 relative  h-28 flex items-end">
+                                        {!d.alive ? <div className="w-full h-full flex justify-center items-center">CONNECTED IP</div> : <div className="w-full h-full absolute bottom-0 left-0 flex justify-between py-4 border-t border-primary">
+                                            <div className=" w-36 h-full">
+                                                <GaugeChart ping={parseInt(d.lastData)}></GaugeChart>
+                                            </div>
+                                            <div className="flex-1 relative">
+                                                <LineNoLabel border={false} ping={d.ping}></LineNoLabel>
+                                            </div>
+                                        </div>
+                                        }
+
+                                    </CardAnimation>
                                 </div>
                             })}
                         </div>
@@ -198,15 +217,22 @@ const Executive = () => {
                             </TitleContent>
                             <div className="flex-1 items-center justify-center flex flex-col">
                                 <div className="flex items-center justify-center flex-1 py-4">
-                                    <GaugeChartIndicator ticks={[0, 1]} color={['l(0) 0:#F4664A 0.5:#FAAD14 1:#00D8FF']} formatText={(d) => {
-                                        return "8/0"
-                                    }} rangeWidth={15} fontSize={24} lineHeight={30} offsetY={-80} height={150} />
+                                    {API_HOST_TOTAL.error ? "ERROR" : API_HOST_TOTAL.isLoading ? <Loading></Loading> :
+                                        <GaugeChartIndicator ticks={[0, 1]} color={['l(0) 0:#F4664A 0.5:#FAAD14 1:#00D8FF']}
+                                            ping={API_HOST_TOTAL.data.percentage / 100}
+                                            formatText={(d) => {
+                                                return `${API_HOST_TOTAL.data.total_server}/${API_HOST_TOTAL.data.server_alive}`
+                                            }} rangeWidth={15} fontSize={24} lineHeight={30} offsetY={-80} height={150} />
+
+                                    }
+
                                 </div>
-                                <div className="grid grid-cols-3 gap-2 px-3 py-3 w-full text-blue">
-                                    <div className="py-1 text-center bg-primary opacity-60">SHUT DOWN</div>
-                                    <div className="py-1 text-center bg-primary opacity-60">PARTLY ON</div>
-                                    <div className="py-1 text-center border font-bold border-blue">ALL ACTIVE</div>
-                                </div>
+                                {API_HOST_TOTAL.error ? "ERROR" : API_HOST_TOTAL.isLoading ? <Loading></Loading> :
+                                    <div className="grid grid-cols-3 gap-2 px-3 py-3 w-full text-blue">
+                                        <div className={`py-1 text-center ${API_HOST_TOTAL.data.server_alive === 0 ? "border-blue font-bold " : "bg-primary opacity-60"}`}>SHUT DOWN</div>
+                                        <div className={`py-1 text-center ${API_HOST_TOTAL.data.total_server < API_HOST_TOTAL.data.server_alive && API_HOST_TOTAL.data.server_alive !== 0 ? "border-blue font-bold " : "bg-primary opacity-60"}`}>PARTLY ON</div>
+                                        <div className={`py-1 text-center border ${API_HOST_TOTAL.data.server_alive === API_HOST_TOTAL.data.total_server ? "border-blue font-bold " : "bg-primary opacity-60"}`}>ALL ACTIVE</div>
+                                    </div>}
                             </div>
                         </div>
                         <div className="col-span-3 flex flex-col">

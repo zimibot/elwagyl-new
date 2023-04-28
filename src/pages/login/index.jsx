@@ -3,9 +3,8 @@ import { Form } from "../../components.eha/input"
 import LOGO from "../../assets/images/full.logo.svg";
 import { useForm } from "react-hook-form";
 import { Navigate, useNavigate } from "react-router-dom";
-import { API_POST, getCookie } from "../../api";
-import { toast, Toaster } from "react-hot-toast";
-import { useCookies } from "react-cookie";
+import { API_POST } from "../../api/elwagyl";
+import { toast } from "react-hot-toast";
 
 const LoginPages = () => {
 
@@ -21,6 +20,7 @@ const LoginPages = () => {
                 loading: 'LOGIN LOADING...',
                 success: (d) => {
                     localStorage.setItem("token", d.data.access_token)
+                    localStorage.setItem("user", d.data.user.username)
                     setTimeout(() => {
                         navi("/dashboard")
                     }, 500);
@@ -43,7 +43,6 @@ const LoginPages = () => {
     let auth = localStorage.getItem("token")
 
     return !auth ? <div className="flex-col flex flex-1">
-        <Toaster></Toaster>
         <div className="flex flex-col flex-1">
             <div className="flex-auto flex items-center justify-center flex-col gap-5" style={{
                 background: "rgba(16, 28, 38, 0.8)"

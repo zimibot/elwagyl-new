@@ -22,7 +22,6 @@ export const ChartLineTooltip = ({ height = 115, mode = "", className = "", data
         stepType: mode,
         tooltip: {
             customContent: (title, data) => {
-                console.log(data)
                 let date = moment(title).format("lll")
                 let value = Formatter(parseInt(data[0]?.value))
                 return `<div class="bg-primary p-2 space-y-2">

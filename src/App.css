@@ -20,6 +20,17 @@
   -webkit-text-size-adjust: 100%;
 }
 
+.ant-select-status-error {
+  border: 1px solid #ea4602;
+}
+
+
+.table-scroll::-webkit-scrollbar
+{
+  width: 8px;  /* for vertical scrollbars */
+  height: 8px; /* for horizontal scrollbars */
+}
+
 div {
   line-height: 1;
 }

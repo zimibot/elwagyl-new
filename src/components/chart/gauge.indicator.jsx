@@ -64,21 +64,6 @@ export const GaugeChartIndicator = ({
                 },
             },
         },
-        // indicator: {
-        //     pointer: {
-        //         style: {
-        //             stroke: '#00D8FF',
-        //             lineWidth: 4,
-        //         },
-        //     },
-        //     pin: {
-        //         style: {
-        //             stroke: '#00D8FF',
-        //             fill: "transparent",
-        //             lineWidth: 2,
-        //         },
-        //     },
-        // },
         axis: false,
         statistic: {
             content: {

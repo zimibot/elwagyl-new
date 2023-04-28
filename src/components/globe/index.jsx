@@ -1,5 +1,5 @@
 import { GetAndUpdateContext } from "../../model/context.function"
-import { API_GET } from "../../api";
+import { API_GET } from "../../api/elwagyl";
 import styled from "styled-components";
 
 const Earth = styled.div`
@@ -37,7 +37,6 @@ export const GlobeGl = ({ status, position = "fixed" }) => {
     return API_GLOBE.error ? "ERROR" :  API_GLOBE.isLoading ? <div className="flex w-full h-full bottom-0 absolute items-center justify-center text-[24px]">
         <div className="space-y-6 text-center">
             <Earth></Earth>
-            <div>LOADING GLOBE DATA</div>
         </div>
     </div> : <div className={`fadein z-0  ${position}`} style={{
         width: "100%",

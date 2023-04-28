@@ -140,7 +140,7 @@ const MENUDATA = [
     {
         label: 'XSOAR',
         key: '/dashboard/soar',
-        url: "google.com",
+        url: "https://sockari.xdr.sg.paloaltonetworks.com",
         icon: <div className="absolute w-full h-full left-0 top-0">
             <div className="absolute top-0 block px-1 !text-lg left-0" style={{
                 color: "rgba(0, 216, 255, 0.3)"
@@ -157,7 +157,7 @@ const MENUDATA = [
     {
         label: 'XDR',
         key: '/dashboard/xdr',
-        url: "facebook.com",
+        url: "https://10.22.24.2/#/login",
         icon: <div className="absolute w-full h-full left-0 top-0">
             <div className="absolute top-0 block px-1 !text-lg left-0" style={{
                 color: "rgba(0, 216, 255, 0.3)"
@@ -174,7 +174,7 @@ const MENUDATA = [
     {
         label: 'FIREWALL',
         key: '/dashboard/firewall',
-        url: "youtube.com",
+        url: "https://colorlib.com/etc/404/colorlib-error-404-6/",
         icon: <div className="absolute w-full h-full left-0 top-0">
             <div className="absolute top-0 block px-1 !text-lg left-0" style={{
                 color: "rgba(0, 216, 255, 0.3)"
@@ -189,26 +189,9 @@ const MENUDATA = [
         </div>
     },
     {
-        label: 'SDWAN',
-        key: '/dashboard/sdwan',
-        url: "1cak.com",
-        icon: <div className="absolute w-full h-full left-0 top-0">
-            <div className="absolute top-0 block px-1 !text-lg left-0" style={{
-                color: "rgba(0, 216, 255, 0.3)"
-            }}>08</div>
-
-            <div className="absolute left-[-3px]">
-                <svg width="6" height="19" viewBox="0 0 6 19" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M0 3L3 0V19L0 16V3Z" fill="#101C26" />
-                    <path d="M6 3L3 0V19L6 16V3Z" fill="#101C26" />
-                </svg>
-            </div>
-        </div>
-    },
-    {
         label: 'SASE',
         key: '/dashboard/sase',
-        url: "1cak.com",
+        url: "https://colorlib.com/etc/404/colorlib-error-404-6/",
         icon: <div className="absolute w-full h-full left-0 top-0">
             <div className="absolute top-0 block px-1 !text-lg left-0" style={{
                 color: "rgba(0, 216, 255, 0.3)"

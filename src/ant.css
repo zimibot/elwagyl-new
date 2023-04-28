@@ -420,6 +420,36 @@ span.anticon.anticon-check-circle svg {
   height: 100px;
 } */
 
+
+.ant-popconfirm .ant-popconfirm-message {
+  color: #00D8FF;
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+}
+
+.ant-popconfirm .ant-popconfirm-message >.ant-popconfirm-message-icon .anticon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  top: -2px;
+}
+
+.ant-popconfirm .ant-popconfirm-description {
+  color: white;
+  font-size: 15px;
+}
+
+.ant-popconfirm .ant-popconfirm-buttons button {
+  border: 0;
+  background: #18313D;
+  min-width: 55px;
+  height: 30px;
+  color: white;
+  border-radius: 0;
+}
+
 .ant-tabs .ant-tabs-tab {
   border-right: 1px solid #18313D;
   color: #00D8FF;

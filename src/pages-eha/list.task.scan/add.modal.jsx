@@ -9,7 +9,6 @@ export const AddModal = () => {
     const { setStatus } = GetAndUpdateContext()
     const { register, handleSubmit, setValue, unregister, watch, formState: { errors } } = useForm();
     const onSubmit = data => {
-        console.log(data)
         ModalSuccess()
     };
 

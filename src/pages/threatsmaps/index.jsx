@@ -10,7 +10,7 @@ import { GlobeGl } from "../../components/globe"
 import { GlobalListSource } from "../../components/layout/global/global.list.source"
 import { ChartLineTooltip } from "../../components/chart/line.tooltip"
 import { GetAndUpdateContext } from "../../model/context.function"
-import { API_GET } from "../../api"
+import RootAPi, { API_GET } from "../../api/elwagyl"
 import { Loading } from "../../components/loading/loadingOther"
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { useEffect, useRef } from "react"
@@ -19,10 +19,8 @@ import moment from "moment"
 
 const ThreatsMaps = ({ titlePath }) => {
     const { value } = GetAndUpdateContext()
-    const THREAT_SEVERITY = API_GET.ALERT_SEVERITY()
-    const API_CYBER_ATTACK = API_GET.THREATSMAP_CYBER_ATTACK_STATISTIC()
-    const API_CYBER_ATTACK_THREATS = API_GET.THREATSMAP_CYBER_ATTACK_THREATS()
-    const API_GLOBE = API_GET.THREATSMAP_GLOBE()
+    const root = RootAPi(["ALERT_SEVERITY", "THREATSMAP_CYBER_ATTACK_STATISTIC", "THREATSMAP_CYBER_ATTACK_THREATS"])
+    // const API_GLOBE = API_GET.THREATSMAP_GLOBE()
     return <LayoutDashboard titlePath={titlePath}>
         <ColumnLeft>
             <CardAnimation>
@@ -33,9 +31,9 @@ const ThreatsMaps = ({ titlePath }) => {
                     <SubtitleInfo title={'OBSERVATION SEVERITY'}>
                         {STASTISTIC_ALERT_DESC}
                     </SubtitleInfo>
-                    {THREAT_SEVERITY.error ? "error" : THREAT_SEVERITY.isLoading ? "LOADING" : <div className="space-y-2">
+                    {root.error ? "error" : root.isLoading ? "LOADING" : <div className="space-y-2">
                         <div className="grid grid-cols-3 border border-primary">
-                            {THREAT_SEVERITY.item.map((d, k) => {
+                            {root.data.ALERT_SEVERITY.map((d, k) => {
                                 return <div key={k} className="border-r border-primary p-3">
                                     <div className="font-bold uppercase" style={{ color: d.color }}>{d.name}</div>
                                     <div className="text-[24px] flex items-center gap-2" style={{
@@ -52,7 +50,7 @@ const ThreatsMaps = ({ titlePath }) => {
 
                         </div>
                         <div className="p-2 border border-primary flex ">
-                            {THREAT_SEVERITY.item.map((d, k) => {
+                            {root.data.ALERT_SEVERITY.map((d, k) => {
                                 return <div key={k} className="h-3" style={{
                                     background: d.color,
                                     width: `${d.percentage}%`
@@ -74,10 +72,10 @@ const ThreatsMaps = ({ titlePath }) => {
                 <div className="flex-1 flex flex-col">
                     <div className="bg-border_second py-2 px-4 flex justify-between">
                         <div>REAL-TIME THREAT</div>
-                        <div>{API_CYBER_ATTACK_THREATS.status === "success" && API_CYBER_ATTACK_THREATS.data.pages.length !== 0 && API_CYBER_ATTACK_THREATS.data.pages[0].data.length ? API_CYBER_ATTACK_THREATS.data.pages.length : 0} / {API_CYBER_ATTACK_THREATS.status === "success" && API_CYBER_ATTACK_THREATS.data.pages.length !== 0 ? API_CYBER_ATTACK_THREATS.data.pages[0].pagination.total_page : 0}</div>
+                        {/* <div>{!root.isLoading && root.data.THREATSMAP_CYBER_ATTACK_THREATS.pages.length !== 0 && root.data.THREATSMAP_CYBER_ATTACK_THREATS.pages[0].data.length ? root.data.THREATSMAP_CYBER_ATTACK_THREATS.pages.length : 0} / {!root.isLoading && root.data.THREATSMAP_CYBER_ATTACK_THREATS.pages.length !== 0 ? root.data.THREATSMAP_CYBER_ATTACK_THREATS.pages[0].pagination.total_page : 0}</div> */}
                     </div>
                     <div className="flex-1 relative">
-                        <ThreatsAttackList dataItem={API_CYBER_ATTACK_THREATS} />
+                        <ThreatsAttackList data={root.data.THREATSMAP_CYBER_ATTACK_THREATS} props={root.props.THREATSMAP_CYBER_ATTACK_THREATS} />
                     </div>
                 </div>
             </CardBox>
@@ -121,7 +119,7 @@ const ThreatsMaps = ({ titlePath }) => {
                 </SubtitleInfo>
                 <div className="relative flex-1 flex flex-col">
                     <div className="absolute w-full h-full">
-                        {API_CYBER_ATTACK.error ? "ERROR" : API_CYBER_ATTACK.isLoading ? <Loading></Loading> : <ChartLineTooltip data={API_CYBER_ATTACK.data.data} className="h-full w-full flex flex-col items-center justify-center" height={"auto"} />}
+                        {root.error ? "ERROR" : root.isLoading ? <Loading></Loading> : <ChartLineTooltip data={root.data.THREATSMAP_CYBER_ATTACK_STATISTIC.data} className="h-full w-full flex flex-col items-center justify-center" height={"auto"} />}
                     </div>
                 </div>
             </CardBox>
@@ -132,14 +130,13 @@ const ThreatsMaps = ({ titlePath }) => {
 
 export default ThreatsMaps
 
-const ThreatsAttackList = ({ dataItem }) => {
+const ThreatsAttackList = ({ props, data }) => {
 
     const { status,
         error,
-        data,
         isFetchingNextPage,
         fetchNextPage,
-        hasNextPage } = dataItem
+        hasNextPage } = props
 
     const allRows = data ? data.pages.flatMap((d) => d.data) : []
     // const allPage = data ? data.pages.flatMap((d) => d.pagination) : []

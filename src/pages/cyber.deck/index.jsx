@@ -16,7 +16,7 @@ import { GlobeGl } from "../../components/globe"
 import { SliderSlick } from "../../components/slider"
 import { GlobalListSource } from "../../components/layout/global/global.list.source"
 import { GetAndUpdateContext } from "../../model/context.function"
-import { API_GET } from "../../api"
+import RootAPi, { API_GET } from "../../api/elwagyl"
 import { Tooltip } from "antd"
 import { Loading } from "../../components/loading/loadingOther"
 import { Formatter } from "../../helper/formater"
@@ -24,14 +24,14 @@ import { Typography } from 'antd';
 
 const { Text } = Typography;
 
+export const ErrorItems = () => {
+    return <div className="flex justify-center items-center p-4 col-span-full text-red-500 h-20 text-1xl">ERROR CONNECTION SERVER</div>
+}
+
 const CyberDeck = () => {
     const { value, maximize } = GetAndUpdateContext()
-    let API_SEVERITY = API_GET.ALERT_SEVERITY()
-    let API_ALERT_TYPE = API_GET.ALERT_TYPE()
-    let API_DASHBOARD_STATUS = API_GET.DASHBOARD_STATUS()
-    let AFFECTED_ENTITY = API_GET.AFFECTED_ENTITY()
-    let API_ATTACK_GROUP = API_GET.ATTACK_GROUP()
-
+    let root = RootAPi(['ALERT_SEVERITY', 'ALERT_TYPE', 'DASHBOARD_STATUS', 'AFFECTED_ENTITY'])
+    console.log(root)
     return <LayoutDashboard>
         <ColumnLeft>
             <CardAnimation>
@@ -47,8 +47,8 @@ const CyberDeck = () => {
                         </div>
                         <div className="grid grid-cols-2 gap-3">
                             {/* <ProgressVertical title="Solved" /> */}
-                            {API_SEVERITY.error ? "ERROR" : API_SEVERITY.isLoading ? <Loading></Loading> : API_SEVERITY.item.map((d, k) => {
-                                return API_SEVERITY.item.length !== 4 && k == 0 ? <div key={k} className="col-span-2">
+                            {root.error ? <ErrorItems></ErrorItems> : root.isLoading ? <Loading></Loading> : root.data.ALERT_SEVERITY.map((d, k) => {
+                                return root.data.ALERT_SEVERITY.length !== 4 && k == 0 ? <div key={k} className="col-span-2">
                                     <ProgressVertical title={d.name} color={d.color} percent={d.percentage} total={d.total} />
                                 </div> : <div key={k}>
                                     <ProgressVertical title={d.name} color={d.color} percent={d.percentage} total={d.total} />
@@ -74,7 +74,7 @@ const CyberDeck = () => {
                     <SubtitleInfo title={'LIST threat'}>
                         {LIST_THREATS}
                     </SubtitleInfo>
-                    {API_ALERT_TYPE.error ? "ERROR" : API_ALERT_TYPE.isLoading ? <Loading></Loading> :
+                    {root.error ? <ErrorItems></ErrorItems> : root.isLoading ? <Loading></Loading> :
                         <TableInline columns={[
                             {
                                 title: "no",
@@ -102,7 +102,7 @@ const CyberDeck = () => {
                                 title: "TOTAL",
                                 key: "total"
                             },
-                        ]} data={API_ALERT_TYPE.dataItems} hoverDisable height={maximize?.ALERTSHOW ? 'auto' : "150px"} />}
+                        ]} data={root.data.ALERT_TYPE} hoverDisable height={maximize?.ALERTSHOW ? 'auto' : "150px"} />}
 
                 </div>
             </CardBox>
@@ -124,7 +124,7 @@ const CyberDeck = () => {
                                         <div className="text-[128px]" style={{
                                             lineHeight: 1
                                         }}>{
-                                                API_DASHBOARD_STATUS.isLoading ? 0 : Formatter(API_DASHBOARD_STATUS.data?.alert)
+                                            root.error ? 0 : root.isLoading ? 0 : Formatter(root.data.DASHBOARD_STATUS.alert)
                                             }</div>
                                     </div>
                                 </div>
@@ -142,7 +142,8 @@ const CyberDeck = () => {
                                     <div className="py-8 flex items-center justify-center">
                                         <div className="text-[128px]" style={{
                                             lineHeight: 1
-                                        }}>{API_DASHBOARD_STATUS.isLoading ? 0 : Formatter(API_DASHBOARD_STATUS.data.entities_at_risk)}</div>
+                                        }}>{root.error ? 0 : root.isLoading ? 0 : Formatter(root.data.DASHBOARD_STATUS.entities_at_risk)}                                        
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -187,7 +188,7 @@ const CyberDeck = () => {
                 <SubtitleInfo title={'PROTOCOL ENTITY'}>
                     {STASTISTIC_ALERT_DESC}
                 </SubtitleInfo>
-                {AFFECTED_ENTITY.error ? "ERROR" : AFFECTED_ENTITY.isLoading ? <Loading></Loading> : <SliderSlick data={AFFECTED_ENTITY.item} />}
+                {root.error ? <ErrorItems></ErrorItems> : root.isLoading ? <Loading></Loading> : <SliderSlick data={root.data.AFFECTED_ENTITY} />}
 
             </CardBox>
         </ColumnRight>
@@ -195,18 +196,18 @@ const CyberDeck = () => {
 }
 
 const AttactCountry = ({ title = "top attack country source", limit }) => {
-    let API_ATTACK_GROUP = API_GET.ATTACK_GROUP()
-    console.log(API_ATTACK_GROUP)
+    let root = RootAPi(['ATTACK_GROUP'])
+
     let arr = new Array(50).fill("")
     return <>
         <SubtitleInfo title={title}>
             {TOP_ATTACK}
         </SubtitleInfo>
-        {arr.length === 0 || !arr ? <div className="text-center p-2 border uppercase text-[white]">
+        {root.data.ATTACK_GROUP?.length === 0 || !root.data.ATTACK_GROUP ? <div className="text-center p-2 border uppercase text-[white]">
             {ERRORCOMPONENT.dataNotAvailable}
         </div> : <div className="max-h-[500px] text-blue overflow-y-auto overflow-x-hidden pb-1 pr-3">
             <CardAnimation className="grid grid-cols-3 gap-3">
-                {API_ATTACK_GROUP.error ? "" : API_ATTACK_GROUP.isLoading ? "Loading" : API_ATTACK_GROUP.data.length === 0 ? "Data not found" : API_ATTACK_GROUP.data.slice(0, limit ? 3 : API_ATTACK_GROUP.data.length).map((d,k) => {
+                {root.error ? <ErrorItems></ErrorItems> : root.isLoading ? "Loading" : root.data.ATTACK_GROUP.length === 0 ? "Data not found" : root.data.ATTACK_GROUP.slice(0, limit ? 3 : root.ATTACK_GROUP.data.length).map((d,k) => {
                     return <div key={k} className="border border-primary px-2 py-1 flex justify-between items-center">
                     <Text className="text-blue" ellipsis={true}>{k + 1} // {d.region}</Text>
                     <div>{Formatter(d.count)}</div>

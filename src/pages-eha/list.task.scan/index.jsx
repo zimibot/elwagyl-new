@@ -1,14 +1,21 @@
+import { GET_API_EHA } from "../../api/eha/GET"
 import { ButtonComponents } from "../../components.eha/button"
 import { CardBox } from "../../components/layout/card"
 import { LayoutDashboard } from "../../components/layout/dashboard.layout"
 import { TitleContent } from "../../components/layout/title"
 import { TableInline } from "../../components/table"
 import { GetAndUpdateContext } from "../../model/context.function"
+import { ErrorHtml, Loading } from "../list.maintenance"
 import { AddModal } from "./add.modal"
 
 const ListTask = () => {
     const { setStatus } = GetAndUpdateContext()
 
+    const API = GET_API_EHA.root([{
+        active: "scan"
+    }])
+
+    console.log(API)
     return (
         <LayoutDashboard className="bg-[#101C26] text-[16px]">
             <div className="col-span-full flex-1 flex flex-col pb-10">
@@ -37,7 +44,7 @@ const ListTask = () => {
                     <TitleContent>
                         <div className="text-[24px] uppercase text-blue">TASK</div>
                     </TitleContent>
-                    <TableInline border paggination hoverDisable columns={[
+                    {API.msg || API.error ? <ErrorHtml error={API.msg}></ErrorHtml>: API.loading ? <Loading></Loading> : <TableInline border hoverDisable columns={[
                         {
                             title: 'TARGETS',
                             key: 'id',
@@ -46,27 +53,26 @@ const ListTask = () => {
                         {
                             title: 'PROTECTED SITE',
                             rowClass: "w-[200px]",
-                            key: 'protect',
+                            key: 'name',
                         },
                         {
                             title: 'REQUESTED BY',
-                            key: 'requested',
+                            key: 'created_by',
                             rowClass: "w-[150px]"
                         },
                         {
                             title: 'CREATION DATES',
-                            key: 'create_date',
+                            key: 'created_at',
                             rowClass: "w-[200px]"
                         },
                         {
                             title: 'SCHEDULED DATES',
-                            key: 'create_date',
+                            key: 'scheduled_start_date',
                         },
 
                         {
                             title: 'REMARKS',
-                            rowClass: "w-[80px] text-center",
-                            columnClass: "text-center",
+                            rowClass: "w-[300px]",
                             key: 'remarks',
                         },
                         {
@@ -105,23 +111,27 @@ const ListTask = () => {
                             }
                         }
                     ]}
-                        data={
-                            new Array(20).fill({
-                                id: "EH-1",
-                                requested: "ADMINISTRATOR",
-                                create_date: "2023/02/14 | 05.00 AM",
-                                ip: "HTTP://192.168.1.1",
-                                protect: "PROTECTED SITE A",
-                                remarks: "",
-                                status: "COMPLETED",
-                                scan_alerts: <div className="flex w-full justify-center items-center">
-                                    <svg width="22" height="19" viewBox="0 0 22 19" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M0 19H22L11 0L0 19ZM12 16H10V14H12V16ZM12 12H10V8H12V12Z" fill="#FFBA08" />
-                                    </svg>
+                        data={API.data.scan.result.map(d=> ({
+                            ...d.asset,
+                            ...d,
+                        }))
+                            // new Array(20).fill({
+                            //     id: "EH-1",
+                            //     requested: "ADMINISTRATOR",
+                            //     create_date: "2023/02/14 | 05.00 AM",
+                            //     ip: "HTTP://192.168.1.1",
+                            //     protect: "PROTECTED SITE A",
+                            //     remarks: "",
+                            //     status: "COMPLETED",
+                            //     scan_alerts: <div className="flex w-full justify-center items-center">
+                            //         <svg width="22" height="19" viewBox="0 0 22 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            //             <path d="M0 19H22L11 0L0 19ZM12 16H10V14H12V16ZM12 12H10V8H12V12Z" fill="#FFBA08" />
+                            //         </svg>
 
-                                </div>
-                            })
-                        }></TableInline>
+                            //     </div>
+                            // })
+                        }></TableInline>}
+
                 </CardBox>
             </div>
             <AddModal></AddModal>

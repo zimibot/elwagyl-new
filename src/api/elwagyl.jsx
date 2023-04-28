@@ -1,10 +1,13 @@
 import axios from 'axios'
-import { counting, max, sum, unique } from 'radash'
+import { counting, isArray, isObject, max, sum, unique } from 'radash'
 import { useQuery, useInfiniteQuery } from 'react-query'
 import { Formatter } from '../helper/formater'
 import { GetAndUpdateContext } from '../model/context.function'
 import { ItemData } from '../pages/executive'
 import { CountryId } from './country'
+import { checkStatement } from './eha/GET'
+import { useState } from 'react'
+import { useEffect } from 'react'
 export const path = import.meta.env.VITE_PATH_API
 let color = (d) => {
     let items
@@ -138,12 +141,10 @@ const API_GET = {
             color: "#00D8FF"
         } : max(item, d => d.count)
 
-        // if (data?.detail) {
-        //     window.localStorage.removeItem("token")
-        // }
 
 
-        return { item, error: data?.detail, isLoading, props, system }
+
+        return { data: item, error: data?.detail, isLoading, props, system }
     },
     ALERT_TYPE: () => {
         const { value } = GetAndUpdateContext()
@@ -174,7 +175,7 @@ const API_GET = {
             percents: (d.total / sum(item, d => d.total)) * 100
         }))
 
-        return { dataItems, error: data?.detail, isLoading, props }
+        return { data: dataItems, error: data?.detail, isLoading, props }
     },
     AFFECTED_ENTITY: () => {
         const { value } = GetAndUpdateContext()
@@ -199,7 +200,7 @@ const API_GET = {
             })
         }
 
-        return { item, error: data?.detail, isLoading, props }
+        return { data: item, error: data?.detail, isLoading, props }
     },
     DASHBOARD_STATUS: () => {
         const { value } = GetAndUpdateContext()
@@ -295,6 +296,52 @@ const API_GET = {
 
         return { data, error: data?.detail, isLoading, props, graph }
     },
+    EXECUTIVE_HOST_REALTIME: () => {
+        const { value } = GetAndUpdateContext();
+        const { isLoading, error, data, ...props } = useQuery(
+            ['hostRealtime', value.APIURLDEFAULT, value.DATEVALUE.value, value.PAGECOUNT],
+            () => fetch(`${path}/full_executive/services-ping-realtime`, { ...Options() }).then(res => res.json()),
+            { refetchInterval: 1000 }
+        );
+
+        const [pingMap, setPingMap] = useState({ data: new Map(), alive: false });
+        let items = [];
+
+        useEffect(() => {
+            if (data) {
+                let alive
+                const pingInterval = setInterval(async () => {
+                    const newPingMap = new Map(pingMap.data);
+                    await Promise.all(data.data.map(async (d) => {
+                        const p = await ping(d.ip_address);
+                        alive = p.alive
+                        if (newPingMap.has(d.hostname)) {
+                            const pingArray = newPingMap.get(d.hostname);
+                            pingArray.push(p.time === "unknown" ? 0 : p.time);
+                            if (pingArray.length > 20) {
+                                pingArray.splice(0, 1);
+                            }
+                        } else {
+                            newPingMap.set(d.hostname, Array(20).fill(0));
+                        }
+                    }));
+                    setPingMap({ data: newPingMap, alive});
+                }, 1000);
+                return () => clearInterval(pingInterval);
+            }
+        }, [data, pingMap.data]);
+
+        if (data) {
+            items = data.data.map(d => ({
+                ...d,
+                ping: pingMap?.data?.get(d.hostname) || Array(20).fill(0),
+                alive: pingMap.alive,
+                lastData: pingMap?.data?.get(d.hostname) ? pingMap.data.get(d.hostname)[pingMap?.data?.get(d.hostname).length - 1] : 0
+            }));
+        }
+
+        return { items, error: data?.detail, isLoading, props };
+    },
     EXECUTIVE_HOST_LIST: () => {
         const { value } = GetAndUpdateContext()
         const { isLoading, error, data, ...props } = useQuery(['hostList', value.APIURLDEFAULT, value.DATEVALUE.value, value.PAGECOUNT], () =>
@@ -302,19 +349,16 @@ const API_GET = {
                 ...Options()
             }).then(res => {
                 return res.json()
-            }), {
-            refetchInterval: 1500
-        }
-
+            }),
         )
         let dataitem
 
         if (data) {
             dataitem = data.data.map(d => {
-                let ps = ping(d.ip)
+                // let ps = ping(d.ip)
                 return {
                     ...d,
-                    ping: ps
+                    // ping: ps
                 }
             })
 
@@ -322,6 +366,20 @@ const API_GET = {
 
 
         return { dataitem, error: data?.detail, isLoading, props }
+    },
+    EXECUTIVE_TOTAL_SERVER: () => {
+        const { value } = GetAndUpdateContext()
+        const { isLoading, error, data, ...props } = useQuery(['totalServer', value.APIURLDEFAULT, value.DATEVALUE.value, value.PAGECOUNT], () =>
+            fetch(`${path}/full_executive/total-server`, {
+                ...Options()
+            }).then(res => {
+                return res.json()
+            }),
+        )
+
+
+
+        return { ...data, error: data?.detail, isLoading, props }
     },
     EXECUTIVE_ACTIVE_TIME: () => {
         const { value } = GetAndUpdateContext()
@@ -387,7 +445,7 @@ const API_GET = {
         }
 
 
-        return { item, error: data?.detail, isLoading, props }
+        return { data: item, error: data?.detail, isLoading, props }
     },
     AVAILABILITY_ASSET_LIST: () => {
         const { value } = GetAndUpdateContext()
@@ -435,7 +493,7 @@ const API_GET = {
         const { value } = GetAndUpdateContext()
         // let item = []
         const { isLoading, error, data, ...props } = useQuery(['serverList', value.SENSOR], () =>
-            fetch(`${path}/availability/server-list?timerange=24hour&limit=9&page=${value.SENSOR ? value.SENSOR.PAGE : 1}`, {
+            fetch(`${path}/availability/server-list?timerange=24hour&limit=100&page=${value.SENSOR ? value.SENSOR.PAGE : 1}`, {
                 ...Options()
             }).then(res => {
                 return res.json()
@@ -443,7 +501,6 @@ const API_GET = {
             ),
             {
                 refetchOnWindowFocus: false,
-                refetchInterval: false
             }
         )
 
@@ -455,8 +512,8 @@ const API_GET = {
     THREATSMAP_CYBER_ATTACK_STATISTIC: () => {
         const { value } = GetAndUpdateContext()
         // let item = []
-        const { isLoading, error, data, ...props } = useQuery(['cyberAttack', value.DATEVALUE.value], () =>
-            fetch(`${path}/threats_map/cyber-attack-statistic?timerange=${value.DATEVALUE.value}`, {
+        const { isLoading, error, data, ...props } = useQuery(['cyberAttack', value.DATEVALUE.value, value.APIURLDEFAULT.ip], () =>
+            fetch(`${value.APIURLDEFAULT.ip}/threats_map/cyber-attack-statistic?timerange=${value.DATEVALUE.value}`, {
                 ...Options()
             }).then(res => {
                 return res.json()
@@ -580,11 +637,8 @@ const API_GET = {
             }
         )
 
-     
-
-
         return {
-            isLoading, ...data, props, error: data?.detail,
+            isLoading, ...data, error: data?.detail,
         }
     },
     THREATSMAP_CYBER_ATTACK_THREATS: () => {
@@ -605,6 +659,7 @@ const API_GET = {
             isFetchingNextPage,
             fetchNextPage,
             hasNextPage,
+            isLoading,
             ...props
         } = useInfiniteQuery(
             ['projects', value.APIURLDEFAULT, value.DATEVALUE],
@@ -629,10 +684,57 @@ const API_GET = {
             isFetchingNextPage,
             fetchNextPage,
             hasNextPage,
+            isLoading,
             props
         }
     },
 }
+
+
+const RootAPi = (ita) => {
+
+
+    if (isArray(ita)) {
+        let data = {
+            error: [],
+            data: {},
+            isLoading: [],
+            props: {}
+        }
+        ita.map(d => {
+            let items = API_GET[d]()
+            //THREATSMAP_CYBER_ATTACK_THREATS
+            if (items.isLoading !== undefined) {
+                data.error.push(items.error ? true : false)
+
+                if (!items.isLoading) {
+                    if (!items.data) {
+                        data.error = [true]
+                    }
+                }
+
+                data.data[d] = items.data
+                data.props[d] = { ...items }
+                data.isLoading.push(items.isLoading)
+            }
+        })
+
+
+
+        return {
+            ...data,
+            error: checkStatement(data.error),
+            isLoading: checkStatement(data.isLoading)
+        }
+
+    } else {
+        return {
+            error: true
+        }
+    }
+
+}
+
 
 export {
     API_DATAMAPS,
@@ -640,8 +742,11 @@ export {
     API_GET
 }
 
+
 let ping = async (ip) => {
     let pfs = await window.api.invoke('ping-window', ip)
 
     return pfs
 }
+
+export default RootAPi

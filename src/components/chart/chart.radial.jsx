@@ -56,7 +56,6 @@ export const ChartRadialBar = () => {
                 type: 'html',
                 position: ['31%', '65%'],
                 html: (container, view) => {
-                    console.log(view.options.data)
                     // const w = coord.polarRadius * coord.innerRadius * 1.15;
 
                     return `<div class="font-bold text-[24px] flex gap-4">

@@ -2,7 +2,7 @@ import { ComposableMap, Geographies, Geography, ZoomableGroup, Line, Marker } fr
 import { Modal, Tooltip } from 'antd';
 import { Motion, spring } from "react-motion";
 import { useEffect, useState } from "react";
-import { API_GET } from "../../api";
+import { API_GET } from "../../api/elwagyl";
 import { GetAndUpdateContext } from "../../model/context.function";
 
 const geoUrl =

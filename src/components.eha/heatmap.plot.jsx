@@ -1,39 +1,38 @@
 import React, { useState, useEffect } from 'react';
 import { Heatmap } from '@ant-design/plots';
 
-export const HeatmapComponent = () => {
-    const [data, setData] = useState(
-        []
-    );
+export const HeatmapComponent = ({data = []}) => {
 
-    useEffect(() => {
-        let day = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"].map(s => {
-            return [1, 2, 3, 4, 5].map(d => ({
-                "WEEK": `${d} WEEK`,
-                "DAYS": s,
-                "TOTAL": parseInt(Math.random(256) * 1582)
-            }))
-        })
+    // useEffect(() => {
+    //     let day = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"].map(s => {
+    //         return [1, 2, 3, 4, 5].map(d => ({
+    //             "WEEK": `${d} WEEK`,
+    //             "DAYS": s,
+    //             "TOTAL": parseInt(Math.random(256) * 1582)
+    //         }))
+    //     })
 
-        let item = []
-        for (const key in day) {
-            item.push(...day[key])
-        }
+    //     let item = []
+    //     for (const key in day) {
+    //         item.push(...day[key])
+    //     }
 
-        setData(item)
-        return () => {
-            setData([])
-            item = []
-        };
-    }, []);
+    //     setData(item)
+    //     return () => {
+    //         setData([])
+    //         item = []
+    //     };
+    // }, []);
 
+
+    console.log(data)
 
 
     const config = {
 
         height: 200,
         data,
-        xField: 'WEEK',
+        xField: 'WEEKS',
         yField: 'DAYS',
         colorField: 'TOTAL',
         // color: ["#00D8FF", "#FFBA08", "#FF7A00", "#ED6A5E"],

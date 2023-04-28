@@ -2,19 +2,50 @@ import { TabsMenu, TabsContent } from "./tab"
 import { CardBox } from "../../components/layout/card"
 import { LayoutDashboard } from "../../components/layout/dashboard.layout"
 import { ListProtectedSite } from "./list.protected.site"
-import { GetAndUpdateContext } from "../../model/context.function"
 import { ListEmailManage } from "./list.manage.email"
 import { ListManageScan } from "./list.manage.scan"
 import ListManageAsset from "./list.manage.asset"
+import { Result } from "antd"
+import { LoadingOutlined } from "@ant-design/icons"
+
+export const Loading = () => {
+    return <div className="absolute items-center justify-center flex w-full h-full">
+        <Result
+            icon={<div className="text-[35px]"><LoadingOutlined /></div>}
+            title={<span className="uppercase">LOADING...</span>}
+        />
+    </div>
+}
+
+export const ErrorHtml = ({error = ""}) => {
+    return <div className="absolute items-center justify-center flex w-full h-full">
+        <Result
+            status={"500"}
+            title={<span className="uppercase">{error}</span>}
+        />
+    </div>
+}
 
 const ListMaintenance = () => {
-    const { setStatus } = GetAndUpdateContext()
+    // if (!API.error) {
+    //     return <div className="absolute items-center justify-center flex w-full h-full">
+    //         <Result
+    //             status={"500"}
+    //             title={<span className="uppercase">Unable to connect to server</span>}
+    //         />
+    //     </div>
+    // }
+
+    // if (!API.loading) {
+    //     return <Loading></Loading>
+    // }
+
 
     let Item = [
         {
             key: 1,
             title: "protected site",
-            content: <ListProtectedSite />
+            content: <ListProtectedSite ErrorHtml={ErrorHtml} HtmlLoading={Loading}  />
         },
         // {
         //     key: 2,

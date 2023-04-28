@@ -15,7 +15,7 @@ import ListMaintenance from "./pages-eha/list.maintenance";
 import TargetReady from "./pages-eha/list.task.target";
 import TaskQA from "./pages-eha/list.task.qa";
 import ListTaskVulnerability from "./pages-eha/list.vulnerability";
-import { API_GET } from "./api";
+import { API_GET } from "./api/elwagyl";
 import styled from "styled-components";
 import LoginPages from "./pages/login";
 import { CookiesProvider } from 'react-cookie';

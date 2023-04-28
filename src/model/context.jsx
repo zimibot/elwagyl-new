@@ -4,7 +4,8 @@ import { CONFIGMAP2D, DATEVALUE,  GLOBEFRAME, GLOBEVALUE, VIEWGLOBE, PIECHARTVVA
 export const ValueContext = () => {
     const [maximize, setmaximize] = useState({});
     const [status, setStatus] = useState({
-        STATUSPING: true
+        STATUSPING: true,
+        Findingpage: 1
     });
     const [value, setvalue] = useState({
         DATEVALUE: { ...DATEVALUE },

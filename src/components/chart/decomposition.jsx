@@ -165,7 +165,7 @@ export const DecompositionTreeGraphChart = ({ refresh, otherRefresh, defaultData
     }, [refresh, otherRefresh, value.SERVICEPORT, defaultData]);
 
 
-    return state.config && defaultData ? <DecompositionTreeGraph  {...state.config} /> : <div className="absolute w-full h-full flex items-center justify-center">
+    return state.config && defaultData ? <DecompositionTreeGraph  {...state.config} animate={false} /> : <div className="absolute w-full h-full flex items-center justify-center">
         Loading...
     </div>;
 };

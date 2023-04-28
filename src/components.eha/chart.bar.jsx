@@ -1,59 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Column } from '@ant-design/plots';
 
-export const ColumnChartComponent = () => {
-    const data = [
-        {
-            date: 'JAN',
-            total: 52,
-        },
-        {
-            date: 'FEB',
-            total: 12,
-        },
-        {
-            date: 'MAR',
-            total: 32,
-        },
-        {
-            date: 'APR',
-            total: 22,
-        },
-        {
-            date: 'MAY',
-            total: 55,
-        },
-        {
-            date: 'JUN',
-            total: 26,
-        },
-        {
-            date: 'JUL',
-            total: 17,
-        },
-        {
-            date: 'AUG',
-            total: 32,
-        },
-        {
-            date: 'SEP',
-            total: 82,
-        },
-        {
-            date: 'OCT',
-            total: 12,
-        },
-        {
-            date: 'NOV',
-            total: 11,
-        },
-        {
-            date: 'DEC',
-            total: 78,
-        },
-
-    ];
-
+export const ColumnChartComponent = ({ data = []}) => {
+    
     let last = data.slice(-1)[0]
     const config = {
         data,
@@ -120,6 +69,6 @@ export const ColumnChartComponent = () => {
         },
 
     };
-    return <Column {...config} />;
+    return <Column {...config} animation={false}/>;
 };
 

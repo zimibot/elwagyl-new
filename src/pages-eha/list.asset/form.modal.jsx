@@ -8,17 +8,35 @@ import { ButtonComponents } from "../../components.eha/button";
 import { GetAndUpdateContext } from "../../model/context.function";
 import { useEffect } from "react";
 import { isEmpty } from "radash";
+import { GET_API_EHA } from "../../api/eha/GET";
+import { useState } from "react";
+import { POST_API } from "../../api/eha/POST";
 
 export const FormModal = () => {
+    const API = GET_API_EHA.root([
+        {
+            active: "protectedSite",
+        },
+        {
+            active: "systemOwner",
+        },
+        {
+            active: "systemOwnerDetail",
+        },
+    ])
 
+    console.log(API)
     const { setStatus } = GetAndUpdateContext()
-    const { register, handleSubmit, setValue, reset, control, formState: { errors } } = useForm(
+    const { register, handleSubmit, reset, control, setValue, formState: { errors } } = useForm(
         {
             defaultValues: {
                 platform: [{ categories: "", name: "", port: "", version: "" }]
             }
         }
     );
+
+    const [selectOwner, setSelectOwner] = useState()
+
     const {
         fields,
         append,
@@ -27,9 +45,44 @@ export const FormModal = () => {
         control,
         name: "platform"
     });
+
     const onSubmit = data => {
-        console.log(data)
-        ModalSuccess({ title: "Successfully Add New Asset!", onlyShowOk: true })
+
+
+        data = {
+            ...data,
+        }
+
+        // {
+        //     "name": "Asset 12",
+        //     "url_ip": "https://example.com",
+        //     "id_tag": "ABC123",
+        //     "risk_group": "High",
+        //     "environment": "Production",
+        //     "contains_pii_data": true,
+        //     "system_owner": "John Doe",
+        //     "system_owner_email": "johndoe@example.com",
+        //     "existing_system_owner": "ACME Corporation",
+        //     "hostname_fqdn": "example.com",
+        //     "mac_address": "00:11:22:33:44:55",
+        //     "brand": "ACME",
+        //     "application_criticality": "Critical",
+        //     "frontend_backend": "Backend",
+        //     "server": "Linux",
+        //     "tags": "security",
+        //     "description": "This is a sample protected site",
+        //     "available_scanning_windows": "Mon-Fri, 8am-5pm",
+        //     "out_of_scope": false,
+        //     "internet_facing": true,
+        //     "system_owner_id": 2,
+        //     "protected_site_id": 2,
+        //     "created_by": "Kurniadi Ahmad Wijaya"
+        // }
+
+
+        POST_API.addAssets(data, reset, setStatus)
+
+        // ModalSuccess({ title: "Successfully Add New Asset!", onlyShowOk: true })
     };
 
     useEffect(() => {
@@ -37,6 +90,9 @@ export const FormModal = () => {
             ModalSuccess({ title: "sorry there is an empty input!", type: "error", onlyShowOk: true })
         }
     }, [errors])
+
+
+    console.log(errors)
 
 
     return (
@@ -56,39 +112,53 @@ export const FormModal = () => {
                     </TitleContent>
                     <div className="grid grid-cols-3 gap-7">
                         <div className="space-y-8">
-                            <Form.input register={register("asset_name")} label={"Asset Name"} />
-                            <Form.input error={errors.protected_site} register={register("protected_site", { required: true })} label={"PROTECTED SITE *"} />
+                            <Form.input error={errors.name} register={register("name", { required: true })} label={"Asset NAME *"} />
+                            <SelectComponent loading={API.loading} data={API.data?.protectedSite?.result?.map(d => ({
+                                label: d.site_name,
+                                value: d.id
+                            }))} control={control} label={"PROTECTED SITE *"} error={errors.protected_site} height={45} name={"protected_site_id"} width={"100%"}></SelectComponent>
                             <Form.input register={register("contains_pii_data")} label={"contains pii data"} />
-                            <SelectComponent control={control} label={"select existing system owner"} height={45} name={"select_existing_system_owner"} width={"100%"}></SelectComponent>
+                            <SelectComponent onChangeData={async (d) => {
+                                let prop = await API.systemOwnerDetail({ idOwner: d })
+                                console.log(prop)
+                                let { created_by, email, id } = prop.items.result
+                                setValue("system_owner", created_by)
+                                setValue("system_owner_email", email)
+                                setValue("system_owner_id", id)
+                                setSelectOwner(true)
+                            }} error={errors.existing_system_owner} setvalue={setValue} loading={API.loading} data={API.data.systemOwner?.result.map(d => ({
+                                label: d.name,
+                                value: d.id
+                            }))} control={control} label={"select existing system owner *"} height={45} name={"existing_system_owner"} width={"100%"}></SelectComponent>
                             <Form.input register={register("brand")} label={"brand"} />
                             <Form.input register={register("server")} label={"server"} />
                             <Form.texarea register={register("description")} label={"description"}></Form.texarea>
                         </div>
                         <div className="space-y-8">
-                            <Form.input error={errors.asset_ip_url} register={register("asset_ip_url", { required: true })} label={"asset ip / url *"} />
-                            <Form.input error={errors.asset_risk_group} register={register("asset_risk_group", { required: true })} label={"asset risk group *"} />
-                            <Form.input register={register("system_owner")} label={"system owner"} />
-                            <Form.input register={register("hostname")} label={"hostname (fqdn)"} />
+                            <Form.input error={errors.url_ip} register={register("url_ip", { required: true })} label={"asset ip / url *"} />
+                            <Form.input error={errors.asset_risk_group} register={register("risk_group", { required: true })} label={"asset risk group *"} />
+                            {selectOwner && <Form.input disabled register={register("system_owner")} error={errors.system_owner} label={"system owner *"} />}
+                            <Form.input register={register("hostname_fqdn")} label={"hostname (fqdn)"} />
                             <Form.input register={register("application_criticality")} label={"application criticality"} />
                             <Form.input register={register("tags")} label={"tags"} />
-                            <Form.texarea label={"available scanning windows"}></Form.texarea>
+                            <Form.texarea register={register("available_scanning_windows")} label={"available scanning windows"}></Form.texarea>
                         </div>
                         <div className="space-y-8 flex flex-col">
-                            <Form.input register={register("asset_id_tag")} label={"asset id / tag"} />
+                            <Form.input register={register("id_tag")} label={"asset id / tag"} />
                             <Form.input register={register("environment")} label={"environment"} />
-                            <Form.input error={errors.system_owner_email} register={register("system_owner_email", { required: true })} label={"system owner email *"} />
+                            {selectOwner && <Form.input disabled error={errors.system_owner_email} register={register("system_owner_email")} label={"system owner email *"} />}
                             <Form.input register={register("mac_address")} label={"mac address"} />
                             <Form.input register={register("frontend_backend")} label={"frontend / backend"} />
                         </div>
                         <div className="grid grid-cols-5 gap-10 col-span-full relative">
                             <div>
                                 <div className="sticky top-5 space-y-6">
-                                    <SelectComponent name={"platform_select"} control={control} width={"100%"}></SelectComponent>
+                                    <SelectComponent error={errors.platform_select} name={"platform_select"} control={control} width={"100%"}></SelectComponent>
                                     <div className="space-y-3">
                                         <span>INTERNET FACING :</span>
                                         <div>
-                                            <Form.check register={register("internet_yes")} text={"YES"}></Form.check>
-                                            <Form.check register={register("internet_no")} text={"NO"}></Form.check>
+                                            <Form.radio value={true}  register={register("internet_facing")} text={"YES"}></Form.radio>
+                                            <Form.radio value={false}  register={register("internet_facing")} text={"NO"}></Form.radio>
                                         </div>
                                     </div>
                                 </div>

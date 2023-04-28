@@ -40,7 +40,7 @@ const ModalItems = styled(Modal)`
     
 `
 
-export const ModalsComponent = ({ children, modalName, width = 800, style = ``, footer = true, customButton = true }) => {
+export const ModalsComponent = ({ children, modalName, width = 800, style = ``, footer = true}) => {
     const { status, setStatus } = GetAndUpdateContext()
 
     const hideModal = () => {

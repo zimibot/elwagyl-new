@@ -7,11 +7,11 @@ export const CardBox = ({ borderBottom, children, className }) => {
     </div>
 }
 
-export const CardAnimation = ({ children, className }) => {
+export const CardAnimation = ({ children, className, duration= 400 }) => {
     const parent = useRef(null)
 
     useEffect(() => {
-        parent.current && autoAnimate(parent.current)
+        parent.current && autoAnimate(parent.current, {duration: duration})
     }, [parent])
 
 

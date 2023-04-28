@@ -1,4 +1,4 @@
-import { ExclamationCircleOutlined, EyeFilled, EyeInvisibleFilled } from "@ant-design/icons"
+import { ExclamationCircleFilled, ExclamationCircleOutlined, EyeFilled, EyeInvisibleFilled } from "@ant-design/icons"
 import { DatePicker, Tooltip } from "antd"
 import { useState } from "react"
 import styled from "styled-components"
@@ -39,7 +39,7 @@ export const Form = {
         return <div className={rowColumn ? "flex gap-4 whitespace-nowrap items-center" : `flex flex-col gap-4 text-[16px] ${className} `}>
             {label && <label className="uppercase">{label}</label>}
             <div className="relative w-full flex items-center justify-end">
-                <Input {...props} type={type} className={`bg-primary w-full p-3 ${classNameInput} ${error && "border border-red-400"}`} {...register} ></Input>
+                <Input {...props} type={type} className={`bg-primary w-full p-3 ${classNameInput} ${error && "border !border-red-400"}`} {...register} ></Input>
 
                 {!error && props?.type === "password" &&
                     <Dropdown
@@ -68,7 +68,7 @@ export const Form = {
 
                 {error && <div className="text-red-400 absolute px-4 font-[20px]">
                     <Tooltip title="INPUT IS REQUIRED">
-                        <ExclamationCircleOutlined />
+                        <ExclamationCircleFilled />
                     </Tooltip>
                 </div>}
             </div>

@@ -1,7 +1,10 @@
 import styled from 'styled-components';
 import { Data } from './data';
-import { Pagination } from 'antd';
+import { Pagination, Tooltip } from 'antd';
 import { ERRORCOMPONENT } from '../../model/information';
+import { useVirtualizer } from '@tanstack/react-virtual';
+import { useRef } from 'react';
+import { ErrorItems } from '../../pages/cyber.deck';
 
 const Tables = styled.table`
     border-collapse: inherit;
@@ -122,7 +125,17 @@ export const TableInline = ({
             statistics: 32,
             total: 1240,
         },
-    ], height = "auto", currentPage = 1, onChange, hoverDisable, paggination, borderLast, tooltip, style = { columns: {}, row: {} }, onLoad = () => { }, className = "flex-auto flex flex-col", classTable, onClick = () => { }, border, active = null, totalPages = 30 }) => {
+    ], height = "auto", error, currentPage = 1, onChange, pageSize = 1, infiniteScroll, hoverDisable, paggination, borderLast, tooltip, style = { columns: {}, row: {} }, onLoad = () => { }, className = "flex-auto flex flex-col", classTable, onClick = () => { }, border, active = null, totalPages = 30 }) => {
+
+
+    const parentRef = useRef()
+
+    // The virtualizer
+    const rowVirtualizer = useVirtualizer({
+        count: !data ? 0 : data.length,
+        getScrollElement: () => parentRef.current,
+        estimateSize: () => 50,
+    })
 
 
     return (
@@ -130,7 +143,60 @@ export const TableInline = ({
             height: height
         }}>
             <div className={`flex flex-col flex-1 relative text-blue ${classTable ? classTable : ""}`} >
-                <div className="absolute w-full h-full overflow-auto  table-scroll">
+                {infiniteScroll ? <div className="flex flex-1 flex-col absolute w-full h-full gap-2 overflow-auto table-scroll">
+                    <div className="grid bg-primary px-5 py-4 gap-4 uppercase border-primary " style={{
+                        gridTemplateColumns: `repeat(${columns.length}, minmax(0, 2fr))`,
+                    }}>
+                        {columns.map((d, k) => {
+                            return <div key={k} className={`${d.columnClass}`} style={{
+                                ...style.columns
+                            }}>{d.title}</div>
+                        })}
+                    </div>
+                    <div className=" overflow-y-auto overflow-x-hidden space-y-2 " ref={parentRef}>
+                        <div
+                            style={{
+                                height: `${rowVirtualizer.getTotalSize()}px`,
+                                width: '100%',
+                                position: 'relative',
+                            }}
+                        >
+                            {rowVirtualizer.getVirtualItems().map((virtualItem) => (
+                                <div
+                                    key={virtualItem.key}
+                                    style={{
+                                        position: 'absolute',
+                                        top: 0,
+                                        left: 0,
+                                        width: '100%',
+                                        height: `${virtualItem.size}px`,
+                                        transform: `translateY(${virtualItem.start}px)`,
+                                    }}
+                                >
+                                    <div className="grid gap-4 p-4 border border-primary" style={{
+                                        gridTemplateColumns: `repeat(${columns.length}, minmax(0, 1fr))`
+                                    }}>
+                                        {columns.map(s => {
+                                            return s["html"] ? <div key={s.key} className='overflow-hidden text-ellipsis  whitespace-nowrap'>
+                                                <Tooltip placement="left" title={data[virtualItem.index][s.key]}>
+                                                    {s['html'](data[virtualItem.index][s.key], d)}
+                                                </Tooltip>
+                                            </div> : <div key={s.key} className='overflow-hidden text-ellipsis whitespace-nowrap'>
+                                                <Tooltip placement="left" title={data[virtualItem.index][s.key]}>
+                                                    {data[virtualItem.index][s.key]}
+                                                </Tooltip>
+                                            </div>
+                                        })}
+                                    </div>
+                                </div>
+                            ))}
+                            {/* {data.map((d, k) => {
+                                return 
+                            })} */}
+                        </div>
+
+                    </div>
+                </div> : error ? <ErrorItems></ErrorItems> : <div className="absolute w-full h-full overflow-auto  table-scroll">
                     <Tables hoverDisable={hoverDisable} border={border} borderLast={borderLast} className="text-left w-full" active={active}>
                         <thead className="sticky top-0 z-10">
                             <tr>
@@ -147,26 +213,27 @@ export const TableInline = ({
                             {Loading ? <tr className="!border-primary" >
                                 <td colSpan={columns.length}>
                                     <div className="text-center py-4">
-                                        <div className="border py-2">LOADING</div>
+                                        <div className="py-2">LOADING</div>
                                     </div>
                                 </td>
                             </tr> : !data || data.length === 0 ? <tr>
                                 <td colSpan={columns.length}>
                                     <div className="text-center py-4 text-[#fff]">
-                                        <div className="border py-2">{ERRORCOMPONENT.dataNotAvailable}</div>
+                                        <div className="py-2">{ERRORCOMPONENT.dataNotAvailable}</div>
                                     </div>
                                 </td>
-                            </tr> : <Data onLoad={onLoad} style={style.row} tooltip={tooltip} border={border} data={data} onClick={onClick} column={columns}></Data>}
+                            </tr> : <Data onLoad={onLoad} style={style.row} tooltip={tooltip} border={border} items={data} onClick={onClick} column={columns}></Data>}
 
 
                         </tbody>
                     </Tables>
-                </div>
+                </div>}
+
             </div>
 
             {paggination &&
                 <div className="bg-primary px-2 py-1 flex text-[16px] justify-center ">
-                    {!Loading ? <Pagination onChange={onChange} simple defaultCurrent={currentPage} total={totalPages} /> : "LOADING"}
+                    {error ? "" : !Loading ? <Pagination onChange={onChange} simple defaultCurrent={currentPage} pageSize={pageSize} total={totalPages} /> : "LOADING"}
                 </div>
             }
         </div>

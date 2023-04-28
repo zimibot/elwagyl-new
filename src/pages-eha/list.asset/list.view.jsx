@@ -1,3 +1,4 @@
+import { GET_API_EHA } from "../../api/eha/GET"
 import { ButtonComponents } from "../../components.eha/button"
 import { CardBox } from "../../components/layout/card"
 import { TitleContent } from "../../components/layout/title"
@@ -6,6 +7,7 @@ import { GetAndUpdateContext } from "../../model/context.function"
 
 export const ListView = () => {
     const { setStatus } = GetAndUpdateContext()
+
 
     return (
         <div className="col-span-full flex-1 flex flex-col pb-10">
@@ -37,7 +39,7 @@ export const ListView = () => {
                 <TitleContent>
                     <div className="text-[24px] uppercase text-blue">UNCONFIRMED ASSET LIST</div>
                 </TitleContent>
-                <TableInline border paggination hoverDisable columns={[
+                <TableInline border hoverDisable columns={[
                     {
                         title: 'ID',
                         key: 'id',
