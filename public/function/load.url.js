@@ -3,6 +3,7 @@ const path = require('path');
 const WindowConfig = require("./browser.window")
 const { ipcMain, app } = require('electron');
 
+ 
 module.exports = function CreateWindow() {
     const win = WindowConfig()
     win.loadURL(
@@ -61,6 +62,7 @@ module.exports = function CreateWindow() {
 
         if (isDev) {
             win.webContents.openDevTools({ mode: 'detach' });
+           
         }
     })
 

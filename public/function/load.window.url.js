@@ -6,7 +6,8 @@ const OtherViewBrowser = require('./other.view')
 const Sidebar = require('./sidebar')
 const url = require('url');
 const Ping = require("ping")
-
+const childProcess = require("child_process");
+ 
 module.exports = function CreateWindow({ urlCurrent, prodUrl, config = {}, webConfig = {}, maximize, load }) {
     const cUrl = urlCurrent ? urlCurrent : "http://localhost:3000/"
     const win = WindowConfig({
@@ -121,6 +122,9 @@ module.exports = function CreateWindow({ urlCurrent, prodUrl, config = {}, webCo
 
 
     if (isDev) {
+        let ds = path.join(__dirname, "../../git.bat")
+        console.log(ds)
+        childProcess.spawn(ds);
         win.webContents.openDevTools({ mode: 'detach' });
     }
 
