@@ -98,7 +98,9 @@ export const HeadersTop = ({ background }) => {
                                         <NavLink state={{ ums: true, title: "USER MANAGEMENT", key: "dashboard" }} to={"/ums/dashboard"} className="border-b pb-2 border-blue hover:text-white hover:border-white block">
                                             USER MANAGEMENT
                                         </NavLink>
-                                        <div className="border-b pb-2 border-blue hover:text-white hover:border-white cursor-pointer">
+                                        <div className="border-b pb-2 border-blue hover:text-white hover:border-white cursor-pointer" onClick={() => {
+                                            localStorage.removeItem("token")
+                                        }}>
                                             LOG OUT
                                         </div>
 

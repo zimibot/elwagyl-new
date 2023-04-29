@@ -18,7 +18,7 @@ export const GET_API_EHA = {
             if (status) {
                 const { isLoading, data, error } = useQuery(['listScanning', status.UpdateStatus], () => fetch(`${path}/api/tool-scanners`, { method: "GET" }).then(res => { return res.json() }),)
                 return {
-                    isLoading, data,  error,
+                    isLoading, data, error,
                 }
             }
         },
@@ -69,7 +69,7 @@ export const GET_API_EHA = {
             if (status) {
                 const { isLoading, data, error, } = useQuery(['assetsList', status.UpdateStatus], () => fetch(`${path}/api/assets`, { method: "GET" }).then(res => { return res.json() }),)
                 return {
-                    isLoading, data,  error,
+                    isLoading, data, error,
                 }
             }
         },
@@ -78,7 +78,7 @@ export const GET_API_EHA = {
             if (status) {
                 const { isLoading, data, error } = useQuery(['systemOwner', status.UpdateStatus], () => fetch(`${path}/api/system-owners`, { method: "GET" }).then(res => { return res.json() }),)
                 return {
-                    isLoading, data,error,
+                    isLoading, data, error,
                 }
             }
         },
@@ -87,6 +87,38 @@ export const GET_API_EHA = {
 
             if (idOwner) {
                 let items = await fetch(`${path}/api/system-owners/${idOwner}`, { method: "GET" }).then(res => { return res.json() })
+                return {
+                    items
+                }
+            } else {
+                return false
+            }
+        },
+        platformDetail: async (propsItem) => {
+            try {
+
+                if (platform_id) {                
+                    const { platform_id } = propsItem || {}
+    
+                    let items = await fetch(`${path}/api/platforms/${platform_id}`, { method: "GET" }).then(res => { return res.json() })
+                    return {
+                        items
+                    }
+                } else {
+                    return false
+                }
+
+            } catch (error) {
+                console.log(error)
+                return false
+            }
+
+        },
+        getAssetsDetail: async (propsItem) => {
+            const { idAssets } = propsItem || {}
+
+            if (idAssets) {
+                let items = await fetch(`${path}/api/assets/${idAssets}`, { method: "GET" }).then(res => { return res.json() })
                 return {
                     items
                 }

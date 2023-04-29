@@ -77,8 +77,8 @@ const MainDeck = () => {
 
                         </div>
                     </div>
-                    {API.error ? <ErrorItems/> : API.loading ? <Loading></Loading> :   <HeatmapComponent data={API.data.mainDeckStatisticsRiskStatus.result}></HeatmapComponent>}
-                  
+                    {API.error ? <ErrorItems /> : API.loading ? <Loading></Loading> : <HeatmapComponent data={API.data.mainDeckStatisticsRiskStatus.result}></HeatmapComponent>}
+
                     <TitleContent>
                         <div className="text-[24px] uppercase text-blue">FINDING MONTHLY REPORT</div>
                     </TitleContent>
@@ -201,7 +201,7 @@ const ChartFindingMonthly = ({ loading, data }) => {
     let da = []
 
     for (const key in items.result) {
-        console.log(key)
+
         da.push({
             date: getShortMonth(key).toUpperCase(),
             total: items.result[key]
@@ -259,7 +259,6 @@ const OverdueFinding = ({ data, loading }) => {
                     width={width}
                     height={height}
                     rowCount={items.length}
-
                     rowHeight={150}
                     rowRenderer={rowRenderer}
                     onScroll={({ scrollTop, scrollHeight, clientHeight }) => {

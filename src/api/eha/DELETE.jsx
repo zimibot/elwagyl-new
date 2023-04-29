@@ -6,6 +6,7 @@ export const DELETE_API = {
     deleteProtectedSite: (data, setStatus) => ToastData({ name: data.site_name, url: `${path}/api/protected-sites/${data.id}`, setStatus, data: { deleted_by: data.name } }),
     deleteScanManage: (data, setStatus) => ToastData({ name: data.site_name, url: `${path}/api/tool-scanners/${data.id}`, setStatus, data: { deleted_by: data.name } }),
     deleteVulnerabilities: (data, setStatus) => ToastData({ name: data.site_name, url: `${path}/api/vulnerabilities/${data.id}`, setStatus, data: { deleted_by: data.name } }),
+    deleteAssets: (data, setStatus) => ToastData({ name: data.site_name, url: `${path}/api/assets/${data.id}`, setStatus, data: { deleted_by: data.name } }),
 }
 
 const ToastData = ({ name, url, setStatus, data }) => {
@@ -14,7 +15,7 @@ const ToastData = ({ name, url, setStatus, data }) => {
         {
             loading: 'LOADING...',
             success: () => {
-                
+
                 setStatus((d) => ({
                     ...d,
                     UpdateStatus: !d?.UpdateStatus

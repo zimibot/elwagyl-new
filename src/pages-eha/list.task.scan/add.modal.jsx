@@ -33,10 +33,10 @@ export const AddModal = () => {
                             <Form.input register={register("tools_scanner")} label={"TOOLS SCANNER"} />
                             <div className="grid grid-cols-2 gap-4">
                                 <Form.date register={register("sla_date")} label={"SLA DATE"} />
-                                <Form.input register={register("tools_scanner")} label={"TOOLS SCANNER"} />
+                                <Form.date register={register("tools_scanner")} label={"SLA TIME"} />
                             </div>
                             <Form.input register={register("recipient_email")} label={"RECIPIENT EMAIL"} />
-                            <Form.input register={register("attachments")} label={"attachments"} />
+                            <Form.input type="file" register={register("attachments")} label={"attachments"} />
                         </div>
                         <div className="space-y-8 col-span-2 flex flex-col">
                             <Form.date register={register("dates_and_schedules")} label={"DATES AND SCHEDULES"} />
@@ -50,7 +50,7 @@ export const AddModal = () => {
                         <div className=" cursor-pointer min-w-[120px] bg-primary py-4 text-center text-red-500" onClick={() => {
                             setStatus(d => ({ ...d, ADDTASK: false }))
                         }}>CANCEL</div>
-                        <div type="submit" className=" min-w-[120px] bg-primary py-4 text-center uppercase px-4 text-yellow-400">save as draft</div>
+                        {/* <div type="submit" className=" min-w-[120px] bg-primary py-4 text-center uppercase px-4 text-yellow-400">save as draft</div> */}
                         <button type="submit" className=" min-w-[120px] bg-primary py-4">SAVE</button>
                     </div>
                 </form>

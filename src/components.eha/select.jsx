@@ -56,6 +56,7 @@ export const SelectComponent = ({ width = 160, error, height, control, name, cla
     },
 ] }) => {
 
+
     if (!control || !name) {
         return <div className="p-4 bg-red-500 text-white">
             ERROR SELECTED
