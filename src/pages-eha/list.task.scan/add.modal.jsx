@@ -7,7 +7,8 @@ import { GetAndUpdateContext } from "../../model/context.function";
 
 export const AddModal = () => {
     const { setStatus } = GetAndUpdateContext()
-    const { register, handleSubmit, setValue, unregister, watch, formState: { errors } } = useForm();
+    const { register, handleSubmit, control, formState: { errors } } = useForm();
+
     const onSubmit = data => {
         ModalSuccess()
     };
@@ -15,7 +16,6 @@ export const AddModal = () => {
 
     return (
         <ModalsComponent footer={false} width={null} style={`
-              
                 padding: 20px!important;
                 .ant-modal-content {
                     width: 100%;
@@ -32,15 +32,21 @@ export const AddModal = () => {
                             <Form.input register={register("target_scan")} label={"TARGET TO SCAN"} />
                             <Form.input register={register("tools_scanner")} label={"TOOLS SCANNER"} />
                             <div className="grid grid-cols-2 gap-4">
-                                <Form.date register={register("sla_date")} label={"SLA DATE"} />
-                                <Form.date register={register("tools_scanner")} label={"SLA TIME"} />
+                                <Form.date control={control} name={"sla_date"} label={"SLA DATE"} />
+                                <Form.date type={"time"} control={control} name={"tools_scanner"} label={"SLA TIME"} />
                             </div>
                             <Form.input register={register("recipient_email")} label={"RECIPIENT EMAIL"} />
                             <Form.input type="file" register={register("attachments")} label={"attachments"} />
                         </div>
                         <div className="space-y-8 col-span-2 flex flex-col">
-                            <Form.date register={register("dates_and_schedules")} label={"DATES AND SCHEDULES"} />
-                            <Form.date type={"time"} register={register("scheduled_start_time")} label={"SCHEDULED START TIME"} />
+                            <div className="grid grid-cols-2 gap-4">
+                                <Form.date control={control} name={"dates_and_schedules"} label={"DATES AND SCHEDULES"} />
+                                <Form.date control={control} name={"expected_end_date"} label={"EXPECTED END DATE"} />
+                            </div>
+                            <div className="grid grid-cols-2 gap-4">
+                                <Form.date type={"time"} control={control} name={"scheduled_start_time"} label={"SCHEDULED START TIME"} />
+                                <Form.date type={"time"} control={control} name={"expected_end_time"} label={"EXPECTED END TIME"} />
+                            </div>
                             <div className="flex flex-1 w-full">
                                 <Form.texarea classNameInput="h-full" className="w-full h-full" label={"REMARKS"}></Form.texarea>
                             </div>

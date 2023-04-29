@@ -3,6 +3,8 @@ import { DatePicker, TimePicker, Tooltip } from "antd"
 import { useState } from "react"
 import styled from "styled-components"
 import { Dropdown } from 'antd';
+import { Controller } from "react-hook-form";
+const { RangePicker } = DatePicker;
 
 
 const items = [
@@ -104,10 +106,26 @@ export const Form = {
             <span className="relative text-sc">  {text}</span>
         </Check>
     },
-    date: ({ onChange, label, type }) => {
+    date: ({ control, name, label, type, ...props }) => {
+
+        if (!control || !name) {
+            return <div className="w-full p-4 h-12 bg-red-500 text-white uppercase">control/name is required </div>
+        }
+        
         return <div className="flex flex-col gap-4 text-[16px]">
             <label className="uppercase">{label}</label>
-            {type === "time" ? <TimePickers onChange={d => onChange(d)}></TimePickers> : <DatePinckers onChange={d => onChange(d)} />}
+            <Controller
+                control={control}
+                name={name}
+                rules={{
+                    required: true
+                }}
+                render={({
+                    field: { onChange, onBlur, value, ref },
+                }) => {
+                    return (type === "time" ? <TimePickers ref={ref} value={value} {...props} onChange={d => onChange(d)}></TimePickers> : <DatePinckers ref={ref} value={value} type={type} onChange={d => onChange(d)} />)
+                }}
+            />
         </div>
     }
 
@@ -118,7 +136,7 @@ const DatePinckers = styled(DatePicker)`
     width: 100%;
     opacity: 1;
     font-size: 16px;
-    padding: 11px;
+    padding: 9px;
     .ant-picker-input>input {
         font-size: 16px;
     }
@@ -130,7 +148,18 @@ const TimePickers = styled(TimePicker)`
     width: 100%;
     opacity: 1;
     font-size: 16px;
-    padding: 11px;
+    padding: 9px;
+    .ant-picker-input>input {
+        font-size: 16px;
+    }
+
+`
+const RangePickers = styled(RangePicker)`
+    background: #152A36;
+    width: 100%;
+    opacity: 1;
+    font-size: 16px;
+    padding: 9px;
     .ant-picker-input>input {
         font-size: 16px;
     }

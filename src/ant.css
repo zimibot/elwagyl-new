@@ -597,8 +597,13 @@ span.ant-picker-clear svg {
 
 .ant-picker-dropdown .ant-picker-panel-container {
   border-radius: 0;
+  background-color: #0B5567;
 }
 
 .ant-picker-dropdown .ant-picker-date-panel .ant-picker-content th {
   color: white;
+}
+
+.ant-btn-primary:disabled {
+  border: 0;
 }
