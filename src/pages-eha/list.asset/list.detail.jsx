@@ -7,6 +7,7 @@ import { TableInline } from "../../components/table"
 import { GetAndUpdateContext } from "../../model/context.function"
 import { ErrorHtml, Loading } from "../list.maintenance"
 import { DELETE_API } from "../../api/eha/DELETE"
+import { Popconfirm } from "antd"
 
 export const ListDetail = () => {
     const { setStatus } = GetAndUpdateContext()
@@ -15,6 +16,7 @@ export const ListDetail = () => {
         active: "assetsList"
     }])
 
+    console.log(API.data)
 
     return (
         <div className="col-span-full flex-1 flex flex-col pb-10">
@@ -112,13 +114,11 @@ export const ListDetail = () => {
                     },
                     {
                         title: 'EDIT',
-                        key:"id",
+                        key: "id",
                         rowClass: "w-[50px] text-center",
                         columnClass: "text-center",
                         html: (id) => {
                             return <button className="flex items-center justify-center gap-4 w-full " onClick={() => {
-                                console.log(id)
-
                                 setStatus(d => ({
                                     ...d,
                                     ADDASSET: !d.ADDASSET,
@@ -131,16 +131,21 @@ export const ListDetail = () => {
                     },
                     {
                         title: 'DELETE',
-                        key:"id",
+                        key: "id",
                         rowClass: "w-[50px] text-center",
                         columnClass: "text-center",
-                        html: (id) => {
-                            return <button className="flex items-center justify-center gap-4 w-full " onClick={() => {
-
-                                DELETE_API.deleteAssets()
+                        html: (__, data) => {
+                            return <Popconfirm title="Are you sure to delete this asset?" okText="Deleted" onConfirm={() => {
+                                data = {
+                                    ...data,
+                                    name: data.created_by
+                                }
+                                DELETE_API.deleteAssets(data, setStatus)
                             }}>
-                                <DeleteOutlined></DeleteOutlined>
-                            </button>
+                                <button className="flex items-center justify-center gap-4 w-full " >
+                                    <DeleteOutlined></DeleteOutlined>
+                                </button>
+                            </Popconfirm>
                         }
                     },
                 ]}

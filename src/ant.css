@@ -531,3 +531,74 @@ span.ant-picker-clear svg {
   height: 100%;
   overflow: auto;
 }
+
+
+.ant-select-multiple .ant-select-selection-item {
+  background: #00d8ff00;
+  font-weight: 500;
+  border: 1px solid #00d8ff;
+  border-radius: 0;
+  padding: 0;
+}
+
+.ant-select-multiple .ant-select-selection-item-remove {
+  display: flex;
+  align-items: center;
+  background: #00d8ff;
+  padding: 5px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.ant-select-multiple .ant-select-selection-item-content {
+  padding: 0 9px;
+}
+
+.ant-btn {
+  background: #00d8ff!important;
+}
+
+.ant-picker-time-panel-cell-inner {
+  color: #00d8ff!important;
+}
+
+.ant-picker-dropdown .ant-picker-time-panel-column >li.ant-picker-time-panel-cell-selected .ant-picker-time-panel-cell-inner {
+  color: white!important;
+  background: #00d8ff;
+}
+
+.ant-picker-dropdown .ant-picker-cell .ant-picker-cell-inner {
+  color: #00d8ff;
+}
+
+.ant-picker-dropdown .ant-picker-cell-in-view.ant-picker-cell-selected .ant-picker-cell-inner {
+  background: #00d8ff;
+}
+
+.ant-picker-dropdown .ant-picker-today-btn {
+  color: white;
+}
+
+.ant-picker-dropdown .ant-picker-header {
+  color: white;
+}
+
+.ant-picker-dropdown .ant-picker-header >button {
+  color: white;
+}
+
+.ant-picker-dropdown .ant-picker-header >button:hover {
+  color: #00d8ff;
+}
+
+.ant-picker-dropdown {
+  border-radius: 0;
+}
+
+.ant-picker-dropdown .ant-picker-panel-container {
+  border-radius: 0;
+}
+
+.ant-picker-dropdown .ant-picker-date-panel .ant-picker-content th {
+  color: white;
+}

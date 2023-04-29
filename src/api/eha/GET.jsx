@@ -97,8 +97,8 @@ export const GET_API_EHA = {
         platformDetail: async (propsItem) => {
             try {
 
+                const { platform_id } = propsItem || {}
                 if (platform_id) {                
-                    const { platform_id } = propsItem || {}
     
                     let items = await fetch(`${path}/api/platforms/${platform_id}`, { method: "GET" }).then(res => { return res.json() })
                     return {

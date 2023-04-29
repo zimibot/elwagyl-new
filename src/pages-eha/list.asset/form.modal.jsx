@@ -11,6 +11,7 @@ import { isEmpty } from "radash";
 import { GET_API_EHA } from "../../api/eha/GET";
 import { POST_API } from "../../api/eha/POST";
 import { toast } from "react-hot-toast";
+import { DeleteFilled, DeleteOutlined } from "@ant-design/icons";
 
 export const FormModal = () => {
     const API = GET_API_EHA.root([
@@ -49,7 +50,7 @@ export const FormModal = () => {
             data = {
                 ...data,
                 created_by: localStorage.getItem("user"),
-                out_of_scope: true,
+                // out_of_scope: true,
                 contains_pii_data: true
             };
 
@@ -161,7 +162,28 @@ export const FormModal = () => {
                                 label: d.site_name,
                                 value: d.id
                             }))} control={control} label={"PROTECTED SITE *"} error={errors.protected_site_id} height={45} name={"protected_site_id"} width={"100%"}></SelectComponent>
-                            <Form.input register={register("contains_pii_data")} label={"contains pii data"} />
+                            {/* <Form.input register={register("contains_pii_data")} label={"contains pii data"} /> */}
+                            <SelectComponent mode="multiple" name={"contains_pii_data"} label={"CONTAINS PII DATA"} data={[{
+                                label: "Name",
+                                value: "name"
+                            },
+                            {
+                                label: "Phone no",
+                                value: "phone_no"
+                            },
+                            {
+                                label: "Personal Identification no",
+                                value: "personal_identification_no"
+                            },
+                            {
+                                label: "Address",
+                                value: "address"
+                            },
+                            {
+                                label: "Email",
+                                value: "email"
+                            },
+                            ]} control={control} width={"100%"} height={45}></SelectComponent>
                             <SelectComponent onChangeData={async (d) => {
                                 let prop = await API.systemOwnerDetail({ idOwner: d })
                                 let { created_by } = prop.items.result
@@ -174,26 +196,72 @@ export const FormModal = () => {
                                 value: d.id
                             }))} control={control} label={"select existing system owner *"} height={45} name={"existing_system_owner"} width={"100%"}></SelectComponent>
                             <Form.input register={register("brand")} label={"brand"} />
-                            <Form.input register={register("server")} label={"server"} />
+                            {/* <Form.input register={register("server")} label={"server"} /> */}
+                            <SelectComponent data={[
+                                {
+                                    label: "yes",
+                                    value: "yes"
+                                },
+                                {
+                                    label: "no",
+                                    value: "no"
+                                },
+                            ]} name={"server"} label={"server"} control={control} width={"100%"} height={45}></SelectComponent>
                             <Form.texarea register={register("description")} label={"description"}></Form.texarea>
                             <Form.check error={errors.out_of_scope} value={true} register={register("out_of_scope")} text={"out of scope"}></Form.check>
 
                         </div>
                         <div className="space-y-8">
                             <Form.input error={errors.url_ip} register={register("url_ip", { required: true })} label={"asset ip / url *"} />
-                            <Form.input error={errors.risk_group} register={register("risk_group", { required: true })} label={"asset risk group *"} />
+                            <SelectComponent name={"risk_group"} label={"asset risk group"} control={control} width={"100%"} height={45}></SelectComponent>
+                            {/* <Form.input error={errors.risk_group} register={register("risk_group", { required: true })} label={"asset risk group *"} /> */}
                             <Form.input register={register("system_owner")} label={"system owner"} />
                             <Form.input register={register("hostname_fqdn")} label={"hostname (fqdn)"} />
-                            <Form.input register={register("application_criticality")} label={"application criticality"} />
-                            <Form.input register={register("tags")} label={"tags"} />
+                            <SelectComponent data={[
+                                {
+                                    label: "low",
+                                    value: "low"
+                                },
+                                {
+                                    label: "medium",
+                                    value: "medium"
+                                },
+                                {
+                                    label: "high",
+                                    value: "high"
+                                },
+                            ]} name={"application_criticality"} label={"application criticality"} control={control} width={"100%"} height={45}></SelectComponent>
+                            {/* <Form.input register={register("application_criticality")} label={"application criticality"} /> */}
+                            {/* <Form.input register={register("tags")} label={"tags"} /> */}
+                            <SelectComponent mode="tags" name={"tags"} label={"tags"} data={[]} control={control} width={"100%"} height={45}></SelectComponent>
                             <Form.texarea register={register("available_scanning_windows")} label={"available scanning windows"}></Form.texarea>
                         </div>
                         <div className="space-y-8 flex flex-col">
                             <Form.input register={register("id_tag")} label={"asset id / tag"} />
-                            <Form.input register={register("environment")} label={"environment"} />
+                            <SelectComponent name={"environment"} label={"environment"} data={[{
+                                label: "UAT",
+                                value: "uat"
+                            },
+                            {
+                                label: "PRODUCTION",
+                                value: "production"
+                            }
+                            ]} control={control} width={"100%"} height={45}></SelectComponent>
+                            {/* <Form.input register={register("environment")} label={"environment"} /> */}
                             <Form.input error={errors.system_owner_email} register={register("system_owner_email")} label={"system owner email "} />
                             <Form.input register={register("mac_address")} label={"mac address"} />
-                            <Form.input register={register("frontend_backend")} label={"frontend / backend"} />
+                            {/* <Form.input register={register("frontend_backend")} label={"frontend / backend"} /> */}
+                            <SelectComponent onChangeData={d => {
+                                console.log(d)
+                            }} mode="multiple" name={"frontend_backend"} label={"frontend / backend"} data={[{
+                                label: "frontend",
+                                value: "frontend"
+                            },
+                            {
+                                label: "backend",
+                                value: "backend"
+                            },
+                            ]} control={control} width={"100%"} height={45}></SelectComponent>
                         </div>
                         <div className="grid grid-cols-5 gap-10 col-span-full relative">
                             <div>

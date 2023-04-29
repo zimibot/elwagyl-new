@@ -1,5 +1,5 @@
 import { ExclamationCircleFilled, ExclamationCircleOutlined, EyeFilled, EyeInvisibleFilled } from "@ant-design/icons"
-import { DatePicker, Tooltip } from "antd"
+import { DatePicker, TimePicker, Tooltip } from "antd"
 import { useState } from "react"
 import styled from "styled-components"
 import { Dropdown } from 'antd';
@@ -104,16 +104,28 @@ export const Form = {
             <span className="relative text-sc">  {text}</span>
         </Check>
     },
-    date: ({ onChange, label }) => {
+    date: ({ onChange, label, type }) => {
         return <div className="flex flex-col gap-4 text-[16px]">
             <label className="uppercase">{label}</label>
-            <DatePinckers onChange={d => onChange(d)} />
+            {type === "time" ? <TimePickers onChange={d => onChange(d)}></TimePickers> : <DatePinckers onChange={d => onChange(d)} />}
         </div>
     }
 
 }
 
 const DatePinckers = styled(DatePicker)`
+    background: #152A36;
+    width: 100%;
+    opacity: 1;
+    font-size: 16px;
+    padding: 11px;
+    .ant-picker-input>input {
+        font-size: 16px;
+    }
+
+`
+
+const TimePickers = styled(TimePicker)`
     background: #152A36;
     width: 100%;
     opacity: 1;

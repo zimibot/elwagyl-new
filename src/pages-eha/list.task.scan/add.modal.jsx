@@ -25,7 +25,7 @@ export const AddModal = () => {
             <CardBox>
                 <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
                     <TitleContent>
-                        <div className="text-[24px] uppercase text-blue">add new asset</div>
+                        <div className="text-[24px] uppercase text-blue">add new scan</div>
                     </TitleContent>
                     <div className="grid grid-cols-3 gap-7">
                         <div className="space-y-8">
@@ -40,7 +40,7 @@ export const AddModal = () => {
                         </div>
                         <div className="space-y-8 col-span-2 flex flex-col">
                             <Form.date register={register("dates_and_schedules")} label={"DATES AND SCHEDULES"} />
-                            <Form.date register={register("scheduled_start_time")} label={"SCHEDULED START TIME"} />
+                            <Form.date type={"time"} register={register("scheduled_start_time")} label={"SCHEDULED START TIME"} />
                             <div className="flex flex-1 w-full">
                                 <Form.texarea classNameInput="h-full" className="w-full h-full" label={"REMARKS"}></Form.texarea>
                             </div>

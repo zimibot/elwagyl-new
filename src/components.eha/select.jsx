@@ -2,7 +2,7 @@ import { Select, Tooltip } from "antd"
 import { SquareMedium } from "../components/decoration/square"
 import styled from "styled-components"
 import { Controller } from "react-hook-form";
-import { ExclamationCircleFilled } from "@ant-design/icons";
+import { DeleteFilled, ExclamationCircleFilled } from "@ant-design/icons";
 
 const Selecable = styled(Select)`
     .ant-select-selector {
@@ -54,7 +54,7 @@ export const SelectComponent = ({ width = 160, error, height, control, name, cla
         value: 'no',
         label: "NON ALL",
     },
-] }) => {
+], ...props }) => {
 
 
     if (!control || !name) {
@@ -80,33 +80,41 @@ export const SelectComponent = ({ width = 160, error, height, control, name, cla
                 rules={{
                     required: true
                 }}
-                defaultValue={null}
+                // defaultValue={null}
                 render={({
                     field: { onChange, onBlur, value, ref },
+                }) => {
+                    value = value ? value : {}
+                    return (
+                        <Selecable
+                            ref={ref}
+                            maxTagCount="responsive"
+                            height={height}
+                            // value={value ? value : false}
+                            {...value}
+                            status={error ? 'error' : ''}
+                            onBlur={d => onBlur(d)}
+                            className={className ? className : ""}
+                            style={{
+                                width: width,
+                            }}
+                            loading={loading}
+                            // defaultActiveFirstOption
+                            removeIcon={() => {
+                                return <DeleteFilled></DeleteFilled>
+                            }}
+                            onChange={d => {
+                                onChange(d)
+                                if (onChangeData) {
+                                    onChangeData(d)
+                                }
+                            }}
 
-
-                }) => (
-                    <Selecable
-                        ref={ref}
-                        height={height}
-                        value={value}
-                        status={error ? 'error' : ''}
-                        onBlur={d => onBlur(d)}
-                        className={className ? className : ""}
-                        style={{
-                            width: width,
-                        }}
-                        loading={loading}
-                        defaultActiveFirstOption
-                        onChange={d => {
-                            onChange(d)
-                            if (onChangeData) {
-                                onChangeData(d)
-                            }
-                        }}
-                        options={items}
-                    />
-                )}
+                            options={items}
+                            {...props}
+                        />
+                    )
+                }}
             />
             {error && <div className="text-red-400 absolute px-4 right-5 font-[20px]">
                 <Tooltip title="INPUT IS REQUIRED">
