@@ -37,39 +37,9 @@ export const SidebarMenu = () => {
                     {left}
                     {right}
                 </div>
-                <div>DASHBOARD</div>
+                <div>USER MANAGEMENT</div>
             </>,
-            key: 'dashboard',
-        },
-        {
-            label: <>
-                <div className="absolute w-full h-full items-center flex justify-between top-0 left-0 ">
-                    {left}
-                    {right}
-                </div>
-                <div>CRM Account</div>
-            </>,
-            key: 'crm',
-        },
-        {
-            label: <>
-                <div className="absolute w-full h-full items-center flex justify-between top-0 left-0 ">
-                    {left}
-                    {right}
-                </div>
-                <div>CASES</div>
-            </>,
-            key: 'cases',
-        },
-        {
-            label: <>
-                <div className="absolute w-full h-full items-center flex justify-between top-0 left-0 ">
-                    {left}
-                    {right}
-                </div>
-                <div>SENSORS</div>
-            </>,
-            key: 'sensor',
+            key: 'user management',
         },
         {
             label: <>
@@ -81,7 +51,6 @@ export const SidebarMenu = () => {
             </>,
             key: 'settings',
         },
-
 
     ];
 

@@ -44,53 +44,49 @@ export const FormModal = () => {
         name: "platform"
     });
 
+    console.log(errors)
     const onSubmit = async (data) => {
-        try {
-            // Menambahkan beberapa data baru ke data yang diinputkan
-            data = {
-                ...data,
-                created_by: localStorage.getItem("user"),
-                // out_of_scope: true,
-                contains_pii_data: true
-            };
+        data = {
+            ...data,
+            created_by: localStorage.getItem("user"),
+            // out_of_scope: true,
+            contains_pii_data: true
+        };
 
-            const onSuccess = (response) => {
-                // Mendapatkan ID dari asset yang berhasil ditambahkan
-                const { id } = response.data.result;
+        console.log(data)
 
-                // Menambahkan data platform jika ada
-                if (data.platform?.length > 0) {
-                    const items = data.platform.map(item => ({
-                        ...item,
-                        created_by: localStorage.getItem("user"),
-                        asset_id: id
-                    }));
-                    POST_API.addplatforms(items, reset, setStatus);
-                }
+        const onSuccess = (response) => {
+            // Mendapatkan ID dari asset yang berhasil ditambahkan
+            const { id } = response.data.result;
 
-                // Mengubah status ADDASSET dan idAssets menjadi null
-                setStatus(prevState => ({
-                    ...prevState,
-                    ADDASSET: false,
-                    idAssets: null
+            // Menambahkan data platform jika ada
+            if (data.platform?.length > 0) {
+                const items = data.platform.map(item => ({
+                    ...item,
+                    created_by: localStorage.getItem("user"),
+                    asset_id: id
                 }));
-            };
+                POST_API.addplatforms(items, reset, setStatus);
+            }
 
-            const onError = (error) => {
-                // Menampilkan pesan error untuk setiap param yang tidak valid
-                error.result.forEach(d => {
-                    setError(d.param);
-                });
-            };
+            // Mengubah status ADDASSET dan idAssets menjadi null
+            setStatus(prevState => ({
+                ...prevState,
+                ADDASSET: false,
+                idAssets: null
+            }));
+        };
 
-            // Menambahkan data asset baru
-            POST_API.addAssets(data, reset, setStatus, onSuccess, onError);
-        } catch (error) {
-            // Menangani error jika terjadi kesalahan saat menambahkan data asset
-            console.error(error);
-            // Tampilkan pesan error
-            toast.error('Terjadi kesalahan saat menambahkan data asset!');
-        }
+        const onError = (error) => {
+            // Menampilkan pesan error untuk setiap param yang tidak valid
+            console.log(error)
+            error.result.forEach(d => {
+                setError(d.param);
+            });
+        };
+
+        // Menambahkan data asset baru
+        POST_API.addAssets(data, reset, setStatus, onSuccess, onError);
     };
     useEffect(() => {
         if (!isEmpty(errors)) {
@@ -152,18 +148,17 @@ export const FormModal = () => {
             <CardBox>
                 <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
                     <TitleContent>
-
                         <div className="text-[24px] uppercase text-blue">{!idAssets ? "add new" : "edit"} asset</div>
                     </TitleContent>
                     <div className="grid grid-cols-3 gap-7">
                         <div className="space-y-8">
                             <Form.input error={errors.name} register={register("name", { required: true })} label={"Asset NAME *"} />
-                            <SelectComponent loading={API.loading} data={API.data?.protectedSite?.result?.map(d => ({
+                            <SelectComponent required={false} loading={API.loading} data={API.data?.protectedSite?.result?.map(d => ({
                                 label: d.site_name,
                                 value: d.id
                             }))} control={control} label={"PROTECTED SITE *"} error={errors.protected_site_id} height={45} name={"protected_site_id"} width={"100%"}></SelectComponent>
                             {/* <Form.input register={register("contains_pii_data")} label={"contains pii data"} /> */}
-                            <SelectComponent mode="multiple" name={"contains_pii_data"} label={"CONTAINS PII DATA"} data={[{
+                            <SelectComponent required={false} mode="multiple" name={"contains_pii_data"} label={"CONTAINS PII DATA"} data={[{
                                 label: "Name",
                                 value: "name"
                             },
@@ -184,27 +179,27 @@ export const FormModal = () => {
                                 value: "email"
                             },
                             ]} control={control} width={"100%"} height={45}></SelectComponent>
-                            <SelectComponent onChangeData={async (d) => {
+                            <SelectComponent required={false} onChangeData={async (d) => {
                                 let prop = await API.systemOwnerDetail({ idOwner: d })
-                                let { created_by } = prop.items.result
+                                let { id } = prop.items.result
                                 // setValue("system_owner", created_by)
                                 // setValue("system_owner_email", email)
-                                setValue("system_owner_id", created_by)
+                                setValue("system_owner_id", id)
                                 // setSelectOwner(true)
                             }} error={errors.existing_system_owner} setvalue={setValue} loading={API.loading} data={API.data.systemOwner?.result.map(d => ({
                                 label: d.name,
-                                value: d.id
+                                value: d.name
                             }))} control={control} label={"select existing system owner *"} height={45} name={"existing_system_owner"} width={"100%"}></SelectComponent>
                             <Form.input register={register("brand")} label={"brand"} />
                             {/* <Form.input register={register("server")} label={"server"} /> */}
-                            <SelectComponent data={[
+                            <SelectComponent required={false} data={[
                                 {
                                     label: "yes",
-                                    value: "yes"
+                                    value: true
                                 },
                                 {
                                     label: "no",
-                                    value: "no"
+                                    value: false
                                 },
                             ]} name={"server"} label={"server"} control={control} width={"100%"} height={45}></SelectComponent>
                             <Form.texarea register={register("description")} label={"description"}></Form.texarea>
@@ -213,11 +208,11 @@ export const FormModal = () => {
                         </div>
                         <div className="space-y-8">
                             <Form.input error={errors.url_ip} register={register("url_ip", { required: true })} label={"asset ip / url *"} />
-                            <SelectComponent name={"risk_group"} label={"asset risk group"} control={control} width={"100%"} height={45}></SelectComponent>
+                            <SelectComponent required={false} name={"risk_group"} label={"asset risk group"} control={control} width={"100%"} height={45}></SelectComponent>
                             {/* <Form.input error={errors.risk_group} register={register("risk_group", { required: true })} label={"asset risk group *"} /> */}
                             <Form.input register={register("system_owner")} label={"system owner"} />
                             <Form.input register={register("hostname_fqdn")} label={"hostname (fqdn)"} />
-                            <SelectComponent data={[
+                            <SelectComponent required={false} data={[
                                 {
                                     label: "low",
                                     value: "low"
@@ -233,12 +228,12 @@ export const FormModal = () => {
                             ]} name={"application_criticality"} label={"application criticality"} control={control} width={"100%"} height={45}></SelectComponent>
                             {/* <Form.input register={register("application_criticality")} label={"application criticality"} /> */}
                             {/* <Form.input register={register("tags")} label={"tags"} /> */}
-                            <SelectComponent mode="tags" name={"tags"} label={"tags"} data={[]} control={control} width={"100%"} height={45}></SelectComponent>
+                            <SelectComponent required={false} mode="tags" name={"tags"} label={"tags"} data={[]} control={control} width={"100%"} height={45}></SelectComponent>
                             <Form.texarea register={register("available_scanning_windows")} label={"available scanning windows"}></Form.texarea>
                         </div>
                         <div className="space-y-8 flex flex-col">
                             <Form.input register={register("id_tag")} label={"asset id / tag"} />
-                            <SelectComponent name={"environment"} label={"environment"} data={[{
+                            <SelectComponent required={false} name={"environment"} label={"environment"} data={[{
                                 label: "UAT",
                                 value: "uat"
                             },
@@ -251,7 +246,7 @@ export const FormModal = () => {
                             <Form.input error={errors.system_owner_email} register={register("system_owner_email")} label={"system owner email "} />
                             <Form.input register={register("mac_address")} label={"mac address"} />
                             {/* <Form.input register={register("frontend_backend")} label={"frontend / backend"} /> */}
-                            <SelectComponent onChangeData={d => {
+                            <SelectComponent required={false} onChangeData={d => {
                                 console.log(d)
                             }} mode="multiple" name={"frontend_backend"} label={"frontend / backend"} data={[{
                                 label: "frontend",

@@ -20,8 +20,9 @@
   -webkit-text-size-adjust: 100%;
 }
 
-.ant-select-status-error {
-  border: 1px solid #ea4602;
+
+input::placeholder {
+  color: #00b3d3!important;
 }
 
 

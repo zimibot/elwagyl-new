@@ -1,16 +1,24 @@
-import { Modal, Result } from "antd"
+import { Modal, Result, Tooltip } from "antd"
 import styled from "styled-components"
 import { SquareMedium } from "../components/decoration/square"
 import { GetAndUpdateContext } from "../model/context.function"
 import { ButtonComponents } from "./button"
+import { TitleContent } from "../components/layout/title"
+import { CloseOutlined } from "@ant-design/icons"
 
 const ModalItems = styled(Modal)`
     ${props => props.styleModal && props.styleModal}
+    display: flex;
+    flex-direction: column;
     .ant-modal-content {
         background: #1C3947;
         border-radius: 0;
         padding: 30px;
         position: relative;
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        ${props => `height: ${props.heightContent ? props.heightContent : "auto"}`}
     }
 
     .ant-btn {
@@ -40,7 +48,7 @@ const ModalItems = styled(Modal)`
     
 `
 
-export const ModalsComponent = ({ children, modalName, width = 800, style = ``, footer = true}) => {
+export const ModalsComponent = ({ heightContent, title, children, modalName, width = 800, style = ``, footer = true }) => {
     const { status, setStatus } = GetAndUpdateContext()
 
     const hideModal = () => {
@@ -50,11 +58,22 @@ export const ModalsComponent = ({ children, modalName, width = 800, style = ``, 
         }))
     };
 
-    return (<ModalItems footer={footer} styleModal={style} width={width} okText="SAVE" centered onCancel={hideModal} onOk={hideModal} title={false} closable={false} open={status[modalName]}>
-        <div className="text-[16px] text-blue space-y-5">
+    return (<ModalItems footer={footer} heightContent={heightContent} styleModal={style} width={width} okText="SAVE" centered onCancel={hideModal} onOk={hideModal} title={false} closable={false} open={status[modalName]}>
+        <div className="text-[16px] text-blue space-y-5 flex flex-1 flex-col">
+            {title ? <div className="mx-[-10px] mt-[-20px]">
+                <TitleContent subTitle={false}>
+                    <div className="flex w-full justify-between items-center">
+                        <div className="text-[24px] uppercase text-blue">{title}</div>
+                        <Tooltip title="CLOSE">
+                            <button className="text-[20px] text-red-500" onClick={hideModal}>
+                                <CloseOutlined></CloseOutlined>
+                            </button>
+                        </Tooltip>
+                    </div>
+                </TitleContent>
+            </div> : ""}
             {children}
         </div>
-
         <SquareMedium></SquareMedium>
     </ModalItems>)
 }

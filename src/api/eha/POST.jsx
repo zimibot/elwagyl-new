@@ -39,7 +39,16 @@ export const POST_API = {
             data,
             reset,
             setStatus
-        })
+        }),
+
+    addscanAssets: (data, reset, setStatus) =>
+        ToastData({
+            name: "SCAN",
+            url: `${path}/api/scans`,
+            data,
+            reset,
+            setStatus
+        }),
 };
 
 

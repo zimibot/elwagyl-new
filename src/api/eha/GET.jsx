@@ -64,6 +64,18 @@ export const GET_API_EHA = {
                 return false
             }
         },
+        scanDetails: async (propsItem) => {
+            const { idscanDetail } = propsItem || {}
+
+            if (idscanDetail) {
+                let items = await fetch(`${path}/api/scans/${idscanDetail}`, { method: "GET" }).then(res => { return res.json() })
+                return {
+                    items
+                }
+            } else {
+                return false
+            }
+        },
 
         assetsList: (status) => {
             if (status) {
@@ -98,8 +110,8 @@ export const GET_API_EHA = {
             try {
 
                 const { platform_id } = propsItem || {}
-                if (platform_id) {                
-    
+                if (platform_id) {
+
                     let items = await fetch(`${path}/api/platforms/${platform_id}`, { method: "GET" }).then(res => { return res.json() })
                     return {
                         items
@@ -141,8 +153,7 @@ export const GET_API_EHA = {
                     "overdue-finding", ({ pageParam = 1 }) => fetch(`${path}/api/protected-sites/statistic/overdue-finding?page=${pageParam}`, { method: "GET" }).then((res) => res.json()),
                     {
                         getNextPageParam: (lastPage) => {
-                            console.log(lastPage.pagination.next_page.split("=")[1])
-                            return lastPage.pagination.next_page ? lastPage.pagination.next_page.split("=")[1] + "=40" : undefined
+                                return lastPage.pagination.next_page ? lastPage.pagination.next_page.split("=")[1] + "=40" : undefined
                         },
 
                     }

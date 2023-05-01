@@ -2,7 +2,8 @@ import { Select, Tooltip } from "antd"
 import { SquareMedium } from "../components/decoration/square"
 import styled from "styled-components"
 import { Controller } from "react-hook-form";
-import { DeleteFilled, ExclamationCircleFilled } from "@ant-design/icons";
+import { DeleteFilled, ExclamationCircleFilled, ExclamationCircleOutlined } from "@ant-design/icons";
+import { isArray, sift } from "radash";
 
 const Selecable = styled(Select)`
     .ant-select-selector {
@@ -45,7 +46,7 @@ export const SelectMultiple = ({ height, className, width, data = [
     </div>
 
 }
-export const SelectComponent = ({ width = 160, error, height, control, name, className, loading, label, onChangeData, data = [
+export const SelectComponent = ({ required = true, width = 160, error, height, control, name, className, loading, label, onChangeData, data = [
     {
         value: 'jack',
         label: " ALL",
@@ -63,13 +64,14 @@ export const SelectComponent = ({ width = 160, error, height, control, name, cla
         </div>
     }
 
+
     let items = data.map(d => ({
         ...d,
         label: <div className="flex items-center gap-2">
-            <img src="./cube.svg"></img>
+            {props.mode !== "multiple" && props.mode !== "tag" && <img src="./cube.svg"></img>}
             {d.label}
         </div>
-    }))
+    })) || [];
 
     return <div className="space-y-4">
         {label && <label className="uppercase">{label}</label>}
@@ -78,23 +80,25 @@ export const SelectComponent = ({ width = 160, error, height, control, name, cla
                 control={control}
                 name={name}
                 rules={{
-                    required: true
+                    required: required
                 }}
                 // defaultValue={null}
                 render={({
                     field: { onChange, onBlur, value, ref },
                 }) => {
-                    value = value ? value : {}
                     return (
                         <Selecable
                             ref={ref}
                             maxTagCount="responsive"
                             height={height}
                             // value={value ? value : false}
-                            {...value}
+                            value={isArray(value) ? value  : value ? value : []}
                             status={error ? 'error' : ''}
                             onBlur={d => onBlur(d)}
                             className={className ? className : ""}
+                            showSearch={false}
+                            allowClear
+                            clearIcon={<DeleteFilled></DeleteFilled>}
                             style={{
                                 width: width,
                             }}
@@ -103,8 +107,19 @@ export const SelectComponent = ({ width = 160, error, height, control, name, cla
                             removeIcon={() => {
                                 return <DeleteFilled></DeleteFilled>
                             }}
+
+                            showArrow={error ? false : true}
                             onChange={d => {
-                                onChange(d)
+                                if (isArray(d)) {
+                                    if (d.length === 0) {
+                                        onChange(null)
+                                    } else {
+                                        onChange(d)
+                                    }
+                                } else {
+                                    onChange(d)
+                                }
+
                                 if (onChangeData) {
                                     onChangeData(d)
                                 }
@@ -116,9 +131,9 @@ export const SelectComponent = ({ width = 160, error, height, control, name, cla
                     )
                 }}
             />
-            {error && <div className="text-red-400 absolute px-4 right-5 font-[20px]">
+            {error && <div className="text-red-400 absolute px-4  font-[20px] top-[25%]">
                 <Tooltip title="INPUT IS REQUIRED">
-                    <ExclamationCircleFilled />
+                    <ExclamationCircleOutlined />
                 </Tooltip>
             </div>}
             <SquareMedium />

@@ -1,9 +1,13 @@
-import { ExclamationCircleFilled, ExclamationCircleOutlined, EyeFilled, EyeInvisibleFilled } from "@ant-design/icons"
-import { DatePicker, TimePicker, Tooltip } from "antd"
+import { CalendarOutlined, ClockCircleOutlined, ExclamationCircleFilled, ExclamationCircleOutlined, EyeFilled, EyeInvisibleFilled, FieldTimeOutlined } from "@ant-design/icons"
+import { DatePicker, Switch, Tag, TimePicker, Timeline, Tooltip } from "antd"
 import { useState } from "react"
 import styled from "styled-components"
 import { Dropdown } from 'antd';
 import { Controller } from "react-hook-form";
+import dayjs from 'dayjs';
+import moment from "moment";
+import { SwitchCustom } from "../components/form.input";
+import { SquareMedium } from "../components/decoration/square";
 const { RangePicker } = DatePicker;
 
 
@@ -35,13 +39,26 @@ export const Form = {
 
 
         const [showPw, setshowPw] = useState();
+        const [file, setfile] = useState(false);
+
 
         let type = props?.type === "password" ? showPw ? "text" : props.type : props.type
 
         return <div className={rowColumn ? "flex gap-4 whitespace-nowrap items-center" : `flex flex-col gap-4 text-[16px] ${className} `}>
-            {label && <label className="uppercase">{label}</label>}
+            {label && <label className="uppercase flex justify-between items-center">{label}
+                {type === "file" &&
+                    <div className="flex gap-2">
+                        <div className="cursor-pointer" onClick={() => { setfile(true) }}>
+                            <Tag className="rounded-none" color={file ? "cyan" : "grey"}>UPLOAD FILE</Tag>
+                        </div>
+                        <div className="cursor-pointer" onClick={() => { setfile(false) }}>
+                            <Tag className="rounded-none" color={file ? "grey" : "cyan"}>URL</Tag>
+                        </div>
+                    </div>
+                }
+            </label>}
             <div className="relative w-full flex items-center justify-end">
-                <Input {...props} type={type} className={`bg-primary w-full p-3 ${classNameInput} ${error && "border !border-red-400"}`} {...register} ></Input>
+                <Input {...props} type={type === "file" ? file ? type : "text" : type} className={`bg-primary w-full p-3 ${classNameInput} ${error && "border !border-red-400"}`} {...register} ></Input>
 
                 {!error && props?.type === "password" &&
                     <Dropdown
@@ -70,7 +87,7 @@ export const Form = {
 
                 {error && <div className="text-red-400 absolute px-4 font-[20px]">
                     <Tooltip title="INPUT IS REQUIRED">
-                        <ExclamationCircleFilled />
+                        <ExclamationCircleOutlined />
                     </Tooltip>
                 </div>}
             </div>
@@ -106,26 +123,56 @@ export const Form = {
             <span className="relative text-sc">  {text}</span>
         </Check>
     },
-    date: ({ control, name, label, type, ...props }) => {
-
+    switch: ({ error, required = false, control, name, label, type, ...props }) => {
         if (!control || !name) {
             return <div className="w-full p-4 h-12 bg-red-500 text-white uppercase">control/name is required </div>
         }
-        
-        return <div className="flex flex-col gap-4 text-[16px]">
-            <label className="uppercase">{label}</label>
+        return <div className="relative switch-item">
             <Controller
                 control={control}
                 name={name}
                 rules={{
-                    required: true
+                    required: required
                 }}
                 render={({
                     field: { onChange, onBlur, value, ref },
                 }) => {
-                    return (type === "time" ? <TimePickers ref={ref} value={value} {...props} onChange={d => onChange(d)}></TimePickers> : <DatePinckers ref={ref} value={value} type={type} onChange={d => onChange(d)} />)
+                    return (<Switch {...props} className="w-full" ref={ref} checked={value} onChange={onChange}></Switch>)
+
                 }}
             />
+
+        </div>
+    },
+    date: ({ error, required = true, control, name, label, type, ...props }) => {
+
+        if (!control || !name) {
+            return <div className="w-full p-4 h-12 bg-red-500 text-white uppercase">control/name is required </div>
+        }
+
+        return <div className="flex flex-col gap-4 text-[16px]">
+            <label className="uppercase">{label}</label>
+            <div className={`relative flex items-center justify-end ${error ? "border border-red-500" : ""}`}>
+                <Controller
+                    control={control}
+                    name={name}
+                    rules={{
+                        required: required
+                    }}
+                    render={({
+                        field: { onChange, onBlur, value, ref },
+                    }) => {
+                        return (type === "time" ?
+                            <TimePickers suffixIcon={error ? false : <ClockCircleOutlined></ClockCircleOutlined>} onBlur={onBlur} format={"hh:mm:ss"} ref={ref} value={value ? moment(value, 'hh:mm:ss') : ""} {...props} onChange={(__, w) => onChange(w)}></TimePickers> :
+                            <DatePinckers suffixIcon={error ? false : <CalendarOutlined></CalendarOutlined>} ref={ref} value={value ? dayjs(value) : ""} type={type} onChange={(__, w) => onChange(w)} />)
+                    }}
+                />
+                {error && <div className="text-red-400 absolute px-4 font-[20px]">
+                    <Tooltip title="INPUT IS REQUIRED">
+                        <ExclamationCircleOutlined />
+                    </Tooltip>
+                </div>}
+            </div>
         </div>
     }
 

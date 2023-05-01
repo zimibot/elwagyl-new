@@ -21,11 +21,10 @@ import LoginPages from "./pages/login";
 import { CookiesProvider } from 'react-cookie';
 import PrivateRoute from "./privateRoutes";
 import Settings from "./pages-ums/settings";
-import Dashboard from "./pages-ums/dashboard";
 import NotFoundUMS from "./pages-ums/notfound";
 import { MassagesDrawer } from "./components/headers/messages.drawer";
 import { Result } from "antd";
-import SettingsUserDashboard from "./pages-ums/settings/user";
+import UserManagement from "./pages-ums/usermanagement";
 const CyberDeck = lazy(() => import('./pages/cyber.deck/index.jsx'));
 const Executive = lazy(() => import('./pages/executive/index.jsx'));
 const AvailabilityPages = lazy(() => import('./pages/availability/index.jsx'));
@@ -64,15 +63,8 @@ export default function App() {
                 </Route>
                 <Route path="ums" element={<ContainerNoHead ums />}>
                   <Route index element={<Navigate state={{ title: ` USER MANAGEMENT SYSTEM // DASHBOARD`, ums: true }} to={`/ums/dashboard`} />} />
-                  <Route path="dashboard" element={<Dashboard></Dashboard>} />
-                  <Route path="settings">
-                    <Route index element={<Settings />}></Route>
-                    <Route path="dashboard">
-                      <Route path="ums_user">
-                        <Route index element={<SettingsUserDashboard></SettingsUserDashboard>}></Route>
-                      </Route>
-                    </Route>
-                  </Route>
+                  <Route path="user management" element={<UserManagement></UserManagement>} />
+                  <Route path="settings" element={<Settings />}/>
                   <Route path="*" element={<NotFoundUMS />} />
                 </Route>
                 <Route path={"eha"} element={<ContainerNoHead eha />}>

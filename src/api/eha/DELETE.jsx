@@ -7,6 +7,7 @@ export const DELETE_API = {
     deleteScanManage: (data, setStatus) => ToastData({ name: data.site_name, url: `${path}/api/tool-scanners/${data.id}`, setStatus, data: { deleted_by: data.name } }),
     deleteVulnerabilities: (data, setStatus) => ToastData({ name: data.site_name, url: `${path}/api/vulnerabilities/${data.id}`, setStatus, data: { deleted_by: data.name } }),
     deleteAssets: (data, setStatus) => ToastData({ name: data.site_name, url: `${path}/api/assets/${data.id}`, setStatus, data: { deleted_by: data.name } }),
+    deleteScanAssets: (data, setStatus) => ToastData({ name: data.site_name, url: `${path}/api/scans/${data.id}`, setStatus, data: { deleted_by: data.name } }),
 }
 
 const ToastData = ({ name, url, setStatus, data }) => {

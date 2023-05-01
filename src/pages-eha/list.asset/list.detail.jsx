@@ -16,7 +16,6 @@ export const ListDetail = () => {
         active: "assetsList"
     }])
 
-    console.log(API.data)
 
     return (
         <div className="col-span-full flex-1 flex flex-col pb-10">
@@ -24,12 +23,12 @@ export const ListDetail = () => {
                 <div className="p-8 flex items-center gap-10 border-b border-primary">
                     <div>ASSET LIST</div>
                     <div className="space-x-4 flex">
-                        <ButtonComponents>
+                        {/* <ButtonComponents>
                             IMPORT
                         </ButtonComponents>
                         <ButtonComponents>
                             EXPORT
-                        </ButtonComponents>
+                        </ButtonComponents> */}
                         <ButtonComponents click={() => {
                             setStatus(d => ({
                                 ...d,
@@ -39,9 +38,9 @@ export const ListDetail = () => {
                         }}>
                             [ + ] ADD
                         </ButtonComponents>
-                        <ButtonComponents>
+                        {/* <ButtonComponents>
                             NET DISCOVERY
-                        </ButtonComponents>
+                        </ButtonComponents> */}
                     </div>
                 </div>
             </CardBox>

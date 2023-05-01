@@ -607,3 +607,51 @@ span.ant-picker-clear svg {
 .ant-btn-primary:disabled {
   border: 0;
 }
+
+.ant-select .ant-select-clear, .ant-select .ant-select-clear:hover {
+  background: transparent;
+  color: #00d8ff;
+  font-size: 15px;
+  top: 35%;
+}
+
+.ant-picker .ant-picker-suffix svg {
+  fill: #00d8ff;
+}
+
+
+.ant-select-status-error {
+  border: 1px solid #ea4602;
+}
+
+.ant-modal-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.ant-switch.ant-switch-checked .ant-switch-inner .ant-switch-inner-checked {
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.ant-switch.ant-switch-checked .ant-switch-inner .ant-switch-inner-unchecked {
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.ant-switch .ant-switch-inner .ant-switch-inner-unchecked {
+  display: flex;
+  justify-content: end;
+  height: 100%;
+  align-items: center;
+  margin-top: -27px;
+}
+
+.ant-switch .ant-switch-inner .ant-switch-inner-checked {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}

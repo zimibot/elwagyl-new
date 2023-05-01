@@ -4,7 +4,8 @@ import { toast } from "react-hot-toast";
 
 export const UPDATE_API = {
     updateProtectedSite: (id, data, setStatus) => ToastData({ name: data.site_name, url: `${path}/api/protected-sites/${id}`, setStatus, data: { ...data, updated_by: data.created_by } }),
-    updateScanManage: (id, data, setStatus) => ToastData({ name: data.name, url: `${path}/api/tool-scanners/${id}`, setStatus, data })
+    updateScanManage: (id, data, setStatus) => ToastData({ name: data.name, url: `${path}/api/tool-scanners/${id}`, setStatus, data }),
+    updateScanAssets: (id, data, setStatus) => ToastData({ name: data.asset.name, url: `${path}/api/scans/${id}`, setStatus, data }),
 }
 
 const ToastData = ({ name, url, data, setStatus }) => {
@@ -26,7 +27,10 @@ const ToastData = ({ name, url, data, setStatus }) => {
                 }))
                 return <span className="uppercase">UPDATE <b className="text-blue">{name}</b> SUCCESS!</span>
             },
-            error: <span className="uppercase">UPDATE <b className="text-blue">{name}</b> FAILED</span>,
+            error: d => {
+                console.log(d)
+                return <span className="uppercase">UPDATE <b className="text-blue">{name}</b> FAILED</span>
+            },
         }, {
         style: {
             background: '#333',

@@ -95,7 +95,7 @@ export const HeadersTop = ({ background }) => {
                                         <div className="border-b pb-2 border-blue hover:text-white hover:border-white cursor-pointer">
                                             LICENSE
                                         </div>
-                                        <NavLink state={{ ums: true, title: "USER MANAGEMENT", key: "dashboard" }} to={"/ums/dashboard"} className="border-b pb-2 border-blue hover:text-white hover:border-white block">
+                                        <NavLink state={{ ums: true, title: "USER MANAGEMENT", key: "dashboard" }} to={"/ums/user management"} className="border-b pb-2 border-blue hover:text-white hover:border-white block">
                                             USER MANAGEMENT
                                         </NavLink>
                                         <div className="border-b pb-2 border-blue hover:text-white hover:border-white cursor-pointer" onClick={() => {
