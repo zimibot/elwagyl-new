@@ -42,6 +42,7 @@ export const Form = {
         const [file, setfile] = useState(false);
 
 
+
         let type = props?.type === "password" ? showPw ? "text" : props.type : props.type
 
         return <div className={rowColumn ? "flex gap-4 whitespace-nowrap items-center" : `flex flex-col gap-4 text-[16px] ${className} `}>
@@ -86,7 +87,7 @@ export const Form = {
                 }
 
                 {error && <div className="text-red-400 absolute px-4 font-[20px]">
-                    <Tooltip title="INPUT IS REQUIRED">
+                    <Tooltip placement="left" title={error.message ? error.message : "INPUT IS REQUIRED"}>
                         <ExclamationCircleOutlined />
                     </Tooltip>
                 </div>}

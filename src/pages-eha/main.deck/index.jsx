@@ -38,6 +38,12 @@ const MainDeck = () => {
     {
         active: "mainDeckStatisticsRiskStatus"
     },
+    {
+        active: "mainDeckStatisticsVulStatic"
+    },
+    {
+        active: "mainDeckStatisticsDeadline"
+    },
     ])
 
 
@@ -103,14 +109,16 @@ const MainDeck = () => {
                                     <div className="relative">
                                         <SquareFull />
                                         <div className="flex items-center justify-center py-4">
-                                            <ChartLineTooltip height={200} mode={'vh'} />
+                                            {API.error ? <ErrorItems></ErrorItems> : API.loading ? <Loading></Loading> : <ChartLineTooltip yField="remediation" data={API.data.mainDeckStatisticsVulStatic.result} height={200} mode={'vh'} />}
+
                                         </div>
                                     </div>
                                 </div>
                                 <div className="col-span-2 border-l-primary border-l relative border-r-primary border-r flex flex-col items-center justify-end">
-                                    <div className="absolute w-full h-full top-[-50px] ">
-                                        <ChartRadialBar />
-                                    </div>
+                                    {API.error? <ErrorItems></ErrorItems> : API.loading ? <Loading></Loading> :  <div className="absolute w-full h-full top-[-50px] ">
+                                        <ChartRadialBar data={API.data.mainDeckStatisticsDeadline} />
+                                    </div>}
+                                    
                                     <div className="p-4">
                                         <div className="grid grid-cols-3 gap-4 text-center">
                                             {value.CHARTRADIAL && value.CHARTRADIAL.map((d, k) => {
@@ -196,7 +204,6 @@ const ChartFindingMonthly = ({ loading, data }) => {
 
     let items = mainDeckStatisticsMontly
 
-    console.log(items)
 
     let da = []
 

@@ -1,30 +1,56 @@
 import React, { useEffect, useRef } from 'react';
 import { RadialBar } from '@ant-design/plots';
 import { GetAndUpdateContext } from '../../model/context.function';
+import { Formatter } from '../../helper/formater';
 
-export const ChartRadialBar = () => {
+export const ChartRadialBar = ({ data = [] }) => {
     const { setvalue } = GetAndUpdateContext()
 
     const refChart = useRef()
-    const data = [
-        {
-            name: 'OVERDUE',
-            count: 10,
-            color: "#ED6A5E"
-        },
-        {
-            name: 'ATTENTION',
-            count: 6,
-            color: "#FFBA08"
-        },
-        {
-            name: 'SECURE',
-            count: 5,
-            color: "#00D8FF"
-        },
-    ];
+
+    let items = []
+
+    const color = (name) => {
+        switch (name) {
+            case "attention":
+                return "#FFBA08"
+            case "overdue":
+                return "#ED6A5E"
+            default:
+                return "#00D8FF"
+        }
+    }
+
+    for (const key in data) {
+        items.push({
+            name: key.toUpperCase(),
+            count: data[key],
+            color: color(key)
+        })
+    }
+
+    console.log(items)
+
+
+    // const data = [
+    //     {
+    //         name: 'OVERDUE',
+    //         count: 10,
+    //         color: "#ED6A5E"
+    //     },
+    //     {
+    //         name: 'ATTENTION',
+    //         count: 6,
+    //         color: "#FFBA08"
+    //     },
+    //     {
+    //         name: 'SECURE',
+    //         count: 5,
+    //         color: "#00D8FF"
+    //     },
+    // ];
     const config = {
-        data,
+        data: items,
         xField: 'name',
         yField: 'count',
         endAngle: 0,
@@ -44,7 +70,7 @@ export const ChartRadialBar = () => {
         innerRadius: 0.6,
         colorField: "color",
         color: ({ color }) => {
-            return data.find((d) => d.color === color).color;
+            return items.find((d) => d.color === color).color;
         },
         barBackground: {},
 
@@ -54,13 +80,13 @@ export const ChartRadialBar = () => {
         annotations: [
             {
                 type: 'html',
-                position: ['31%', '65%'],
+                position: ['25%', '85%'],
                 html: (container, view) => {
                     // const w = coord.polarRadius * coord.innerRadius * 1.15;
 
-                    return `<div class="font-bold text-[24px] flex gap-4">
+                    return `<div class="font-bold text-[25px] flex gap-1">
                     ${view.options.data.map(d => {
-                        return `<div style="color:${d.color}">${d.count}</div>`
+                        return `<div style="color:${d.color}">${Formatter(d.count)}</div>`
                     })
                         }
                      </div>`.replace(/,/g, "<span>|</span>");
@@ -69,6 +95,8 @@ export const ChartRadialBar = () => {
         ],
 
     };
+
+    
 
     useEffect(() => {
         if (refChart.current) {
@@ -83,6 +111,7 @@ export const ChartRadialBar = () => {
 
         }
     }, [])
+
 
     return <div className="h-80 ">
         <RadialBar {...config} ref={refChart} animation={false} />

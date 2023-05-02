@@ -1,5 +1,6 @@
 import { useInfiniteQuery, useQuery } from "react-query"
 import { GetAndUpdateContext } from "../../model/context.function"
+import { useLocation } from "react-router-dom";
 
 export const path = import.meta.env.VITE_PATH_API_EHA
 
@@ -24,7 +25,8 @@ export const GET_API_EHA = {
         },
         vulnerability: (status) => {
             if (status) {
-                const { isLoading, data, error } = useQuery(['vulnerability', status.UpdateStatus, status.vulnerabilitypages], () => fetch(`${path}/api/vulnerabilities?page=${status.vulnerabilitypages ? status.vulnerabilitypages : 1}&limit=15`, { method: "GET" }).then(res => { return res.json() }),)
+                const stateLocation = useLocation()
+                const { isLoading, data, error } = useQuery(['vulnerability', status.UpdateStatus, status.vulnerabilitypages, stateLocation.state.id], () => fetch(`${path}/api/vulnerabilities?page=${status.vulnerabilitypages ? status.vulnerabilitypages : 1}&limit=15&${stateLocation.state?.id ? `scan_id=${stateLocation.state?.id}` : ""}`, { method: "GET" }).then(res => { return res.json() }),)
                 return {
                     isLoading, data, error,
                 }
@@ -79,6 +81,7 @@ export const GET_API_EHA = {
 
         assetsList: (status) => {
             if (status) {
+                console.log(status)
                 const { isLoading, data, error, } = useQuery(['assetsList', status.UpdateStatus], () => fetch(`${path}/api/assets`, { method: "GET" }).then(res => { return res.json() }),)
                 return {
                     isLoading, data, error,
@@ -153,7 +156,7 @@ export const GET_API_EHA = {
                     "overdue-finding", ({ pageParam = 1 }) => fetch(`${path}/api/protected-sites/statistic/overdue-finding?page=${pageParam}`, { method: "GET" }).then((res) => res.json()),
                     {
                         getNextPageParam: (lastPage) => {
-                                return lastPage.pagination.next_page ? lastPage.pagination.next_page.split("=")[1] + "=40" : undefined
+                            return lastPage.pagination.next_page ? lastPage.pagination.next_page.split("=")[1] + "=40" : undefined
                         },
 
                     }
@@ -189,11 +192,24 @@ export const GET_API_EHA = {
                 isLoading, data, error,
             }
         },
+        mainDeckStatisticsVulStatic: () => {
+            const { isLoading, data, error, } = useQuery(['mainDeckStatisticsVulStatic'], () => fetch(`${path}/api/vulnerabilities/statistic/daily?page=1&limit=15`, { method: "GET" }).then(res => { return res.json() }),)
+            return {
+                isLoading, data, error,
+            }
+        },
+        mainDeckStatisticsDeadline: () => {
+            const { isLoading, data, error, } = useQuery(['mainDeckStatisticsDeadline'], () => fetch(`${path}/api/vulnerabilities/statistic/deadline`, { method: "GET" }).then(res => { return res.json() }),)
+            return {
+                isLoading, data, error,
+            }
+        },
 
     },
 
     root: (typeName) => {
         const { status } = GetAndUpdateContext()
+
 
         let data = typeName || []
 
@@ -206,6 +222,7 @@ export const GET_API_EHA = {
             };
 
             let parse = GET_API_EHA.data
+
 
 
             data.map(async d => {

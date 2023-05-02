@@ -67,8 +67,6 @@ const ToastData = ({ name, url, data, reset, setStatus, success, error }) => {
                     }
                     setStatus((d) => ({
                         ...d,
-                        addProtected: false,
-                        editScanTools: false,
                         UpdateStatus: !d?.UpdateStatus
                     }));
                     return <b>ADD {name} SUCCESS!</b>;
@@ -79,9 +77,7 @@ const ToastData = ({ name, url, data, reset, setStatus, success, error }) => {
                     }
                     return (
                         <div className="text-red-500 font-bold">
-                            {d.response.data.result.map((d, k) => (
-                                <div key={k}>{d.msg}</div>
-                            ))}
+                           SAVE ERROR
                         </div>
                     );
                 }

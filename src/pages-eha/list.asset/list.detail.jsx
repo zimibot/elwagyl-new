@@ -72,26 +72,23 @@ export const ListDetail = () => {
                         key: 'updated_at',
                         rowClass: "w-[200px]",
                     },
-                    {
-                        title: 'Name Server',
-                        key: 'server',
-                        rowClass: "w-[150]",
-                    },
+
                     {
                         title: 'target RISK',
                         key: 'risk_group',
-                        rowClass: "w-[150]",
+                        rowClass: "w-[100]",
                     },
                     {
                         title: 'application criticality',
                         key: 'application_criticality',
-                        rowClass: "w-[200px]",
+                        rowClass: "w-[200px] text-center",
+                        columnClass: "text-center"
                     },
                     {
                         title: 'CRIT',
                         rowClass: "w-[80px] text-center",
                         columnClass: "text-center",
-                        key: 'crit',
+                        key: 'critical',
                     },
                     {
                         title: 'HIGH',
@@ -103,7 +100,7 @@ export const ListDetail = () => {
                         title: 'MEDIUM',
                         rowClass: "w-[80px] text-center",
                         columnClass: "text-center",
-                        key: 'med',
+                        key: 'medium',
                     },
                     {
                         title: 'LOW',
@@ -151,6 +148,7 @@ export const ListDetail = () => {
                     data={
                         API.data.assetsList.result.map(d => ({
                             ...d.protected_site,
+                            ...d.severity_count,
                             ...d
                         }))
                     }></TableInline>}

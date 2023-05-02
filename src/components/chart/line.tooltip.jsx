@@ -25,8 +25,8 @@ export const ChartLineTooltip = ({ height = 115, mode = "", className = "", data
                 let date = moment(title).format("lll")
                 let value = Formatter(parseInt(data[0]?.value))
                 return `<div class="bg-primary p-2 space-y-2">
-                    <div>DATE: ${date}</div>
-                    <div>TOTAL: ${value}</div>
+                    <div>DATE: ${date  === "Invalid date"? title : date}</div>
+                    <div>TOTAL: ${value }</div>
                 </div>`;
             }
         },
@@ -69,7 +69,7 @@ export const ChartLineTooltip = ({ height = 115, mode = "", className = "", data
                 },
                 formatter: (d) => {
                     let time = date ? moment(d).format("l") : moment(d).format("LTS")
-                    return time
+                    return time === "Invalid date" ? d : time
                 },
                 rotate: false
             },

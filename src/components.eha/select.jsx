@@ -92,7 +92,7 @@ export const SelectComponent = ({ required = true, width = 160, error, height, c
                             maxTagCount="responsive"
                             height={height}
                             // value={value ? value : false}
-                            value={isArray(value) ? value  : value ? value : []}
+                            value={isArray(value) ? value : value ? value : []}
                             status={error ? 'error' : ''}
                             onBlur={d => onBlur(d)}
                             className={className ? className : ""}
@@ -132,7 +132,7 @@ export const SelectComponent = ({ required = true, width = 160, error, height, c
                 }}
             />
             {error && <div className="text-red-400 absolute px-4  font-[20px] top-[25%]">
-                <Tooltip title="INPUT IS REQUIRED">
+                <Tooltip title={error.message ? error.message : "INPUT IS REQUIRED"}>
                     <ExclamationCircleOutlined />
                 </Tooltip>
             </div>}

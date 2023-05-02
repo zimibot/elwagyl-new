@@ -10,8 +10,7 @@ import { useEffect } from "react";
 import { isEmpty } from "radash";
 import { GET_API_EHA } from "../../api/eha/GET";
 import { POST_API } from "../../api/eha/POST";
-import { toast } from "react-hot-toast";
-import { DeleteFilled, DeleteOutlined } from "@ant-design/icons";
+import { UPDATE_API } from "../../api/eha/UPDATE";
 
 export const FormModal = () => {
     const API = GET_API_EHA.root([
@@ -44,16 +43,16 @@ export const FormModal = () => {
         name: "platform"
     });
 
-    console.log(errors)
     const onSubmit = async (data) => {
+
+
         data = {
             ...data,
             created_by: localStorage.getItem("user"),
             // out_of_scope: true,
-            contains_pii_data: true
+            // contains_pii_data: true
         };
 
-        console.log(data)
 
         const onSuccess = (response) => {
             // Mendapatkan ID dari asset yang berhasil ditambahkan
@@ -70,23 +69,26 @@ export const FormModal = () => {
             }
 
             // Mengubah status ADDASSET dan idAssets menjadi null
-            setStatus(prevState => ({
-                ...prevState,
-                ADDASSET: false,
-                idAssets: null
+            setStatus(d => ({
+                ...d,
+                ADDASSET: true,
             }));
         };
 
         const onError = (error) => {
             // Menampilkan pesan error untuk setiap param yang tidak valid
-            console.log(error)
             error.result.forEach(d => {
-                setError(d.param);
+                console.log(d)
+                setError(d.param, { message: d.msg.replace(/_/g, " ").toUpperCase() });
             });
         };
 
         // Menambahkan data asset baru
-        POST_API.addAssets(data, reset, setStatus, onSuccess, onError);
+        if (idAssets) {
+            UPDATE_API.updateAssets(idAssets, data, setStatus, onSuccess, onError);
+        } else {
+            POST_API.addAssets(data, reset, setStatus, onSuccess, onError);
+        }
     };
     useEffect(() => {
         if (!isEmpty(errors)) {
@@ -100,20 +102,20 @@ export const FormModal = () => {
                 const assetsDetail = await API.getAssetsDetail({ idAssets });
                 const { id } = assetsDetail.items.result;
 
+
                 for (const key in assetsDetail.items.result) {
                     const value = assetsDetail.items.result[key];
-
                     if (key === "system_owner") {
-                        setValue(key, value.name);
+                        setValue(key, value?.name);
                     } else {
                         setValue(key, value);
+
                     }
                 }
 
                 if (id) {
 
-                    const platformDetail = await API.platformDetail({ platform_id: id });
-                    console.log(platformDetail);
+                    // const platformDetail = await API.platformDetail({ platform_id: id });
                 }
             }
 
@@ -128,8 +130,12 @@ export const FormModal = () => {
     }
 
     useEffect(() => {
+        if (idAssets) {
+            GetAssets(idAssets)
+        } else {
+            reset()
+        }
 
-        GetAssets(idAssets)
 
     }, [idAssets])
 
@@ -158,7 +164,7 @@ export const FormModal = () => {
                                 value: d.id
                             }))} control={control} label={"PROTECTED SITE *"} error={errors.protected_site_id} height={45} name={"protected_site_id"} width={"100%"}></SelectComponent>
                             {/* <Form.input register={register("contains_pii_data")} label={"contains pii data"} /> */}
-                            <SelectComponent required={false} mode="multiple" name={"contains_pii_data"} label={"CONTAINS PII DATA"} data={[{
+                            <SelectComponent error={errors.contains_pii_data} required={false} mode="multiple" name={"contains_pii_data"} label={"CONTAINS PII DATA"} data={[{
                                 label: "Name",
                                 value: "name"
                             },
@@ -180,38 +186,52 @@ export const FormModal = () => {
                             },
                             ]} control={control} width={"100%"} height={45}></SelectComponent>
                             <SelectComponent required={false} onChangeData={async (d) => {
-                                let prop = await API.systemOwnerDetail({ idOwner: d })
+                                const resultItem = API.data.systemOwner.result.find(item => item.name === d);
+                                let prop = await API.systemOwnerDetail({ idOwner: resultItem.id })
                                 let { id } = prop.items.result
                                 // setValue("system_owner", created_by)
                                 // setValue("system_owner_email", email)
                                 setValue("system_owner_id", id)
                                 // setSelectOwner(true)
-                            }} error={errors.existing_system_owner} setvalue={setValue} loading={API.loading} data={API.data.systemOwner?.result.map(d => ({
+                            }} error={errors.existing_system_owner} loading={API.loading} data={API.data.systemOwner?.result.map(d => ({
                                 label: d.name,
                                 value: d.name
                             }))} control={control} label={"select existing system owner *"} height={45} name={"existing_system_owner"} width={"100%"}></SelectComponent>
-                            <Form.input register={register("brand")} label={"brand"} />
+                            <Form.input error={errors.brand} register={register("brand")} label={"brand"} />
                             {/* <Form.input register={register("server")} label={"server"} /> */}
                             <SelectComponent required={false} data={[
                                 {
                                     label: "yes",
-                                    value: true
+                                    value: "yes"
                                 },
                                 {
                                     label: "no",
-                                    value: false
+                                    value: "no"
                                 },
                             ]} name={"server"} label={"server"} control={control} width={"100%"} height={45}></SelectComponent>
-                            <Form.texarea register={register("description")} label={"description"}></Form.texarea>
+                            <Form.texarea error={errors.description} register={register("description")} label={"description"}></Form.texarea>
                             <Form.check error={errors.out_of_scope} value={true} register={register("out_of_scope")} text={"out of scope"}></Form.check>
 
                         </div>
                         <div className="space-y-8">
                             <Form.input error={errors.url_ip} register={register("url_ip", { required: true })} label={"asset ip / url *"} />
-                            <SelectComponent required={false} name={"risk_group"} label={"asset risk group"} control={control} width={"100%"} height={45}></SelectComponent>
+                            <SelectComponent error={errors.risk_group} data={[
+                                {
+                                    label: "medium",
+                                    value: "medium",
+                                },
+                                {
+                                    label: "high",
+                                    value: "high",
+                                },
+                                {
+                                    label: "critical",
+                                    value: "critical",
+                                },
+                            ]} required={false} name={"risk_group"} label={"asset risk group"} control={control} width={"100%"} height={45}></SelectComponent>
                             {/* <Form.input error={errors.risk_group} register={register("risk_group", { required: true })} label={"asset risk group *"} /> */}
-                            <Form.input register={register("system_owner")} label={"system owner"} />
-                            <Form.input register={register("hostname_fqdn")} label={"hostname (fqdn)"} />
+                            <Form.input error={errors.system_owner} register={register("system_owner")} label={"system owner"} />
+                            <Form.input error={errors.hostname_fqdn} register={register("hostname_fqdn")} label={"hostname (fqdn)"} />
                             <SelectComponent required={false} data={[
                                 {
                                     label: "low",
@@ -228,25 +248,29 @@ export const FormModal = () => {
                             ]} name={"application_criticality"} label={"application criticality"} control={control} width={"100%"} height={45}></SelectComponent>
                             {/* <Form.input register={register("application_criticality")} label={"application criticality"} /> */}
                             {/* <Form.input register={register("tags")} label={"tags"} /> */}
-                            <SelectComponent required={false} mode="tags" name={"tags"} label={"tags"} data={[]} control={control} width={"100%"} height={45}></SelectComponent>
-                            <Form.texarea register={register("available_scanning_windows")} label={"available scanning windows"}></Form.texarea>
+                            <SelectComponent error={errors.tags} required={false} mode="tags" name={"tags"} label={"tags"} data={[]} control={control} width={"100%"} height={45}></SelectComponent>
+                            <Form.texarea error={errors.available_scanning_windows} register={register("available_scanning_windows")} label={"available scanning windows"}></Form.texarea>
                         </div>
                         <div className="space-y-8 flex flex-col">
-                            <Form.input register={register("id_tag")} label={"asset id / tag"} />
-                            <SelectComponent required={false} name={"environment"} label={"environment"} data={[{
-                                label: "UAT",
+                            <Form.input error={errors.id_tag} register={register("id_tag")} label={"asset id / tag"} />
+                            <SelectComponent error={errors.environment} required={false} name={"environment"} label={"environment"} data={[{
+                                label: "Staging",
                                 value: "uat"
                             },
                             {
                                 label: "PRODUCTION",
-                                value: "production"
-                            }
+                                value: "Production"
+                            },
+                            {
+                                label: "PRODUCTION",
+                                value: "UAT"
+                            },
                             ]} control={control} width={"100%"} height={45}></SelectComponent>
                             {/* <Form.input register={register("environment")} label={"environment"} /> */}
                             <Form.input error={errors.system_owner_email} register={register("system_owner_email")} label={"system owner email "} />
-                            <Form.input register={register("mac_address")} label={"mac address"} />
+                            <Form.input error={errors.mac_address} register={register("mac_address")} label={"mac address"} />
                             {/* <Form.input register={register("frontend_backend")} label={"frontend / backend"} /> */}
-                            <SelectComponent required={false} onChangeData={d => {
+                            <SelectComponent error={errors.frontend_backend} required={false} onChangeData={d => {
                                 console.log(d)
                             }} mode="multiple" name={"frontend_backend"} label={"frontend / backend"} data={[{
                                 label: "frontend",
