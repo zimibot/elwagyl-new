@@ -1,7 +1,6 @@
 import { ComposableMap, Geographies, Geography, ZoomableGroup, Line, Marker } from "react-simple-maps"
-import { Modal, Tooltip } from 'antd';
 import { Motion, spring } from "react-motion";
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import { API_GET } from "../../api/elwagyl";
 import { GetAndUpdateContext } from "../../model/context.function";
 
@@ -122,43 +121,6 @@ export const MapHighcharts = ({ className = "fixed" }) => {
                 </ComposableMap>
             )}
         </Motion>
-        {/* <Drawer title={false} closable={false} width={600} placement="left" onClose={onClose} open={open.active}>
-            <ContentPover open={open}></ContentPover>
-        </Drawer> */}
-        <Modal title={false} open={open.active} centered footer={false} onCancel={() => setOpen(d => ({ ...d, active: !d.active }))} closable={false}>
-            <ContentPover open={open}></ContentPover>
-            <div className="px-4 py-2 bg-primary">Total : 40 Item</div>
-        </Modal>
     </div>
 }
 
-
-const ContentPover = ({ open }) => {
-    if (!open.active) {
-        return ""
-    }
-
-    let attack = open.content.desc.attack
-    let list = attack.attack_list || []
-    console.log(list)
-    return <div>
-        <div className="uppercase relative" >
-            <div className="grid grid-cols-4 font-bold px-4 py-3 bg-primary text-[white] sticky">
-                <div className="col-span-2">Name Attack</div>
-                <div>Date</div>
-                <div className="text-end">Type INDICATOR</div>
-            </div>
-            <div className="max-h-96 overflow-auto px-4 py-3">
-                {list.map((d, k) => {
-                    return <div className="grid grid-cols-4 py-1" key={k}>
-                        <div className="col-span-2">{d.name}</div>
-                        <div>20/01/2022 01:10</div>
-                        <div className="flex items-center justify-end">
-                            <div className="border py-1 px-4 border-[#a01e1e] text-[#a01e1e] text-sm">RED CODE</div>
-                        </div>
-                    </div>
-                })}
-            </div>
-        </div>
-    </div>
-}

@@ -9,7 +9,6 @@ import { OBSERVATION_SEVERITY_DESC } from "../../model/information"
 import { GetAndUpdateContext } from "../../model/context.function"
 import { SquareFull } from "../../components/decoration/square"
 import { ChartLineTooltip } from "../../components/chart/line.tooltip"
-import { MapHighcharts } from "../../components/maps/higchart.map"
 import { DetailDeck } from "./detail"
 import { ChartRadialBar } from "../../components/chart/chart.radial"
 import { max } from "radash"
@@ -18,6 +17,7 @@ import { ErrorHtml } from "../list.maintenance"
 import List from 'react-virtualized/dist/commonjs/List';
 import AutoSizer from 'react-virtualized/dist/commonjs/AutoSizer';
 import { ErrorItems } from "../../pages/cyber.deck"
+import MapChart from "../../components/maps/simple.chart"
 
 
 const MainDeck = () => {
@@ -149,7 +149,7 @@ const MainDeck = () => {
                     <TitleContent className={"z-20 p-4 backdrop-blur relative"}>
                         <div className="text-[24px] uppercase text-blue">AERIAL VIEW</div>
                     </TitleContent>
-                    {/* <MapHighcharts className="absolute"></MapHighcharts> */}
+                    <MapChart></MapChart>
                 </div>
             </ColumnCenter>
             <ColumnRight>
