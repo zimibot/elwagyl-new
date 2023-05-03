@@ -13,33 +13,32 @@ const colorScale = scaleLinear()
     .range(["#ffedea", "#ff5233"]);
 
 const MapChart = () => {
-
-
     return (
-        <ComposableMap
-            projectionConfig={{
-                rotate: [-10, 0, 0],
-                scale: 147
-            }}
-        >
-            {/* <Sphere stroke="#E4E5E6" strokeWidth={0.5} /> */}
-            {/* <Graticule stroke="#E4E5E6" strokeWidth={0.5} /> */}
-            <Geographies geography={geoUrl}>
-                {({ geographies }) =>
-                    geographies.map((geo) => {
-                        //   const d = data.find((s) => s.ISO3 === geo.id);
-                        //   console.log(d)
-                        return (
-                            <Geography
-                                key={geo.rsmKey}
-                                geography={geo}
-                            // fill={d ? colorScale(d["2017"]) : "#F5F4F6"}
-                            />
-                        );
-                    })
-                }
-            </Geographies>
-        </ComposableMap>
+        <div className="absolute w-full h-full overflow-hidden top-0">
+            <ComposableMap
+                projectionConfig={{
+                    rotate: [0, 0, 0],
+                    // scale: 147
+                }}
+            >
+                <Geographies geography={geoUrl}>
+                    {({ geographies }) =>
+                        geographies.map((geo) => {
+                            //   const d = data.find((s) => s.ISO3 === geo.id);
+                            //   console.log(d)
+                            return (
+                                <Geography
+                                    key={geo.rsmKey}
+                                    geography={geo}
+                                    fill={"red"}
+                                // fill={d ? colorScale(d["2017"]) : "#F5F4F6"}
+                                />
+                            );
+                        })
+                    }
+                </Geographies>
+            </ComposableMap>
+        </div>
     );
 };
 
