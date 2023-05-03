@@ -64,33 +64,33 @@ app.whenReady().then(async () => {
 
 }
 );
-app.commandLine.appendSwitch('high-dpi-support', 1)
-app.commandLine.appendSwitch('force-device-scale-factor', 1)
-app.on('browser-window-focus', function () {
-  globalShortcut.register("CommandOrControl+0", () => {
-    console.log("CommandOrControl+0 is pressed: Shortcut Disabled");
-  });
-  globalShortcut.register("CommandOrControl+R", () => {
-    console.log("CommandOrControl+R is pressed: Shortcut Disabled");
-  });
-  globalShortcut.register("F5", () => {
-    console.log("F5 is pressed: Shortcut Disabled");
-  });
-});
-app.on('browser-window-blur', function () {
-  globalShortcut.unregister('CommandOrControl+R');
-  globalShortcut.unregister('CommandOrControl+0');
-  globalShortcut.unregister('F5');
-});
-app.focus()
-app.commandLine.appendSwitch('ignore-certificate-errors')
+// app.commandLine.appendSwitch('high-dpi-support', 1)
+// app.commandLine.appendSwitch('force-device-scale-factor', 1)
+// app.on('browser-window-focus', function () {
+//   globalShortcut.register("CommandOrControl+0", () => {
+//     console.log("CommandOrControl+0 is pressed: Shortcut Disabled");
+//   });
+//   globalShortcut.register("CommandOrControl+R", () => {
+//     console.log("CommandOrControl+R is pressed: Shortcut Disabled");
+//   });
+//   globalShortcut.register("F5", () => {
+//     console.log("F5 is pressed: Shortcut Disabled");
+//   });
+// });
+// app.on('browser-window-blur', function () {
+//   globalShortcut.unregister('CommandOrControl+R');
+//   globalShortcut.unregister('CommandOrControl+0');
+//   globalShortcut.unregister('F5');
+// });
+// app.focus()
+// app.commandLine.appendSwitch('ignore-certificate-errors')
 
-app.on('certificate-error', (event, webContents, url, error, certificate, callback) => {
-  // On certificate error we disable default behaviour (stop loading the page)
-  // and we then say "it is all fine - true" to the callback
-  event.preventDefault();
-  callback(true);
-});
+// app.on('certificate-error', (event, webContents, url, error, certificate, callback) => {
+//   // On certificate error we disable default behaviour (stop loading the page)
+//   // and we then say "it is all fine - true" to the callback
+//   event.preventDefault();
+//   callback(true);
+// });
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
