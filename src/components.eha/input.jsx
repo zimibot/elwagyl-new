@@ -29,9 +29,12 @@ const Check = styled.label`
 `
 const Input = styled.input`
     border: 1px solid transparent;
+   
     :hover {
         border: 1px solid
     }
+
+    
 `
 
 export const Form = {
@@ -59,7 +62,7 @@ export const Form = {
                 }
             </label>}
             <div className="relative w-full flex items-center justify-end">
-                <Input {...props} type={type === "file" ? file ? type : "text" : type} className={`bg-primary w-full p-3 ${classNameInput} ${error && "border !border-red-400"}`} {...register} ></Input>
+                <Input placeholder="please fill in this input" {...props} type={type === "file" ? file ? type : "text" : type} className={`bg-primary w-full p-3 ${classNameInput} ${error && "border !border-red-400"}`} {...register} ></Input>
 
                 {!error && props?.type === "password" &&
                     <Dropdown

@@ -202,11 +202,11 @@ export const FormModal = () => {
                             <SelectComponent required={false} data={[
                                 {
                                     label: "yes",
-                                    value: "yes"
+                                    value: true
                                 },
                                 {
                                     label: "no",
-                                    value: "no"
+                                    value: false
                                 },
                             ]} name={"server"} label={"server"} control={control} width={"100%"} height={45}></SelectComponent>
                             <Form.texarea error={errors.description} register={register("description")} label={"description"}></Form.texarea>
@@ -214,7 +214,7 @@ export const FormModal = () => {
 
                         </div>
                         <div className="space-y-8">
-                            <Form.input error={errors.url_ip} register={register("url_ip", { required: true })} label={"asset ip / url *"} />
+                            <Form.input error={errors.url_ip} placeholder="exp : 190.21.xx.xx or https://xxxx.com" register={register("url_ip", { required: true })} label={"asset ip / url *"} />
                             <SelectComponent error={errors.risk_group} data={[
                                 {
                                     label: "medium",
@@ -230,8 +230,8 @@ export const FormModal = () => {
                                 },
                             ]} required={false} name={"risk_group"} label={"asset risk group"} control={control} width={"100%"} height={45}></SelectComponent>
                             {/* <Form.input error={errors.risk_group} register={register("risk_group", { required: true })} label={"asset risk group *"} /> */}
-                            <Form.input error={errors.system_owner} register={register("system_owner")} label={"system owner"} />
-                            <Form.input error={errors.hostname_fqdn} register={register("hostname_fqdn")} label={"hostname (fqdn)"} />
+                            <Form.input error={errors.system_owner_name} register={register("system_owner_name")} label={"system owner"} />
+                            <Form.input error={errors.hostname_fqdn} register={register("hostname_fqdn")} placeholder="example.com" label={"hostname (fqdn)"} />
                             <SelectComponent required={false} data={[
                                 {
                                     label: "low",
@@ -255,20 +255,20 @@ export const FormModal = () => {
                             <Form.input error={errors.id_tag} register={register("id_tag")} label={"asset id / tag"} />
                             <SelectComponent error={errors.environment} required={false} name={"environment"} label={"environment"} data={[{
                                 label: "Staging",
-                                value: "uat"
+                                value: "Staging"
                             },
                             {
                                 label: "PRODUCTION",
                                 value: "Production"
                             },
                             {
-                                label: "PRODUCTION",
+                                label: "UAT",
                                 value: "UAT"
                             },
                             ]} control={control} width={"100%"} height={45}></SelectComponent>
                             {/* <Form.input register={register("environment")} label={"environment"} /> */}
                             <Form.input error={errors.system_owner_email} register={register("system_owner_email")} label={"system owner email "} />
-                            <Form.input error={errors.mac_address} register={register("mac_address")} label={"mac address"} />
+                            <Form.input error={errors.mac_address} placeholder="exp: 00:11:xx:xx:xx:xx" register={register("mac_address")} label={"mac address"} />
                             {/* <Form.input register={register("frontend_backend")} label={"frontend / backend"} /> */}
                             <SelectComponent error={errors.frontend_backend} required={false} onChangeData={d => {
                                 console.log(d)

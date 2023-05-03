@@ -92,11 +92,12 @@ export const SelectComponent = ({ required = true, width = 160, error, height, c
                             maxTagCount="responsive"
                             height={height}
                             // value={value ? value : false}
-                            value={isArray(value) ? value : value ? value : []}
+                            value={isArray(value) ? value : value ? value : props.mode === "multiple" || props.mode === "tag" ? [] : value}
                             status={error ? 'error' : ''}
                             onBlur={d => onBlur(d)}
                             className={className ? className : ""}
                             showSearch={false}
+                            placeholder="please Select"
                             allowClear
                             clearIcon={<DeleteFilled></DeleteFilled>}
                             style={{

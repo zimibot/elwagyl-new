@@ -44,6 +44,9 @@ const MainDeck = () => {
     {
         active: "mainDeckStatisticsDeadline"
     },
+    {
+        active: "mainDeckStatisticsMaps"
+    },
     ])
 
 
@@ -52,7 +55,7 @@ const MainDeck = () => {
     }
 
 
-    console.log(API)
+    console.log(API.data)
 
     return (<>
         <LayoutDashboard className="bg-[#101C26]">
@@ -115,10 +118,10 @@ const MainDeck = () => {
                                     </div>
                                 </div>
                                 <div className="col-span-2 border-l-primary border-l relative border-r-primary border-r flex flex-col items-center justify-end">
-                                    {API.error? <ErrorItems></ErrorItems> : API.loading ? <Loading></Loading> :  <div className="absolute w-full h-full top-[-50px] ">
+                                    {API.error ? <ErrorItems></ErrorItems> : API.loading ? <Loading></Loading> : <div className="absolute w-full h-full top-[-50px] ">
                                         <ChartRadialBar data={API.data.mainDeckStatisticsDeadline} />
                                     </div>}
-                                    
+
                                     <div className="p-4">
                                         <div className="grid grid-cols-3 gap-4 text-center">
                                             {value.CHARTRADIAL && value.CHARTRADIAL.map((d, k) => {
@@ -149,7 +152,8 @@ const MainDeck = () => {
                     <TitleContent className={"z-20 p-4 backdrop-blur relative"}>
                         <div className="text-[24px] uppercase text-blue">AERIAL VIEW</div>
                     </TitleContent>
-                    <MapChart></MapChart>
+                    {API.data.error ? "" : API.loading ? "" : <MapChart data={API.data.mainDeckStatisticsMaps}></MapChart>}
+
                 </div>
             </ColumnCenter>
             <ColumnRight>

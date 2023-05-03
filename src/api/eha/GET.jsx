@@ -204,6 +204,12 @@ export const GET_API_EHA = {
                 isLoading, data, error,
             }
         },
+        mainDeckStatisticsMaps: () => {
+            const { isLoading, data, error, } = useQuery(['mainDeckStatisticsMaps'], () => fetch(`${path}/api/assets/statistics/map`, { method: "GET" }).then(res => { return res.json() }),)
+            return {
+                isLoading, data, error,
+            }
+        },
 
     },
 

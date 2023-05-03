@@ -22,7 +22,7 @@ span.ant-select-selection-item {
   color: #00D8FF;
   font-size: 24px;
   padding: 0px;
-  width:100%
+  width: 100%
 }
 
 .ant-modal-confirm.ant-modal-confirm-success.custom-modal .ant-modal-confirm-btns {
@@ -56,6 +56,7 @@ span.ant-select-selection-item {
   text-transform: uppercase;
   font-size: 15px;
 }
+
 .ant-dropdown.custom-dropdown .ant-dropdown-menu .ant-dropdown-menu-item {
   padding: 0;
 }
@@ -278,7 +279,7 @@ li.ant-menu-overflow-item.ant-menu-overflow-item-rest.ant-menu-submenu.ant-menu-
   border-radius: 0;
   background: #152A36;
   color: cyan;
-  border: 0px solid ;
+  border: 0px solid;
 }
 
 .ant-popover .ant-popover-title {
@@ -414,6 +415,7 @@ span.anticon.anticon-check-circle svg {
 .ant-result .ant-result-title {
   color: white;
 }
+
 /* 
 .ant-result-icon svg {
   width: 100px;
@@ -428,7 +430,7 @@ span.anticon.anticon-check-circle svg {
   font-size: 16px;
 }
 
-.ant-popconfirm .ant-popconfirm-message >.ant-popconfirm-message-icon .anticon {
+.ant-popconfirm .ant-popconfirm-message>.ant-popconfirm-message-icon .anticon {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -465,7 +467,7 @@ span.anticon.anticon-check-circle svg {
   border: 1px solid #18313D;
   border-left: 0;
   border-right: 0;
-  margin: 0!important;
+  margin: 0 !important;
 }
 
 
@@ -555,15 +557,15 @@ span.ant-picker-clear svg {
 }
 
 .ant-btn {
-  background: #00d8ff!important;
+  background: #00d8ff !important;
 }
 
 .ant-picker-time-panel-cell-inner {
-  color: #00d8ff!important;
+  color: #00d8ff !important;
 }
 
-.ant-picker-dropdown .ant-picker-time-panel-column >li.ant-picker-time-panel-cell-selected .ant-picker-time-panel-cell-inner {
-  color: white!important;
+.ant-picker-dropdown .ant-picker-time-panel-column>li.ant-picker-time-panel-cell-selected .ant-picker-time-panel-cell-inner {
+  color: white !important;
   background: #00d8ff;
 }
 
@@ -583,11 +585,11 @@ span.ant-picker-clear svg {
   color: white;
 }
 
-.ant-picker-dropdown .ant-picker-header >button {
+.ant-picker-dropdown .ant-picker-header>button {
   color: white;
 }
 
-.ant-picker-dropdown .ant-picker-header >button:hover {
+.ant-picker-dropdown .ant-picker-header>button:hover {
   color: #00d8ff;
 }
 
@@ -608,7 +610,8 @@ span.ant-picker-clear svg {
   border: 0;
 }
 
-.ant-select .ant-select-clear, .ant-select .ant-select-clear:hover {
+.ant-select .ant-select-clear,
+.ant-select .ant-select-clear:hover {
   background: transparent;
   color: #00d8ff;
   font-size: 15px;
@@ -654,4 +657,15 @@ span.ant-picker-clear svg {
   display: flex;
   align-items: center;
   height: 100%;
+}
+
+.ant-select-single.ant-select-show-arrow .ant-select-selection-placeholder, span.ant-select-selection-placeholder  {
+  color: #00a2c0!important;
+  display: flex;
+  align-items: center;
+}
+
+::placeholder {
+  color: #00a2c0!important;
+  text-transform: uppercase;
 }

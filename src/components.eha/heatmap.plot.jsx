@@ -25,7 +25,6 @@ export const HeatmapComponent = ({data = []}) => {
     // }, []);
 
 
-    console.log(data)
 
 
     const config = {

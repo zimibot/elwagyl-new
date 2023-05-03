@@ -11,6 +11,8 @@ export const MapHighcharts = ({ className = "fixed" }) => {
     const API = API_GET.THREATSMAP_GLOBE()
     const { value } = GetAndUpdateContext()
 
+    console.log(value)
+
     const [open, setOpen] = useState({
         active: false,
         content: null

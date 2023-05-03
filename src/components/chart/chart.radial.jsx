@@ -29,7 +29,6 @@ export const ChartRadialBar = ({ data = [] }) => {
         })
     }
 
-    console.log(items)
 
 
     // const data = [
