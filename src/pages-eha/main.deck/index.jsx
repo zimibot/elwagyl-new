@@ -210,7 +210,7 @@ const ChartFindingMonthly = ({ loading, data }) => {
     for (const key in items.result) {
 
         da.push({
-            date: getShortMonth(key).toUpperCase(),
+            date: getShortMonth(key)?.toUpperCase(),
             total: items.result[key]
         })
     }
