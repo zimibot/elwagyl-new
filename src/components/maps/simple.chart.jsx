@@ -30,7 +30,7 @@ const MapChart = () => {
                                 <Geography
                                     key={geo.rsmKey}
                                     geography={geo}
-                                    fill={"red"}
+                                    fill={"#00D8FF"}
                                 // fill={d ? colorScale(d["2017"]) : "#F5F4F6"}
                                 />
                             );
