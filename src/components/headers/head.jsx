@@ -42,6 +42,7 @@ export const HeadFunction = (menu, setStatus, VALUEMENU) => {
 
             window.api.invoke('routesItem', {
                 url: menu.url,
+                status: false,
                 size: {
                     y: height,
                     width: window.outerWidth,
@@ -54,6 +55,7 @@ export const HeadFunction = (menu, setStatus, VALUEMENU) => {
         setStatus(d => ({ ...d, headHidden: false, loading: false }))
         window.api.invoke('routesItem', {
             url: null,
+            status: true,
             size: {
                 y: 0,
                 width: 0,
