@@ -83,6 +83,7 @@ app.on('browser-window-blur', function () {
   globalShortcut.unregister('F5');
 });
 app.focus()
+
 app.commandLine.appendSwitch('ignore-certificate-errors')
 
 app.on('certificate-error', (event, webContents, url, error, certificate, callback) => {
