@@ -1,3 +1,4 @@
+const { default: axios } = require('axios')
 const OtherView = require('./browser.oher.window')
 const { ipcMain } = require('electron')
 
@@ -23,9 +24,8 @@ module.exports = function OtherViewBrowser(win) {
                             width: true,
                             height: true
                         })
+                        axios.get(arg.url).then(d => console.log(d))
                         viewBrowser.webContents.loadURL(arg.url)
-
-
                     } else {
                         mainBrowser.removeBrowserView(viewBrowser)
                     }

@@ -37,10 +37,6 @@ export const HeadFunction = (menu, setStatus, VALUEMENU) => {
             }
         })
 
-        axios.get(menu.url).then(d => {
-            console.log(d)
-        })
-
         setTimeout(() => {
             setStatus(d => ({ ...d, loading: true }))
             let height
