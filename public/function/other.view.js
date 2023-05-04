@@ -23,13 +23,14 @@ module.exports = function OtherViewBrowser(win) {
                             height: true
                         })
                         viewBrowser.webContents.loadURL(arg.url)
-                        console.log(viewBrowser.webContents.isLoading())
                         if (viewBrowser.webContents.isLoading()) {
                             viewBrowser.setBounds({
                                 x: 0, y: 0, width: 0,
                                 height: 0
                             })
                         }
+
+                        console.log(viewBrowser.webContents.isWaitingForResponse())
 
                         viewBrowser.webContents.once("dom-ready", () => {
                             viewBrowser.setBounds({ x: 0, ...arg.size })

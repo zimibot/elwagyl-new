@@ -28,14 +28,6 @@ export const HeadFunction = (menu, setStatus, VALUEMENU) => {
     if (menu.url) {
 
         setStatus(d => ({ ...d, headHidden: true, loading: false }))
-        window.api.invoke('routesItem', {
-            url: null,
-            size: {
-                y: 0,
-                width: 0,
-                height: 0
-            }
-        })
 
         setTimeout(() => {
             setStatus(d => ({ ...d, loading: true }))
@@ -58,16 +50,6 @@ export const HeadFunction = (menu, setStatus, VALUEMENU) => {
             })
         }, 300);
 
-    } else {
-        setStatus(d => ({ ...d, headHidden: false, loading: false }))
-        window.api.invoke('routesItem', {
-            url: null,
-            size: {
-                y: 0,
-                width: 0,
-                height: 0
-            }
-        })
     }
 }
 
