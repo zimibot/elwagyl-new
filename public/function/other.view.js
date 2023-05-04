@@ -20,21 +20,27 @@ module.exports = function OtherViewBrowser(win) {
                         width: true,
                         height: true
                     })
-                    viewBrowser.webContents.loadURL(arg.url)
-                    viewBrowser.webContents.once("did-fail-load", () => {
-                        console.log("error-items")
-                    })
-                    if (viewBrowser.webContents.isLoading() ) {
+                    if (arg.url) {
+                        viewBrowser.webContents.loadURL(arg.url)
+                        viewBrowser.webContents.once("did-fail-load", () => {
+                            console.log("error-items")
+                        })
+                        if (viewBrowser.webContents.isLoading() ) {
+                            viewBrowser.setBounds({
+                                x: 0, y: 0, width: 0,
+                                height: 0
+                            })
+                        }
+    
+                        viewBrowser.webContents.once("dom-ready", () => {
+                            viewBrowser.setBounds({ x: 0, ...arg.size })
+                        })
+                    } else {
                         viewBrowser.setBounds({
                             x: 0, y: 0, width: 0,
                             height: 0
                         })
                     }
-
-
-                    viewBrowser.webContents.once("dom-ready", () => {
-                        viewBrowser.setBounds({ x: 0, ...arg.size })
-                    })
                 }
             });
         });
