@@ -7,13 +7,16 @@ const isDev = require('electron-is-dev');
 
 module.exports = function Sidebar() {
     const { height, width } = electron.screen.getPrimaryDisplay().workAreaSize
+    const windowHeight = Math.floor(height * 0.8)
+
     let w = 550
     let sideWin = WindowConfig({
         minWidth: w,
         maxWidth: w,
         width: w,
-        minHeight: height,
-        maxHeight: height,
+        minHeight: windowHeight,
+        maxHeight: windowHeight,
+        height: windowHeight,
         y: 0,
         x: (width - w)
     })
