@@ -47,11 +47,19 @@ export const HeadFunction = (menu, setStatus, VALUEMENU) => {
                     width: window.outerWidth,
                     height: window.outerHeight - height
                 }
-            }).then(d => {
-                console.log(d)
             })
         }, 300);
 
+    } else {
+        setStatus(d => ({ ...d, headHidden: false, loading: false }))
+        window.api.invoke('routesItem', {
+            url: null,
+            size: {
+                y: 0,
+                width: 0,
+                height: 0
+            }
+        })
     }
 }
 
