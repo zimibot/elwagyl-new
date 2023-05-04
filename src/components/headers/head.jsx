@@ -23,7 +23,9 @@ export const Heads = () => {
 }
 
 export const HeadFunction = (menu, setStatus, VALUEMENU) => {
+    console.log(menu)
     if (menu.url) {
+
         setStatus(d => ({ ...d, headHidden: true, loading: false }))
 
         setTimeout(() => {
@@ -151,8 +153,8 @@ const HeadTop = () => {
                     <div className="text-[24px]">PROTECTION DURATION</div>
                     <div className="h-full items-center relative justify-center flex pregress-license" onMouseEnter={() => setShow(true)} onMouseLeave={() => setShow(false)}>
                         <div className="w-full bg-primary text-border_primary font-bold">
-                            <div className={`bg-blue h-full px-3 w-1/2 relative  ${show ? "" : "h-3"}`}>
-                                {show && <span>Expired: 100 Days</span>}
+                            <div className={`bg-blue  px-3 w-1/2 relative  ${show ? "" : "h-3"}`}>
+                                {show && <span>Expired: 2 years</span>}
                             </div>
                         </div>
                     </div>

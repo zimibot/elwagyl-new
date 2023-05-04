@@ -24,7 +24,6 @@ const MapChart = ({ data }) => {
     const { value, setvalue } = GetAndUpdateContext()
 
 
-    console.log(value.MAPSEHA)
 
     if (isArray(data.result) && data.result.length > 0) {
         let items = data.result.map(d => {
@@ -71,7 +70,7 @@ const MapChart = ({ data }) => {
 
                                             return <Tooltip title={<div>{geo.properties.name}</div>}>
                                                 <Geography
-                                                    className="cursor-pointer"
+                                                    className="cursor-pointer fadeinOnly"
                                                     key={geo.rsmKey}
                                                     geography={geo}
                                                     fill={"url('#lines')"}
@@ -91,7 +90,7 @@ const MapChart = ({ data }) => {
                                         if (d) {
                                             return (<Tooltip title={<div>{geo.properties.name}</div>} key={geo.rsmKey}>
                                                 <Geography
-                                                    className="cursor-pointer"
+                                                    className="cursor-pointer animate-pulse"
                                                     geography={geo}
                                                     fill={"url('#lines')"}
                                                     id={geo.id}
@@ -124,6 +123,7 @@ const MapChart = ({ data }) => {
                                             );
                                         } else {
                                             return <Geography
+                                                className="fadeinOnly"
                                                 key={geo.rsmKey}
                                                 geography={geo}
                                                 fill={"#008199"}

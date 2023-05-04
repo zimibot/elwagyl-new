@@ -155,6 +155,14 @@ input:focus-visible {
   animation-timing-function: linear;
 }
 
+.fadeinOnly {
+  animation: fadeInOnly ease 1s;
+  -webkit-animation: fadeInOnly ease 1s;
+  animation-fill-mode: forwards;
+  animation-timing-function: linear;
+}
+
+
 .fadein2sc {
   animation: fadeInAnimation ease-in-out 0.5s;
   -webkit-animation: fadeInAnimation ease-in-out 0.5s;
@@ -641,5 +649,18 @@ ul.slick-dots li.slick-active button:after {
     -moz-transform: translate(0px, 0px);
     -ms-transform: translate(0px, 0px);
     -o-transform: translate(0px, 0px);
+  }
+}
+@keyframes fadeInOnly {
+  0% {
+    opacity: 0;
+  }
+
+  60% {
+    opacity: 0.7;
+  }
+
+  100% {
+    opacity: 1;
   }
 }
