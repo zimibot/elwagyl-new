@@ -34,7 +34,7 @@ export const HeadFunction = (menu, setStatus, VALUEMENU) => {
             let height
 
             if (VALUEMENU.data > 150) {
-                height = VALUEMENU.data - 55
+                height = VALUEMENU.data - 60
             } else {
                 height = VALUEMENU.data + 15
             }
