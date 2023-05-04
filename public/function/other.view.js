@@ -17,18 +17,22 @@ module.exports = function OtherViewBrowser(win) {
                         mainBrowser.setBrowserView(viewBrowser)
                         // mainBrowser.addBrowserView(viewBrowser)
                         // console.log(arg)
-                        if (arg) {
-                            viewBrowser.setBounds({ x: 0, ...arg.size })
-                        }
+
                         viewBrowser.setAutoResize({
                             width: true,
                             height: true
                         })
                         viewBrowser.webContents.loadURL(arg.url)
                         console.log(viewBrowser.webContents.isLoading())
-                        
+                        if (viewBrowser.webContents.isLoading()) {
+                            viewBrowser.setBounds({
+                                x: 0, y: 0, width: 0,
+                                height: 0
+                            })
+                        }
+
                         viewBrowser.webContents.once("dom-ready", () => {
-                            console.log("ready tempat")
+                            viewBrowser.setBounds({ x: 0, ...arg.size })
                         })
                     }
                 }
