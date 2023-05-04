@@ -30,11 +30,16 @@ module.exports = function OtherViewBrowser(win) {
                             })
                         }
 
-                        console.log(viewBrowser.webContents.isWaitingForResponse())
+                        result = viewBrowser.webContents.isLoading()
 
                         viewBrowser.webContents.once("dom-ready", () => {
                             viewBrowser.setBounds({ x: 0, ...arg.size })
+                            result = false
                         })
+
+                        return result
+
+
                     }
                 }
             });

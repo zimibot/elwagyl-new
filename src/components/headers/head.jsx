@@ -47,6 +47,8 @@ export const HeadFunction = (menu, setStatus, VALUEMENU) => {
                     width: window.outerWidth,
                     height: window.outerHeight - height
                 }
+            }).then(d => {
+                console.log(d)
             })
         }, 300);
 
