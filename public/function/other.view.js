@@ -26,6 +26,8 @@ module.exports = function OtherViewBrowser(win) {
                         })
                         viewBrowser.webContents.loadURL(arg.url).then(d => {
                             console.log(d)
+                        }).catch(d => {
+                            console.log(d)
                         })
                     } else {
                         mainBrowser.removeBrowserView(viewBrowser)
