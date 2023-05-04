@@ -12,38 +12,31 @@ module.exports = function OtherViewBrowser(win) {
             return new Promise(async function () {
                 // do stuff
                 if (true) {
-                    if (arg.url) {
+                    mainBrowser.setBrowserView(viewBrowser)
+                    // mainBrowser.addBrowserView(viewBrowser)
+                    // console.log(arg)
 
-                        mainBrowser.setBrowserView(viewBrowser)
-                        // mainBrowser.addBrowserView(viewBrowser)
-                        // console.log(arg)
-
-                        viewBrowser.setAutoResize({
-                            width: true,
-                            height: true
+                    viewBrowser.setAutoResize({
+                        width: true,
+                        height: true
+                    })
+                    viewBrowser.webContents.loadURL(arg.url)
+                    viewBrowser.webContents.once("preload-error", () => {
+                        console.log("error-items")
+                    })
+                    if (viewBrowser.webContents.isLoading() ) {
+                        viewBrowser.setBounds({
+                            x: 0, y: 0, width: 0,
+                            height: 0
                         })
-                        viewBrowser.webContents.loadURL(arg.url)
-                        viewBrowser.webContents.once("preload-error", () => {
-                            console.log("error-items")
-                        })
-                        if (viewBrowser.webContents.isLoading() ) {
-                            viewBrowser.setBounds({
-                                x: 0, y: 0, width: 0,
-                                height: 0
-                            })
-                        }
-
-                        result = viewBrowser.webContents.isLoading()
-
-                        viewBrowser.webContents.once("dom-ready", () => {
-                            viewBrowser.setBounds({ x: 0, ...arg.size })
-                            result = false
-                        })
-
-                        return result
-
-
                     }
+
+                    result = viewBrowser.webContents.isLoading()
+
+                    viewBrowser.webContents.once("dom-ready", () => {
+                        viewBrowser.setBounds({ x: 0, ...arg.size })
+                        result = false
+                    })
                 }
             });
         });
