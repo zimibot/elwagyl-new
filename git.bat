@@ -7,7 +7,8 @@ SET TIMESTAMP=%TIMESTAMP::=-%
 
 REM Get the current user's home directory
 SET USER_DIR=%USERPROFILE%
-
-"C:\Program Files\Git\bin\git.exe" add .
-"C:\Program Files\Git\bin\git.exe" commit -am "%USERNAME%_%TIMESTAMP%"
-"C:\Program Files\Git\bin\git.exe" push origin main
+SET PROGRAM_FILES=%ProgramFiles%
+echo %PROGRAM_FILES%
+"%PROGRAM_FILES%\Git\bin\git.exe" add .
+"%PROGRAM_FILES%\Git\bin\git.exe" commit -am "%USERNAME%_%TIMESTAMP%"
+"%PROGRAM_FILES%\Git\bin\git.exe" push origin main
