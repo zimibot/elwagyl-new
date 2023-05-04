@@ -18,6 +18,8 @@ import List from 'react-virtualized/dist/commonjs/List';
 import AutoSizer from 'react-virtualized/dist/commonjs/AutoSizer';
 import { ErrorItems } from "../../pages/cyber.deck"
 import MapChart from "../../components/maps/simple.chart"
+import { Drawer, Tooltip } from "antd"
+import { CloseOutlined } from "@ant-design/icons"
 
 
 const MainDeck = () => {
@@ -54,8 +56,6 @@ const MainDeck = () => {
         return <ErrorHtml error={API.msg}></ErrorHtml>
     }
 
-
-    console.log(API.data)
 
     return (<>
         <LayoutDashboard className="bg-[#101C26]">
@@ -99,7 +99,8 @@ const MainDeck = () => {
                     </div>
                 </CardBox>
             </ColumnLeft>
-            <ColumnCenter>
+            <ColumnCenter className="overflow-hidden" >
+
                 <div className=" backdrop-blur z-30">
                     <CardAnimation>
                         {!maximize?.GLOBESHOW && <>
@@ -155,6 +156,68 @@ const MainDeck = () => {
                     {API.data.error ? "" : API.loading ? "" : <MapChart data={API.data.mainDeckStatisticsMaps}></MapChart>}
 
                 </div>
+
+                <Drawer
+                    title={false}
+                    placement="right"
+                    closable={false}
+                    width={450}
+                    onClose={() => {
+                        setvalue(d => ({ ...d, MAPSEHA: { ...d.MAPSEHA, status: false } }))
+                    }}
+                    footer={false}
+                    open={value.MAPSEHA.status}
+                    getContainer={false}
+                >
+                    <div className="m-[-23px]">
+                        <TitleContent className={"z-20 p-4 backdrop-blur relative"} subTitle={false}>
+                            <div className="w-full">
+                                <div className="text-[18px] uppercase text-blue flex justify-between w-full items-center">
+                                    <span>DETAIL MAPS</span>
+                                    <Tooltip title="CLOSE DETAIL">
+                                        <button className="text-red-500" onClick={() => setvalue(d => ({ ...d, MAPSEHA: { ...d.MAPSEHA, status: false } }))}><CloseOutlined></CloseOutlined></button>
+                                    </Tooltip>
+                                </div>
+                            </div>
+                        </TitleContent>
+                    </div>
+                    <div className="flex-1 pt-10 space-y-3 pr-2 overflow-auto">
+                        {value.MAPSEHA.data?.map(d => {
+                            return <div key={d.id} className="border p-3 border-primary space-y-3 uppercase">
+                                <div>// {d.url_ip}</div>
+                                <div>{d.isp}</div>
+                                <div className="border-t border-primary py-3 space-y-3 text-white">
+                                    <div className="flex gap-2">
+                                        <div>
+                                            city :
+                                        </div>
+                                        <div>
+                                            {d.city}
+                                        </div>
+                                    </div>
+                                    <div className="flex gap-2">
+                                        <div>
+                                            system owner :
+                                        </div>
+                                        <div>
+                                            {d.system_owner_name}
+                                        </div>
+                                    </div>
+                                    <div className="flex gap-2">
+                                        <div>
+                                        mac address :
+                                        </div>
+                                        <div>
+                                            {d.mac_address}
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        })}
+
+                    </div>
+                </Drawer>
             </ColumnCenter>
             <ColumnRight>
                 <CardBox className={"flex-1"}>

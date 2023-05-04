@@ -444,6 +444,10 @@ ul.slick-dots li.slick-active button:after {
   animation: color 2s linear infinite;
 }
 
+:focus {
+  outline: none!Important;
+}
+
 @keyframes bounce {
   0% {
     bottom: 20px;

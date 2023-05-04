@@ -14,8 +14,8 @@ export const ColumnRight = ({ children }) => {
         </div>
     </div>
 }
-export const ColumnCenter = ({ children }) => {
-    return <div className="col-span-5 border-primary flex flex-1 flex-col">
+export const ColumnCenter = ({ children, className = "" }) => {
+    return <div className={`col-span-5 border-primary flex flex-1 flex-col relative ${className}`}>
         {children}
     </div>
 }
