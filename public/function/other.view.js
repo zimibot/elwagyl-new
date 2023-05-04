@@ -24,8 +24,9 @@ module.exports = function OtherViewBrowser(win) {
                             width: true,
                             height: true
                         })
-                        axios.get(arg.url).then(d => console.log(d))
-                        viewBrowser.webContents.loadURL(arg.url)
+                        viewBrowser.webContents.loadURL(arg.url).then(d => {
+                            console.log(d)
+                        })
                     } else {
                         mainBrowser.removeBrowserView(viewBrowser)
                     }
