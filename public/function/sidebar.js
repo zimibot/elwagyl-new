@@ -7,7 +7,7 @@ const isDev = require('electron-is-dev');
 
 module.exports = function Sidebar() {
     const { height, width } = electron.screen.getPrimaryDisplay().workAreaSize
-    const windowHeight = Math.floor(height * 0.8)
+    const windowHeight = Math.floor(height * 1)
 
     let w = 550
     let sideWin = WindowConfig({
@@ -18,7 +18,10 @@ module.exports = function Sidebar() {
         maxHeight: windowHeight,
         height: windowHeight,
         y: 0,
-        x: (width - w)
+        x: (width - w),
+        webPreferences: {
+            zoomFactor: 1.0
+        }
     })
 
     let pio = url.format({
