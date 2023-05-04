@@ -54,7 +54,7 @@ export const HeadFunction = (menu, setStatus, VALUEMENU) => {
                     height: window.outerHeight - height
                 }
             })
-        }, 50);
+        }, 300);
 
     } else {
         setStatus(d => ({ ...d, headHidden: false, loading: false }))
