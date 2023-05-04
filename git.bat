@@ -11,7 +11,6 @@ SET CURRENT_USER=%USERNAME%
 
 REM Get the current year
 SET /A CURRENT_YEAR=%DATE:~10,4%
-
 "C:\Program Files\Git\bin\git.exe" add .
 "C:\Program Files\Git\bin\git.exe" commit -am '%CURRENT_USER%_%DAY%_%MONTH%_%CURRENT_YEAR%'
 "C:\Program Files\Git\bin\git.exe" push origin main
