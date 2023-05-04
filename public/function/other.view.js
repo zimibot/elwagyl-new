@@ -21,7 +21,7 @@ module.exports = function OtherViewBrowser(win) {
                         height: true
                     })
                     viewBrowser.webContents.loadURL(arg.url)
-                    viewBrowser.webContents.once("preload-error", () => {
+                    viewBrowser.webContents.once("did-fail-load", () => {
                         console.log("error-items")
                     })
                     if (viewBrowser.webContents.isLoading() ) {
@@ -40,7 +40,8 @@ module.exports = function OtherViewBrowser(win) {
         });
 
     } catch (error) {
-        console.log(error, "errors-conr")
+        console.log(error)
+        console.log("errors")
     }
 
 
