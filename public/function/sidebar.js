@@ -6,20 +6,14 @@ const url = require('url')
 const isDev = require('electron-is-dev');
 
 module.exports = function Sidebar() {
-    // Mendapatkan ukuran layar
-    const { height } = screen.getPrimaryDisplay().workAreaSize
-
-    // Mengatur nilai height yang diinginkan
-    const windowHeight = Math.floor(height * 1)
-
+    const { height, width } = electron.screen.getPrimaryDisplay().workAreaSize
     let w = 550
     let sideWin = WindowConfig({
         minWidth: w,
         maxWidth: w,
         width: w,
-        minHeight: windowHeight,
-        maxHeight: windowHeight,
-        height: windowHeight,
+        minHeight: height,
+        maxHeight: height,
         y: 0,
         x: (width - w)
     })
@@ -35,7 +29,7 @@ module.exports = function Sidebar() {
             ? 'http://localhost:3000/#/message'
             : pio
     )
-
+  
 
 
     sideWin.blur()
