@@ -27,7 +27,7 @@ module.exports = function ({ title = "NOTIFICATION", content = "NOTIFICATION CON
     })
 
     notif.setIcon(path.join(__dirname, favicon));
-    notif.webContents.once("did-finish-load", () => {
+    notif.webContents.once("dom-ready", () => {
         console.log(path.join(__dirname, "../../sound/error.wav"))
         load.close()
         load = null
