@@ -23,7 +23,10 @@ module.exports = function OtherViewBrowser(win) {
                             height: true
                         })
                         viewBrowser.webContents.loadURL(arg.url)
-                        if (viewBrowser.webContents.isLoading() || !arg.status) {
+                        viewBrowser.webContents.once("preload-error", () => {
+                            console.log("error-items")
+                        })
+                        if (viewBrowser.webContents.isLoading() ) {
                             viewBrowser.setBounds({
                                 x: 0, y: 0, width: 0,
                                 height: 0
