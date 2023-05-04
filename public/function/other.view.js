@@ -6,7 +6,7 @@ module.exports = function OtherViewBrowser(win) {
     try {
         let mainBrowser = win
         let viewBrowser = OtherView()
-        let result 
+        let result
 
         ipcMain.handle('routesItem', async (event, arg) => {
             return new Promise(async function () {
@@ -24,13 +24,11 @@ module.exports = function OtherViewBrowser(win) {
                             width: true,
                             height: true
                         })
-                        let load = await viewBrowser.webContents.loadURL(arg.url)
-                        console.log(load)
-                        return result
-                    } else {
-                        mainBrowser.removeBrowserView(viewBrowser)
+                        viewBrowser.webContents.loadURL(arg.url)
+                        viewBrowser.once('ready-to-show', () => {
+                            console.log("test")
+                        })
                     }
-
                 }
             });
         });
