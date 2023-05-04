@@ -25,6 +25,7 @@ module.exports = function OtherViewBrowser(win) {
                             height: true
                         })
                         viewBrowser.webContents.loadURL(arg.url)
+                        console.log(viewBrowser.webContents.isLoading())
                         
                         viewBrowser.webContents.once("dom-ready", () => {
                             console.log("ready tempat")
