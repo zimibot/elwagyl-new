@@ -13,7 +13,7 @@ const items = [
         label: `TODAY`,
         children: <div>
             {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((d,k) => {
-                return <div key={d} className="p-6 border-b border-primary text-blue text-[16px] space-y-2 fadein2sc opacity-0" style={{
+                return <div key={d} className="p-6 border-b !border-primary text-blue text-[16px] space-y-2 fadein2sc opacity-0" style={{
                     animationDelay: `${k * 100}ms`
                 }}>
                     <div className="flex justify-between">
@@ -33,7 +33,7 @@ const items = [
         label: `MONTH`,
         children: <div>
             {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((d,k) => {
-                return <div key={d} className="p-6 border-b border-primary text-blue text-[16px] space-y-2 fadein2sc opacity-0" style={{
+                return <div key={d} className="p-6 border-b !border-primary text-blue text-[16px] space-y-2 fadein2sc opacity-0" style={{
                     animationDelay: `${k * 100}ms`
                 }}>
                     <div className="flex justify-between">
@@ -53,7 +53,7 @@ const items = [
         label: `ALL TIMES`,
         children: <div>
             {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((d,k) => {
-                return <div key={d} className="p-6 border-b border-primary text-blue text-[16px] space-y-2 fadein2sc opacity-0" style={{
+                return <div key={d} className="p-6 border-b !border-primary text-blue text-[16px] space-y-2 fadein2sc opacity-0" style={{
                     animationDelay: `${k * 100}ms`
                 }}>
                     <div className="flex justify-between">
@@ -73,7 +73,7 @@ const items = [
         label: `SYSTEM`,
         children: <div>
             {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((d,k) => {
-                return <div key={d} className="p-6 border-b border-primary text-blue text-[16px] space-y-2 fadein2sc opacity-0" style={{
+                return <div key={d} className="p-6 border-b !border-primary text-blue text-[16px] space-y-2 fadein2sc opacity-0" style={{
                     animationDelay: `${k * 100}ms`
                 }}>
                     <div className="flex justify-between">

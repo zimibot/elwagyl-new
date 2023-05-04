@@ -5,7 +5,7 @@ import { TabItem } from "./tab.item"
 
 export const MassagesDrawer = () => {
     const { maximize, setmaximize } = GetAndUpdateContext()
-    return <Drawer title={false} width={610} placement="right" onClose={() => {
+    return <Drawer title={false} width={"100%"} placement="right" onClose={() => {
         setmaximize(d => ({ ...d, MESSAGES: !d.MESSAGES }))
         window.api.invoke('message-close') 
     }} closable={false} open={true}>

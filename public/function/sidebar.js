@@ -8,8 +8,8 @@ const isDev = require('electron-is-dev');
 module.exports = function Sidebar() {
     const { height, width } = electron.screen.getPrimaryDisplay().workAreaSize
     const windowHeight = Math.floor(height * 1)
-
     let w = 550
+    const windowWidth = Math.floor((width - w) * (1))
     let sideWin = WindowConfig({
         minWidth: w,
         maxWidth: w,
@@ -18,7 +18,7 @@ module.exports = function Sidebar() {
         maxHeight: windowHeight,
         height: windowHeight,
         y: 0,
-        x: (width - w),
+        x: windowWidth,
         webPreferences: {
             zoomFactor: 1.0
         }
@@ -35,7 +35,7 @@ module.exports = function Sidebar() {
             ? 'http://localhost:3000/#/message'
             : pio
     )
-  
+
 
 
     sideWin.blur()
