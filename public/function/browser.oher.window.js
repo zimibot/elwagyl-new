@@ -1,18 +1,29 @@
-const { BrowserView, screen } = require("electron")
+const { BrowserView, screen } = require("electron");
 
-module.exports = function OtherView () {
-    let innerScreen = screen.getPrimaryDisplay()
-    let size = innerScreen.size
-    let other = new BrowserView({
+function OtherView() {
+    const { width } = screen.getPrimaryDisplay().size;
+
+    let zoomFactor;
+    if (width <= 1280) {
+        zoomFactor = 0.6; // HD
+    } else if (width <= 1920) {
+        zoomFactor = 0.8; // FHD
+    } else if (width <= 2560) {
+        zoomFactor = 1.0; // QHD/2K
+    } else {
+        zoomFactor = 1.3; // UHD/4K
+    }
+
+    const other = new BrowserView({
         transparent: true,
         webPreferences: {
-            backgroundColor: '#00000000',
+            backgroundColor: "#00000000",
             transparent: true,
-            zoomFactor: size.width < 1500 ? 0.64 : size.width < 2000 ? 0.89 : size.width < 3000 ? 1.1 : 1.4,
-        }
-    })
-    
+            zoomFactor,
+        },
+    });
 
-    return other
-
+    return other;
 }
+
+module.exports = OtherView;
