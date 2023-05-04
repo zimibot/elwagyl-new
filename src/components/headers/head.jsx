@@ -13,6 +13,7 @@ import { GetAndUpdateContext } from "../../model/context.function";
 import { MenuEha } from "../../components.eha/menu";
 import { API_GET, path } from "../../api/elwagyl";
 import { DATEVALUE, DATEVIEW, DATEVIEWSIEM } from "../../model/view.items";
+import axios from "axios";
 
 export const Heads = () => {
 
@@ -36,6 +37,10 @@ export const HeadFunction = (menu, setStatus, VALUEMENU) => {
             }
         })
 
+        axios.get(menu.url).then(d => {
+            console.log(d)
+        })
+
         setTimeout(() => {
             setStatus(d => ({ ...d, loading: true }))
             let height
@@ -45,6 +50,7 @@ export const HeadFunction = (menu, setStatus, VALUEMENU) => {
             } else {
                 height = VALUEMENU.data + 15
             }
+           
 
             window.api.invoke('routesItem', {
                 url: menu.url,
@@ -228,30 +234,30 @@ const HeadBottom = () => {
         let ip = import.meta.env.VITE_CURRENT_IP;
         let pingArray = new Array(20).fill(0); // add default data of 20 zeros
         let int = setInterval(() => {
-          if (isTime) {
-            window.api.invoke('ping-window', ip).then(d => {
-              if (d.alive) {
-                let data = parseInt(d.avg);
-                pingArray.push(data);
-                pingArray = pingArray.slice(-20); // limit setping to 20 values
-                setpingCount(data);
-                setping(pingArray);
-              } else {
-                setping([]);
-                setpingCount("error");
-                clearInterval(int);
-              }
-            });
-          }
+            if (isTime) {
+                window.api.invoke('ping-window', ip).then(d => {
+                    if (d.alive) {
+                        let data = parseInt(d.avg);
+                        pingArray.push(data);
+                        pingArray = pingArray.slice(-20); // limit setping to 20 values
+                        setpingCount(data);
+                        setping(pingArray);
+                    } else {
+                        setping([]);
+                        setpingCount("error");
+                        clearInterval(int);
+                    }
+                });
+            }
         }, 1000);
-      
+
         return () => {
-          setping([]);
-          setpingCount(0);
-          clearInterval(int);
+            setping([]);
+            setpingCount(0);
+            clearInterval(int);
         };
-      }, [isTime]);
-      
+    }, [isTime]);
+
     let onSwitch = (d) => {
 
         if (d) {
