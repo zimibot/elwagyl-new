@@ -40,7 +40,7 @@ module.exports = function OtherViewBrowser(win) {
         });
 
     } catch (error) {
-        console.log(error)
+        console.log(error, "errors-conr")
     }
 
 
