@@ -1,16 +1,13 @@
 @echo off
-FOR /F "tokens=1-3 delims=/ " %%A IN ('DATE /T') DO (
-    SET DAY=%%A
-    SET MONTH=%%B
-    SET YEAR=%%C
-)
 
-REM Add 2000 to the year if it's less than 100
-IF %YEAR% LSS 100 SET YEAR=20%YEAR%
-SET CURRENT_USER=%USERNAME%
+REM Get the current date and time
+SET TIMESTAMP=%DATE%_%TIME%
+SET TIMESTAMP=%TIMESTAMP:/=-%
+SET TIMESTAMP=%TIMESTAMP::=-%
 
-REM Get the current year
-SET /A CURRENT_YEAR=%DATE:~10,4%
+REM Get the current user's home directory
+SET USER_DIR=%USERPROFILE%
+
 "C:\Program Files\Git\bin\git.exe" add .
-"C:\Program Files\Git\bin\git.exe" commit -am '%CURRENT_USER%_%DAY%_%MONTH%_%CURRENT_YEAR%'
+"C:\Program Files\Git\bin\git.exe" commit -am "%USERNAME%_%TIMESTAMP%"
 "C:\Program Files\Git\bin\git.exe" push origin main
