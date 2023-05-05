@@ -13,8 +13,6 @@ module.exports = async function DownloadFIles() {
     const tempDir = process.env.TEMP;
     const zipFilePath = path.join(tempDir, 'elwagyl-update', 'updater.zip');
     const updateAvailable = path.join(tempDir, 'updater', "files" , 'update.zip');
-
-
     const downloaders = (versi, progress) => [
         {
             url: 'http://157.245.49.164:8080/update/elwagylUpdate/updater.zip',

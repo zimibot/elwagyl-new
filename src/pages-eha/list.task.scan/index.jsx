@@ -26,9 +26,9 @@ const ListTask = () => {
                     <div className="p-8 flex items-center gap-10 border-b border-primary">
                         <div>SCAN FUNCTION</div>
                         <div className="space-x-4 flex">
-                            {/* <ButtonComponents>
-                                IMPORT
-                            </ButtonComponents> */}
+                            <ButtonComponents>
+                                EXPORT PDF
+                            </ButtonComponents>
                             <ButtonComponents click={() => {
                                 setStatus(d => ({
                                     ...d,
@@ -38,9 +38,9 @@ const ListTask = () => {
                             }}>
                                 [ + ] ADD
                             </ButtonComponents>
-                            {/* <ButtonComponents>
+                            <ButtonComponents>
                                 RECURRING SCANS
-                            </ButtonComponents> */}
+                            </ButtonComponents>
                         </div>
                     </div>
                 </CardBox>

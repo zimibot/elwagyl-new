@@ -140,7 +140,7 @@ const MENUDATA = [
     {
         label: 'XSOAR',
         key: '/dashboard/soar',
-        url: "https://sockari.xdr.sg.paloaltonetworks.com",
+        url: "https://10.22.24.2/#/login ",
         icon: <div className="absolute w-full h-full left-0 top-0">
             <div className="absolute top-0 block px-1 !text-lg left-0" style={{
                 color: "rgba(0, 216, 255, 0.3)"
@@ -157,7 +157,7 @@ const MENUDATA = [
     {
         label: 'XDR',
         key: '/dashboard/xdr',
-        url: "https://10.22.24.2/#/login",
+        url: "https://sockari.xdr.sg.paloaltonetworks.com",
         icon: <div className="absolute w-full h-full left-0 top-0">
             <div className="absolute top-0 block px-1 !text-lg left-0" style={{
                 color: "rgba(0, 216, 255, 0.3)"
@@ -174,7 +174,7 @@ const MENUDATA = [
     {
         label: 'FIREWALL',
         key: '/dashboard/firewall',
-        url: "https://colorlib.com/etc/404/colorlib-error-404-6/",
+        url: "https://10.22.24.4/php/login.php",
         icon: <div className="absolute w-full h-full left-0 top-0">
             <div className="absolute top-0 block px-1 !text-lg left-0" style={{
                 color: "rgba(0, 216, 255, 0.3)"
