@@ -1,5 +1,5 @@
 const OtherView = require('./browser.oher.window');
-const { ipcMain } = require('electron');
+const { ipcMain, dialog } = require('electron');
 
 module.exports = function OtherViewBrowser(win) {
   try {
@@ -7,7 +7,7 @@ module.exports = function OtherViewBrowser(win) {
     const viewBrowser = OtherView();
 
     ipcMain.handle('routesItem', async (event, arg) => {
-      return new Promise(async function() {
+      return new Promise(async function () {
         // melakukan operasi
         if (true) {
           mainBrowser.setBrowserView(viewBrowser);
@@ -23,6 +23,8 @@ module.exports = function OtherViewBrowser(win) {
             viewBrowser.webContents.loadURL(arg.url);
             viewBrowser.webContents.once('did-fail-load', () => {
               console.log('error-items');
+
+
             });
 
             if (viewBrowser.webContents.isLoading()) {
@@ -37,6 +39,9 @@ module.exports = function OtherViewBrowser(win) {
             viewBrowser.webContents.once('dom-ready', () => {
               viewBrowser.setBounds({ x: 0, ...arg.size });
             });
+
+            viewBrowser.setZOrder(-1);
+
           } else {
             viewBrowser.setBounds({
               x: 0,

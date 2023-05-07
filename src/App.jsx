@@ -25,6 +25,8 @@ import NotFoundUMS from "./pages-ums/notfound";
 import { MassagesDrawer } from "./components/headers/messages.drawer";
 import { Result } from "antd";
 import UserManagement from "./pages-ums/usermanagement";
+import WelcomeEha from "./pages-eha/welcome";
+import { MenuPopup } from "./components/menu";
 const CyberDeck = lazy(() => import('./pages/cyber.deck/index.jsx'));
 const Executive = lazy(() => import('./pages/executive/index.jsx'));
 const AvailabilityPages = lazy(() => import('./pages/availability/index.jsx'));
@@ -52,6 +54,7 @@ export default function App() {
                 <Route path="*" element={<HeadersTop />} />
                 <Route path="/" element={<LoginPages></LoginPages>} />
                 <Route path="/message" element={<MassagesDrawer />} />
+                <Route path="/menu" element={<MenuPopup />} />
                 <Route path="/dashboard" element={<Container></Container>}>
                   <Route index element={<CyberDeck />} />
                   <Route path="executive" element={<Executive />} />
@@ -64,11 +67,12 @@ export default function App() {
                 <Route path="ums" element={<ContainerNoHead ums />}>
                   <Route index element={<Navigate state={{ title: ` USER MANAGEMENT SYSTEM // DASHBOARD`, ums: true }} to={`/ums/dashboard`} />} />
                   <Route path="user management" element={<UserManagement></UserManagement>} />
-                  <Route path="settings" element={<Settings />}/>
+                  <Route path="settings" element={<Settings />} />
                   <Route path="*" element={<NotFoundUMS />} />
                 </Route>
-                <Route path={"eha"} element={<ContainerNoHead eha />}>
-                  <Route index element={<Navigate state={{ title: `10 // eha // MAIN DECK`, eha: true }} to={`/eha/home`} />} />
+                <Route path={"eha"} element={<ContainerNoHead />}>
+                  <Route index element={<Navigate state={{ title: `10 // eha // MAIN DECK`, eha: false }} to={`/eha/home`} />} />
+                  <Route path="welcome" element={<WelcomeEha />} />
                   <Route path="home" element={<MainDeck />} />
                   <Route path="profile-indicator" element={<ProfileIndicator />} />
                   <Route path="assets" element={<AssetsList />} />
@@ -159,10 +163,12 @@ const ContainerNoHead = ({ eha = false, ums = false }) => {
 
 
   return ping.isLoading ? "" : ping.data.alive ? <PrivateRoute>
+
     <HeadersTop background={"#101C26"} nohead={{
       eha,
       ums
     }} />
+
     <Outlet></Outlet>
   </PrivateRoute> : <div className="flex items-center justify-center flex-1">
     <Result

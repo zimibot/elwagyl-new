@@ -36,9 +36,11 @@ module.exports = function Sidebar() {
             : pio
     )
 
+    sideWin.on('blur', () => {
+        sideWin.hide()
+    })
 
-
-    sideWin.blur()
+    // sideWin.blur()
     // sideWin.webContents.openDevTools({ mode: 'detach' });
     return sideWin
 }

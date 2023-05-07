@@ -669,3 +669,7 @@ span.ant-picker-clear svg {
   color: #00a2c0!important;
   text-transform: uppercase;
 }
+
+span.ant-menu-title-content {
+  color: #00d8ff;
+}

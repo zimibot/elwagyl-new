@@ -5,10 +5,9 @@ import { NavLink } from "react-router-dom";
 import Logo from "../../assets/images/full.logo.svg";
 import { GetAndUpdateContext } from "../../model/context.function";
 import { SquareMedium } from "../decoration/square";
-import { TitleContent } from "../layout/title";
 import { Heads } from "./head";
 import MenuItems from "./menu";
-import { MassagesDrawer } from "./messages.drawer";
+import { UserOutlined } from "@ant-design/icons";
 
 export const HeadersTop = ({ background }) => {
     const { maximize, setmaximize, setvalue, status } = GetAndUpdateContext()
@@ -87,15 +86,26 @@ export const HeadersTop = ({ background }) => {
                                 </svg>
                             </div>
                         </div>
+                        
                         <div className="h-full min-w-[70px] flex items-center justify-center px-1 border-r border-r-border_primary relative">
-                            <Popover rootClassName="min-w-[200px]" trigger={"click"} placement="bottomRight" content={
+                            <Popover rootClassName="min-w-[200px]" trigger={"click"} placement="leftTop" content={
                                 <>
                                     <SquareMedium />
                                     <div className="text-[16px] space-y-4 text-blue">
                                         <div className="border-b pb-2 border-blue hover:text-white hover:border-white cursor-pointer">
                                             LICENSE
                                         </div>
-                                        <NavLink state={{ ums: true, title: "USER MANAGEMENT", key: "dashboard" }} to={"/ums/user management"} className="border-b pb-2 border-blue hover:text-white hover:border-white block">
+                                        <NavLink onClick={() => {
+                                              window.api.invoke('routesItem', {
+                                                url: null,
+                                                status: true,
+                                                size: {
+                                                    y: 0,
+                                                    width: 0,
+                                                    height: 0
+                                                }
+                                            })
+                                        }} state={{ ums: true, title: "USER MANAGEMENT", key: "dashboard" }} to={"/ums/user management"} className="border-b pb-2 border-blue hover:text-white hover:border-white block">
                                             USER MANAGEMENT
                                         </NavLink>
                                         <div className="border-b pb-2 border-blue hover:text-white hover:border-white cursor-pointer" onClick={() => {
@@ -120,6 +130,23 @@ export const HeadersTop = ({ background }) => {
                                 </svg>
                             </div>
                         </div>
+                        {/* <div className="h-full min-w-[70px] flex items-center justify-center px-1 border-r border-r-border_primary relative">
+                            <Tooltip title="PROFILE">
+                                <button className="alert-notif w-full h-full items-center justify-center flex text-[20px] text-blue border-b-[6px] border-border_primary" onClick={() => {
+                                    setmaximize(d => ({ ...d, MESSAGES: !d.MESSAGES }))
+                                    window.api.invoke('message-open', maximize.MESSAGES)
+
+                                }}>
+                                  <UserOutlined></UserOutlined>
+                                </button>
+                            </Tooltip>
+                            <div className="absolute left-[-3px]">
+                                <svg width="6" height="19" viewBox="0 0 6 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M0 3L3 0V19L0 16V3Z" fill="#101C26" />
+                                    <path d="M6 3L3 0V19L6 16V3Z" fill="#101C26" />
+                                </svg>
+                            </div>
+                        </div> */}
                         <div className="h-full w-full relative flex items-center">
                             <div className="absolute left-[-4px]">
                                 <svg width="3" height="19" viewBox="0 0 3 19" fill="none" xmlns="http://www.w3.org/2000/svg">

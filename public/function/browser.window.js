@@ -26,7 +26,7 @@ module.exports = function WindowConfig(mainConfig = {}, webPreferences = {}) {
       nodeIntegration: false, // is default value after Electron v5
       contextIsolation: true, // protect against prototype pollution
       enableRemoteModule: true,
-      zoomFactor: size.width < 1500 ? 0.64 : size.width < 2000 ? 0.89 : size.width < 3000 ? 1.3 : 1.55,
+      zoomFactor: size.width < 1500 ? 0.64 : size.width < 2000 ? 0.89 : size.width < 3000 ? 1.4 : 1.7,
       preload: path.join(__dirname, "../preload.js"), // path to your preload.js file
       ...webPreferences,
 

@@ -7,7 +7,8 @@ const Sidebar = require('./sidebar')
 const url = require('url');
 const Ping = require("ping")
 const childProcess = require("child_process");
- 
+const MenuPopup = require('./menuPopup');
+
 module.exports = function CreateWindow({ urlCurrent, prodUrl, config = {}, webConfig = {}, maximize, load }) {
     const cUrl = urlCurrent ? urlCurrent : "http://localhost:3000/"
     const win = WindowConfig({
@@ -32,7 +33,7 @@ module.exports = function CreateWindow({ urlCurrent, prodUrl, config = {}, webCo
 
 
     win.webContents.once("did-finish-load", async () => {
-        
+
 
         if (load) {
             load.close()
@@ -62,8 +63,6 @@ module.exports = function CreateWindow({ urlCurrent, prodUrl, config = {}, webCo
                     });
                 });
 
-
-
                 ipcMain.handle('minimize', async () => {
                     return new Promise(function () {
                         // do stuff
@@ -88,6 +87,29 @@ module.exports = function CreateWindow({ urlCurrent, prodUrl, config = {}, webCo
                         }
                     });
                 });
+                let menuPopup = MenuPopup()
+
+                ipcMain.handle('menu-open', async (ev, args) => {
+                    return new Promise(function () {
+                        // do stuff
+                        if (true) {
+                            menuPopup.show()
+                            menuPopup.webContents.executeJavaScript(`
+                                document.getElementsByClassName('menu-window')[0].remove()
+                            `)
+
+                        }
+                    });
+                });
+                
+                ipcMain.handle('menu-close', async (ev, args) => {
+                    return new Promise(function () {
+                        // do stuff
+                        if (true) {
+                            menuPopup.hide()
+                        }
+                    });
+                });
 
 
                 ipcMain.handle('close', async () => {
@@ -96,7 +118,6 @@ module.exports = function CreateWindow({ urlCurrent, prodUrl, config = {}, webCo
                         if (true) {
                             app.quit()
                             Sidebar().close()
-                            
                         }
                     });
                 });

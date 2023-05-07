@@ -1,27 +1,28 @@
 const { BrowserView, screen } = require("electron");
+const path = require("path")
+const dev = require("electron-is-dev")
+
 
 function OtherView() {
-    const { width } = screen.getPrimaryDisplay().size;
-
-    let zoomFactor;
-    if (width <= 1280) {
-        zoomFactor = 0.6; // HD
-    } else if (width <= 1920) {
-        zoomFactor = 0.8; // FHD
-    } else if (width <= 2560) {
-        zoomFactor = 1.0; // QHD/2K
-    } else {
-        zoomFactor = 1.3; // UHD/4K
-    }
+    let innerScreen = screen.getPrimaryDisplay()
+    let size = innerScreen.size
 
     const other = new BrowserView({
         transparent: true,
         webPreferences: {
+            preload: path.join(__dirname, '../other-config.js'),
             backgroundColor: "#00000000",
             transparent: true,
-            zoomFactor,
+            zoomFactor: size.width < 1500 ? 0.64 : size.width < 2000 ? 0.89 : size.width < 3000 ? 1.4 : 1.7,
+            nodeIntegration: true
         },
     });
+
+
+
+    if (dev) {
+        // other.webContents.openDevTools()
+    }
 
     return other;
 }
