@@ -1,4 +1,4 @@
-import { Drawer, Popover, Tooltip } from "antd";
+import {  Popover, Tooltip } from "antd";
 import moment from "moment";
 import { useEffect, useRef, useState } from "react";
 import { NavLink } from "react-router-dom";
@@ -7,7 +7,6 @@ import { GetAndUpdateContext } from "../../model/context.function";
 import { SquareMedium } from "../decoration/square";
 import { Heads } from "./head";
 import MenuItems from "./menu";
-import { UserOutlined } from "@ant-design/icons";
 
 export const HeadersTop = ({ background }) => {
     const { maximize, setmaximize, setvalue, status } = GetAndUpdateContext()
@@ -92,7 +91,9 @@ export const HeadersTop = ({ background }) => {
                                 <>
                                     <SquareMedium />
                                     <div className="text-[16px] space-y-4 text-blue">
-                                        <div className="border-b pb-2 border-blue hover:text-white hover:border-white cursor-pointer">
+                                        <div className="border-b pb-2 border-blue hover:text-white hover:border-white cursor-pointer" onClick={() => {
+                                              window.api.invoke('license-open')
+                                        }}>
                                             LICENSE
                                         </div>
                                         <NavLink onClick={() => {

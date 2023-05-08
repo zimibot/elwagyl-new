@@ -13,7 +13,6 @@ import { GetAndUpdateContext } from "../../model/context.function";
 import { MenuEha } from "../../components.eha/menu";
 import { API_GET, path } from "../../api/elwagyl";
 import { DATEVALUE, DATEVIEW, DATEVIEWSIEM } from "../../model/view.items";
-import axios from "axios";
 
 export const Heads = () => {
 
@@ -24,7 +23,6 @@ export const Heads = () => {
 }
 
 export const HeadFunction = (menu, setStatus, VALUEMENU) => {
-    console.log(menu)
     if (menu.url) {
 
         setStatus(d => ({ ...d, headHidden: true, loading: false }))
@@ -34,7 +32,7 @@ export const HeadFunction = (menu, setStatus, VALUEMENU) => {
             let height
 
             if (VALUEMENU.data > 150) {
-                height = VALUEMENU.data - 60
+                height = VALUEMENU.data - 70
             } else {
                 height = VALUEMENU.data + 15
             }
@@ -156,9 +154,9 @@ const HeadTop = () => {
                 <div className="grid gap-2 grid-cols-2 h-full items-center">
                     <div className="text-[24px]">PROTECTION DURATION</div>
                     <div className="h-full items-center relative justify-center flex pregress-license" onMouseEnter={() => setShow(true)} onMouseLeave={() => setShow(false)}>
-                        <div className="w-full bg-primary text-border_primary font-bold">
-                            <div className={`bg-blue  px-3 w-1/2 relative  ${show ? "" : "h-3"}`}>
-                                {show && <span>Expired: 2 years</span>}
+                        <div className="w-full bg-primary text-border_primary font-bold relative">
+                            <div className={`bg-blue flex justify-center items-center  w-[0%]  ${show ? "h-5" : "h-3"}`}>
+                                {show && <span className="absolute w-full right-0 text-white justify-center items-center flex">Expired: 2 years</span>}
                             </div>
                         </div>
                     </div>

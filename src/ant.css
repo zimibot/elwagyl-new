@@ -268,7 +268,9 @@ li.ant-menu-overflow-item.ant-menu-overflow-item-rest.ant-menu-submenu.ant-menu-
 
 .ant-switch .ant-switch-handle {
   width: 45px;
-  height: 24px;
+  height: 100%;
+  /* inset-inline-start: 0px; */
+  top: 0;
 }
 
 .ant-switch.ant-switch-checked .ant-switch-handle {
@@ -650,7 +652,7 @@ span.ant-picker-clear svg {
   justify-content: end;
   height: 100%;
   align-items: center;
-  margin-top: -27px;
+  margin-top: 0;
 }
 
 .ant-switch .ant-switch-inner .ant-switch-inner-checked {
@@ -672,4 +674,8 @@ span.ant-picker-clear svg {
 
 span.ant-menu-title-content {
   color: #00d8ff;
+}
+
+.ant-switch .ant-switch-inner {
+  display: flex;
 }

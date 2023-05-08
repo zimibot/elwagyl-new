@@ -26,7 +26,7 @@ import { MassagesDrawer } from "./components/headers/messages.drawer";
 import { Result } from "antd";
 import UserManagement from "./pages-ums/usermanagement";
 import WelcomeEha from "./pages-eha/welcome";
-import { MenuPopup } from "./components/menu";
+import { LicensePoup } from "./components/licensePopup";
 const CyberDeck = lazy(() => import('./pages/cyber.deck/index.jsx'));
 const Executive = lazy(() => import('./pages/executive/index.jsx'));
 const AvailabilityPages = lazy(() => import('./pages/availability/index.jsx'));
@@ -54,7 +54,7 @@ export default function App() {
                 <Route path="*" element={<HeadersTop />} />
                 <Route path="/" element={<LoginPages></LoginPages>} />
                 <Route path="/message" element={<MassagesDrawer />} />
-                <Route path="/menu" element={<MenuPopup />} />
+                <Route path="/license" element={<LicensePoup />} />
                 <Route path="/dashboard" element={<Container></Container>}>
                   <Route index element={<CyberDeck />} />
                   <Route path="executive" element={<Executive />} />
@@ -71,7 +71,7 @@ export default function App() {
                   <Route path="*" element={<NotFoundUMS />} />
                 </Route>
                 <Route path={"eha"} element={<ContainerNoHead />}>
-                  <Route index element={<Navigate state={{ title: `10 // eha // MAIN DECK`, eha: false }} to={`/eha/home`} />} />
+                  <Route index element={<Navigate state={{ title: `10 // eha // MAIN DECK`, eha: true }} to={`/eha/home`} />} />
                   <Route path="welcome" element={<WelcomeEha />} />
                   <Route path="home" element={<MainDeck />} />
                   <Route path="profile-indicator" element={<ProfileIndicator />} />

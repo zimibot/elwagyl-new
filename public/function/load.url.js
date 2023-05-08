@@ -60,10 +60,12 @@ module.exports = function CreateWindow() {
         });
 
 
-        if (isDev) {
-            win.webContents.openDevTools({ mode: 'detach' });
+        // if (isDev) {
+        //     win.webContents.openDevTools({ mode: 'detach' });
            
-        }
+        // } else {
+        //     win.webContents.openDevTools({ mode: 'detach' });
+        // }
     })
 
 

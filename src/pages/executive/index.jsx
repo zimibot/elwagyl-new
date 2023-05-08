@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 import { DecompositionTreeGraphChart } from "../../components/chart/decomposition";
-import { GaugeChart } from "../../components/chart/gauge";
 import { ChartLineTooltip } from "../../components/chart/line.tooltip";
 import { SquareFull } from "../../components/decoration/square";
 import { FillterDay } from "../../components/fillter/fillter.day";
@@ -19,7 +18,8 @@ import { API_GET } from "../../api/elwagyl";
 import { Loading } from "../../components/loading/loadingOther";
 import { counting } from 'radash'
 import { GaugeChartIndicator } from "../../components/chart/gauge.indicator";
-import { LineNoLabel } from "../../components/chart/line.no.label";
+import { HostRealtime } from "./hostRealtime";
+import { Form } from "../../components.eha/input";
 
 export const ItemData = ({ d, arInactive, arActive, totalActive }) => ({
     id: d.ip,
@@ -102,26 +102,11 @@ const Executive = () => {
     const API_SERVICE_HISTORY = API_GET.EXECUTIVE_SERVICE_HISTORY()
     const API_SERVICE_LIST = API_GET.EXECUTIVE_SERVICE_LIST()
     const API_HOST_LIST = API_GET.EXECUTIVE_HOST_LIST()
-    const API_HOST_LIST_REALTIME = API_GET.EXECUTIVE_HOST_REALTIME()
     const API__ACTIVE_TIME = API_GET.EXECUTIVE_ACTIVE_TIME()
     const API_HOST_TOTAL = API_GET.EXECUTIVE_TOTAL_SERVER()
 
     const [refresh, setrefresh] = useState({ status: false });
-    const [Row, setRow] = useState([]);
-
-    useEffect(() => {
-        let data = new Array(10).fill().map((d, k) => ({
-            no: <div>{k + 1}</div>,
-            source: <div>88.210.293.12</div>,
-            date: <div>21/DEC/22</div>,
-            time: <div>10:15:49</div>,
-        }))
-
-        setRow(data)
-        return () => {
-            setRow([])
-        };
-    }, []);
+    const [switchHide, setswitchHide] = useState({ status: false });
 
 
 
@@ -140,54 +125,34 @@ const Executive = () => {
                             <SubtitleInfo className="btn-information" title={'service statistic'}>
                                 {OBSERVATION_SEVERITY_DESC}
                             </SubtitleInfo>
-                            {API_SERVICE_ALIVE.error ? "ERROR" : API_SERVICE_ALIVE.isLoading ? <Loading></Loading> : <ChartLineTooltip data={API_SERVICE_ALIVE.data.data} height={150} mode={'vh'} />}
+                            {API_SERVICE_ALIVE.error ? "ERROR" : API_SERVICE_ALIVE.isLoading ? <Loading></Loading> : <ChartLineTooltip customTextTooltip={"PORT ACTIVE"} data={API_SERVICE_ALIVE.data.data} height={150} mode={'vh'} />}
 
                         </>
                     }
                 </CardAnimation>
 
             </CardBox>
-            <CardBox className={"flex-1"}>
+            <CardBox className={"flex-1 gap-2"}>
                 <TitleContent date={value.DATEVALUE.uniq} time={true} statusMinimize={!maximize.SERVICESTATUS} maximizeItem={"SERVICESTATUS"} subTitle={"S-2"}>
                     <div className="text-[24px] uppercase text-blue">SERVICE STATUS</div>
                 </TitleContent>
-                <SubtitleInfo className="btn-information" title={'List Service'}>
-                    {OBSERVATION_SEVERITY_DESC}
+                <SubtitleInfo custom className="btn-information" title={'List Service'}>
+                    <div className="flex items-center gap-3 justify-center">
+                        <div>DETAIL VIEW</div>
+                        <div className="w-[90px]">
+                            <Form.switch className="h-[20px] w-full" nonControl onChange={(d) => {
+                                setswitchHide({ status: d })
+                            }} checkedChildren="ON" unCheckedChildren="OFF" />
+                        </div>
+                    </div>
+
                 </SubtitleInfo>
                 <div className="flex-1 flex flex-col border-r border-r-primary text-blue">
                     <div className="bg-primary p-1 px-4"> SERVICE CONNECTION</div>
                     <div className="overflow-auto flex-1 relative">
-                        <div className="grid  gap-4 p-3 absolute left-0 top-0  w-full">
-                            {API_HOST_LIST_REALTIME.error ? "ERROR" : API_HOST_LIST_REALTIME.isLoading ? "LOADING" : API_HOST_LIST_REALTIME.items.map((d, k) => {
-                                let percent = d.ping.length === 0 ? 0 : (d.ping.slice(-1)[0] / 500) * 100;
-                                percent = Math.min(percent, 100);
-                               
-                               return <div key={k} className="p-2 border border-primary space-y-4">
-                                    <div className="uppercase flex justify-between">
-                                        <span>
-
-                                            {d.hostname}
-                                        </span>
-                                        {d.alive && <span>
-                                            {d.lastData} MS
-                                        </span>}
-
-                                    </div>
-                                    <CardAnimation className="px-3 relative  h-28 flex items-end">
-                                        {!d.alive ? <div className="w-full h-full flex justify-center items-center">CONNECTED IP</div> : <div className="w-full h-full absolute bottom-0 left-0 flex justify-between py-4 border-t border-primary">
-                                            <div className=" w-36 h-full">
-                                                <GaugeChart ping={parseInt(d.lastData)}></GaugeChart>
-                                            </div>
-                                            <div className="flex-1 relative">
-                                                <LineNoLabel border={false} ping={d.ping}></LineNoLabel>
-                                            </div>
-                                        </div>
-                                        }
-
-                                    </CardAnimation>
-                                </div>
-                            })}
-                        </div>
+                        <CardAnimation className={`grid gap-4 p-3 absolute left-0 top-0 w-full ${!switchHide.status ? "grid-cols-3" : ""}`}>
+                            <HostRealtime switchHide={switchHide}/>
+                        </CardAnimation>
                     </div>
                 </div>
             </CardBox>
@@ -281,7 +246,7 @@ const Executive = () => {
                         <SubtitleInfo className="btn-information" title={'HISTORY STATISTIC'}>
                             {OBSERVATION_SEVERITY_DESC}
                         </SubtitleInfo>
-                        {API_SERVICE_HISTORY.error ? "ERROR" : API_SERVICE_HISTORY.isLoading ? <Loading></Loading> : <ChartLineTooltip data={API_SERVICE_HISTORY.data.data} date height={150} mode={'vh'} />}
+                        {API_SERVICE_HISTORY.error ? "ERROR" : API_SERVICE_HISTORY.isLoading ? <Loading></Loading> : <ChartLineTooltip customTextTooltip={"PORT ACTIVE"}  data={API_SERVICE_HISTORY.data.data} date height={150} mode={'vh'} />}
 
                     </>
                     }

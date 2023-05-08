@@ -127,7 +127,10 @@ export const Form = {
             <span className="relative text-sc">  {text}</span>
         </Check>
     },
-    switch: ({ error, required = false, control, name, label, type, ...props }) => {
+    switch: ({ error, required = false, control, name, label, nonControl, type, ...props }) => {
+        if (nonControl) {
+            return <Switch  className="w-full" {...props}  ></Switch>
+        }
         if (!control || !name) {
             return <div className="w-full p-4 h-12 bg-red-500 text-white uppercase">control/name is required </div>
         }
@@ -139,7 +142,7 @@ export const Form = {
                     required: required
                 }}
                 render={({
-                    field: { onChange, onBlur, value, ref },
+                    field: { onChange, value, ref },
                 }) => {
                     return (<Switch {...props} className="w-full" ref={ref} checked={value} onChange={onChange}></Switch>)
 

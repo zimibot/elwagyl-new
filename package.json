@@ -1,7 +1,7 @@
 {
   "name": "elwagyl",
   "private": true,
-  "version": "4.0.2",
+  "version": "4.0.3",
   "main": "public/electron.js",
   "scripts": {
     "start": "vite",

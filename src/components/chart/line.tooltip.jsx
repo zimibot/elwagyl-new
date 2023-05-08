@@ -4,7 +4,7 @@ import barIcon from '../../assets/images/icon/bar-chart.png'
 import moment from 'moment';
 import { Formatter } from '../../helper/formater';
 
-export const ChartLineTooltip = ({ height = 115, mode = "", className = "", data = [], date, xField = "date", yField = "count" }) => {
+export const ChartLineTooltip = ({ height = 115, mode = "", className = "", data = [], date, xField = "date", yField = "count", customTextTooltip }) => {
 
     height = height === "auto" ? {
         autoFit: true,
@@ -25,8 +25,8 @@ export const ChartLineTooltip = ({ height = 115, mode = "", className = "", data
                 let date = moment(title).format("lll")
                 let value = Formatter(parseInt(data[0]?.value))
                 return `<div class="bg-primary p-2 space-y-2">
-                    <div>DATE: ${date  === "Invalid date"? title : date}</div>
-                    <div>TOTAL: ${value }</div>
+                    <div>DATE: ${date === "Invalid date" ? title : date}</div>
+                    <div>${customTextTooltip ? customTextTooltip : "TOTAL"}: ${value}</div>
                 </div>`;
             }
         },

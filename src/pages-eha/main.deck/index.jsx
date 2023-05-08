@@ -53,7 +53,7 @@ const MainDeck = () => {
 
 
     if (API.error || API.msg) {
-        return <ErrorHtml error={API.msg}></ErrorHtml>
+        return <ErrorHtml error={API.msg ? API.msg : <div className="uppercase">There was an error fetching the data. <br></br>Please try again later or contact our support team if the problem persists.</div>}></ErrorHtml>
     }
 
 

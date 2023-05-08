@@ -20,11 +20,12 @@ module.exports = function OtherViewBrowser(win) {
           });
 
           if (arg.url) {
+            // if (mainBrowser.getBrowserViews()) {
+            //   viewBrowser.webContents.removeAllListeners()
+            // }
             viewBrowser.webContents.loadURL(arg.url);
-            viewBrowser.webContents.once('did-fail-load', () => {
-              console.log('error-items');
-
-
+            viewBrowser.webContents.on('did-fail-load', (data, ers, sa) => {
+              console.log({ data, ers, sa });
             });
 
             if (viewBrowser.webContents.isLoading()) {
@@ -40,7 +41,6 @@ module.exports = function OtherViewBrowser(win) {
               viewBrowser.setBounds({ x: 0, ...arg.size });
             });
 
-            viewBrowser.setZOrder(-1);
 
           } else {
             viewBrowser.setBounds({

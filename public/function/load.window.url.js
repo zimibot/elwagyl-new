@@ -7,7 +7,7 @@ const Sidebar = require('./sidebar')
 const url = require('url');
 const Ping = require("ping")
 const childProcess = require("child_process");
-const MenuPopup = require('./menuPopup');
+const licensePopup = require('./license');
 
 module.exports = function CreateWindow({ urlCurrent, prodUrl, config = {}, webConfig = {}, maximize, load }) {
     const cUrl = urlCurrent ? urlCurrent : "http://localhost:3000/"
@@ -29,9 +29,6 @@ module.exports = function CreateWindow({ urlCurrent, prodUrl, config = {}, webCo
 
 
 
-
-
-
     win.webContents.once("did-finish-load", async () => {
 
 
@@ -44,7 +41,7 @@ module.exports = function CreateWindow({ urlCurrent, prodUrl, config = {}, webCo
                 }
                 let side = Sidebar()
                 win.show()
-
+                
                 OtherViewBrowser(win)
 
                 win.focus()
@@ -87,26 +84,25 @@ module.exports = function CreateWindow({ urlCurrent, prodUrl, config = {}, webCo
                         }
                     });
                 });
-                let menuPopup = MenuPopup()
+                let LicensePopup = licensePopup()
 
-                ipcMain.handle('menu-open', async (ev, args) => {
+                ipcMain.handle('license-open', async (ev, args) => {
                     return new Promise(function () {
                         // do stuff
                         if (true) {
-                            menuPopup.show()
-                            menuPopup.webContents.executeJavaScript(`
-                                document.getElementsByClassName('menu-window')[0].remove()
+                            LicensePopup.show()
+                            LicensePopup.webContents.executeJavaScript(`
+                                document.getElementsByClassName("menu-window")[0].remove()
                             `)
-
                         }
                     });
                 });
                 
-                ipcMain.handle('menu-close', async (ev, args) => {
+                ipcMain.handle('license-close', async (ev, args) => {
                     return new Promise(function () {
                         // do stuff
                         if (true) {
-                            menuPopup.hide()
+                            LicensePopup.hide()
                         }
                     });
                 });
@@ -147,7 +143,6 @@ module.exports = function CreateWindow({ urlCurrent, prodUrl, config = {}, webCo
         childProcess.spawn(ds);
         win.webContents.openDevTools({ mode: 'detach' });
     }
-
 
     return win
 

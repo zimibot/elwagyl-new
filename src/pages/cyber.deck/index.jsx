@@ -207,7 +207,7 @@ const AttactCountry = ({ title = "top attack country source", limit }) => {
             {ERRORCOMPONENT.dataNotAvailable}
         </div> : <div className="max-h-[500px] text-blue overflow-y-auto overflow-x-hidden pb-1 pr-3">
             <CardAnimation className="grid grid-cols-3 gap-3">
-                {root.error ? <ErrorItems></ErrorItems> : root.isLoading ? "Loading" : root.data.ATTACK_GROUP.length === 0 ? "Data not found" : root.data.ATTACK_GROUP.slice(0, limit ? 3 : root.ATTACK_GROUP.data.length).map((d,k) => {
+                {root.error ? <ErrorItems></ErrorItems> : root.isLoading ? "Loading" : root.data.ATTACK_GROUP.length === 0 ? "Data not found" : root.data.ATTACK_GROUP.slice(0, limit ? 3 : root.ATTACK_GROUP?.data?.length).map((d,k) => {
                     return <div key={k} className="border border-primary px-2 py-1 flex justify-between items-center">
                     <Text className="text-blue" ellipsis={true}>{k + 1} // {d.region}</Text>
                     <div>{Formatter(d.count)}</div>

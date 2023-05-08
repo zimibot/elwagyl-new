@@ -21,6 +21,9 @@ export const ListView = () => {
                         <ButtonComponents>
                             EXPORT
                         </ButtonComponents> */}
+                         <ButtonComponents>
+                            EXPORT
+                        </ButtonComponents> 
                         <ButtonComponents click={() => {
                             setStatus(d => ({
                                 ...d,
@@ -29,9 +32,9 @@ export const ListView = () => {
                         }}>
                             [ + ] ADD
                         </ButtonComponents>
-                        {/* <ButtonComponents>
+                        <ButtonComponents>
                             NET DISCOVERY
-                        </ButtonComponents> */}
+                        </ButtonComponents>
                     </div>
                 </div>
             </CardBox>

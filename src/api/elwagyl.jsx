@@ -301,7 +301,7 @@ const API_GET = {
         const { isLoading, error, data, ...props } = useQuery(
             ['hostRealtime', value.APIURLDEFAULT, value.DATEVALUE.value, value.PAGECOUNT],
             () => fetch(`${path}/full_executive/services-ping-realtime`, { ...Options() }).then(res => res.json()),
-            { refetchInterval: 1000 }
+            // { refetchInterval: 1000 }
         );
 
         const [pingMap, setPingMap] = useState({ data: new Map(), alive: false });
