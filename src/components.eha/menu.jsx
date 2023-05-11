@@ -109,8 +109,7 @@ export const MenuEha = () => {
                     onClick: handleMenuClick,
                 }}
                 open={open}
-                arrow={false}
-                disabled
+                arrow={true}
                 onOpenChange={handleOpenChange}
                 trigger={['click']}
             >

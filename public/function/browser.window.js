@@ -8,7 +8,7 @@ process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 initialize();
 
 
-module.exports = function WindowConfig(mainConfig = {}, webPreferences = {}) {
+module.exports = function WindowConfig(mainConfig = {},  webPreferences = {}, frame = false,) {
 
   let innerScreen = screen.getPrimaryDisplay()
   let size = innerScreen.size
@@ -18,7 +18,7 @@ module.exports = function WindowConfig(mainConfig = {}, webPreferences = {}) {
     minHeight: 600,
     show: false,
     autoHideMenuBar: true,
-    frame: false,
+    frame: frame,
     transparent: false,
     backgroundColor: "#101C26",
     ...mainConfig,

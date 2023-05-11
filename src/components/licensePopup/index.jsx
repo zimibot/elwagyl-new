@@ -17,7 +17,7 @@ export const LicensePoup = () => {
             WebkitAppRegion: "drag",
         }}>
             <div>LICENSE</div>
-            <Button className="text-red-500 menu-no-drag"><CloseOutlined></CloseOutlined></Button>
+            {/* <Button className="text-red-500 menu-no-drag"><CloseOutlined></CloseOutlined></Button> */}
         </div>
         <div className=" flex-1  flex flex-col gap-4 p-4 overflow-auto">
             <div className="border border-primary">
@@ -26,12 +26,31 @@ export const LicensePoup = () => {
                 </div>
                 <div className="grid grid-cols-2 border-t border-primary">
                     <div className="font-bold p-4">PRODUCT NAME</div>
-                    <div className="border-l border-primary p-4">EL WAGYL SOAR</div>
+                    <div className="border-l border-primary p-4">EL WAGYL TIM</div>
                 </div>
                 <div className="grid grid-cols-2 border-t border-primary">
                     <div className="font-bold p-4">IDENTIFICATION NUMBER</div>
                     <div className="border-l border-primary p-4">
-                        <div>2197301408120740123</div>
+                        <div>AS12-DD45-EE56-AA21</div>
+                    </div>
+                </div>
+                <div className="grid grid-cols-2 border-t border-primary">
+                    <div className="font-bold p-4">VALIDITY TYPE</div>
+                    <div className="border-l border-primary p-4">ON PREMISE [MAY-2025]</div>
+                </div>
+            </div>
+            <div className="border border-primary">
+                <div className="p-5">
+                    <img src={elwagyl}></img>
+                </div>
+                <div className="grid grid-cols-2 border-t border-primary">
+                    <div className="font-bold p-4">PRODUCT NAME</div>
+                    <div className="border-l border-primary p-4">E.H.A</div>
+                </div>
+                <div className="grid grid-cols-2 border-t border-primary">
+                    <div className="font-bold p-4">IDENTIFICATION NUMBER</div>
+                    <div className="border-l border-primary p-4">
+                        <div>I23A-56AS-77OP-98OL</div>
                     </div>
                 </div>
                 <div className="grid grid-cols-2 border-t border-primary">

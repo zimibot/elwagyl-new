@@ -7,16 +7,17 @@ const path = require("path")
 
 
 
-module.exports = function ({ title = "NOTIFICATION", content = "NOTIFICATION CONTENT", colorContent = "", iconContent = "", favicon, load }) {
+module.exports = function ({ title = "NOTIFICATION", content = "NOTIFICATION CONTENT", colorContent = "", iconContent = "", favicon, load, }) {
     let notif = CreateWindow({
         urlCurrent: "http://localhost:3000/html/notif/index.html",
         prodUrl: "../html/notif/index.html",
+        frame: false,
         config: {
-            width: 500,
+            width: 600,
             height: 220,
-            minWidth: 500,
+            minWidth: 600,
             minHeight: 220,
-            maxWidth: 500,
+            maxWidth: 600,
             maxHeight: 220,
             transparent: true,
             backgroundColor: false,
@@ -28,7 +29,6 @@ module.exports = function ({ title = "NOTIFICATION", content = "NOTIFICATION CON
 
     notif.setIcon(path.join(__dirname, favicon));
     notif.webContents.once("dom-ready", () => {
-        console.log(path.join(__dirname, "../../sound/error.wav"))
         load.close()
         load = null
         if (!load) {
@@ -59,7 +59,7 @@ module.exports = function ({ title = "NOTIFICATION", content = "NOTIFICATION CON
                     if (true) {
                         app.relaunch();
                         app.quit();
-                      
+
 
                     }
                 });

@@ -9,7 +9,6 @@ export const DecompositionTreeGraphChart = ({ defaultData }) => {
         config: null
     });
 
-    console.log(defaultData)
     const [items, setItems] = useState()
     const [loading, setloading] = useState(false)
     useEffect(() => {
@@ -19,9 +18,11 @@ export const DecompositionTreeGraphChart = ({ defaultData }) => {
             autoFit: true,
             onReady: (graph) => {
                 // Zoom 0.5x and set the center to [100,100]
-                const nodeIdToFocus = value.SERVICEPORT?.data ? value.SERVICEPORT?.data.id : defaultData.id;
-                graph.zoom(2.5);
-                graph.focusItem(nodeIdToFocus);
+                if (defaultData) {
+                    const nodeIdToFocus = value.SERVICEPORT?.data ? value.SERVICEPORT?.data.id : defaultData.id;
+                    graph.zoom(2.5);
+                    graph.focusItem(nodeIdToFocus);
+                }
             },
 
             nodeCfg: {

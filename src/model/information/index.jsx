@@ -138,7 +138,7 @@ const MENUDATA = [
         </div>
     },
     {
-        label: 'XSOAR',
+        label: 'SOAR',
         key: '/dashboard/soar',
         url: "https://10.22.24.2/#/login ",
         icon: <div className="absolute w-full h-full left-0 top-0">
@@ -195,7 +195,7 @@ const MENUDATA = [
         icon: <div className="absolute w-full h-full left-0 top-0">
             <div className="absolute top-0 block px-1 !text-lg left-0" style={{
                 color: "rgba(0, 216, 255, 0.3)"
-            }}>09</div>
+            }}>08</div>
 
             <div className="absolute left-[-3px]">
                 <svg width="6" height="19" viewBox="0 0 6 19" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -211,7 +211,7 @@ const MENUDATA = [
         icon: <div className="absolute w-full h-full left-0 top-0">
             <div className="absolute top-0 block px-1 !text-lg left-0" style={{
                 color: "rgba(0, 216, 255, 0.3)"
-            }}>10</div>
+            }}>09</div>
 
             <div className="absolute left-[-3px]">
                 <svg width="6" height="19" viewBox="0 0 6 19" fill="none" xmlns="http://www.w3.org/2000/svg">

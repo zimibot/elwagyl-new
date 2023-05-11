@@ -54,7 +54,7 @@
   <div class="flex justify-between items-center p-1 bg-primary border-b border-primary menu-window sticky top-0 z-50"
     style="display: none ;">
     <div class="px-2" style="color: rgba(0, 216, 255, 0.3);">
-      Version 4.0.3
+      Version 4.0.9
     </div>
     <div class="flex items-center gap-7 menu-no-drag">
       <button class="w-7 h-7 hover:bg-border_primary flex items-center p-2 rounded" id="mini">
@@ -71,16 +71,6 @@
   <div id="root" class="flex flex-col flex-1 overflow-auto relative"></div>
 
   <script>
-    localStorage.removeItem("token")
-    document.getElementById('fullscreen').addEventListener('click', () => {
-      window.api.invoke('exit-full-screen', ["2"])
-    })
-    document.getElementById('close').addEventListener('click', () => {
-      window.api.invoke('close', ["1"])
-    })
-    document.getElementById('mini').addEventListener('click', () => {
-      window.api.invoke('minimize', ["3"])
-    })
 
     window.onload = (event) => {
       document.getElementsByClassName("menu-window")[0].style.display = "flex"

@@ -1,4 +1,4 @@
-import {  Popover, Tooltip } from "antd";
+import { Popover, Tooltip } from "antd";
 import moment from "moment";
 import { useEffect, useRef, useState } from "react";
 import { NavLink } from "react-router-dom";
@@ -66,7 +66,7 @@ export const HeadersTop = ({ background }) => {
                         </div>
                     </div>
                     <div className="flex justify-start flex-[0.235] h-full border-l border-l-border_primary items-center">
-                        <div className="h-full min-w-[70px] flex items-center justify-center px-1 border-r border-r-border_primary relative">
+                        {!document.body.getAttribute("key") && <div className="h-full min-w-[70px] flex items-center justify-center px-1 border-r border-r-border_primary relative">
                             <Tooltip title="MESSAGES">
                                 <button className="alert-notif w-full h-full items-center justify-center flex  border-b-[6px] border-border_primary" onClick={() => {
                                     setmaximize(d => ({ ...d, MESSAGES: !d.MESSAGES }))
@@ -84,33 +84,44 @@ export const HeadersTop = ({ background }) => {
                                     <path d="M6 3L3 0V19L6 16V3Z" fill="#101C26" />
                                 </svg>
                             </div>
-                        </div>
-                        
-                        <div className="h-full min-w-[70px] flex items-center justify-center px-1 border-r border-r-border_primary relative">
+                        </div>}
+
+                        {!document.body.getAttribute("key") && <div className="h-full min-w-[70px] flex items-center justify-center px-1 border-r border-r-border_primary relative">
                             <Popover rootClassName="min-w-[200px]" trigger={"click"} placement="leftTop" content={
                                 <>
                                     <SquareMedium />
                                     <div className="text-[16px] space-y-4 text-blue">
                                         <div className="border-b pb-2 border-blue hover:text-white hover:border-white cursor-pointer" onClick={() => {
-                                              window.api.invoke('license-open')
+                                            window.api.invoke('license-open')
                                         }}>
                                             LICENSE
                                         </div>
                                         <NavLink onClick={() => {
-                                              window.api.invoke('routesItem', {
+                                            window.api.invoke('routesItem', {
                                                 url: null,
                                                 status: true,
                                                 size: {
                                                     y: 0,
                                                     width: 0,
                                                     height: 0
-                                                }
+                                                },
+                                                attribute: document.body?.getAttribute("name"),
                                             })
                                         }} state={{ ums: true, title: "USER MANAGEMENT", key: "dashboard" }} to={"/ums/user management"} className="border-b pb-2 border-blue hover:text-white hover:border-white block">
                                             USER MANAGEMENT
                                         </NavLink>
                                         <div className="border-b pb-2 border-blue hover:text-white hover:border-white cursor-pointer" onClick={() => {
                                             localStorage.removeItem("token")
+                                            window.api.invoke('routesItem', {
+                                                url: null,
+                                                status: true,
+                                                size: {
+                                                    y: 0,
+                                                    width: 0,
+                                                    height: 0
+                                                },
+                                                attribute: document.body?.getAttribute("name"),
+                                            })
                                         }}>
                                             LOG OUT
                                         </div>
@@ -130,7 +141,9 @@ export const HeadersTop = ({ background }) => {
                                     <path d="M6 3L3 0V19L6 16V3Z" fill="#101C26" />
                                 </svg>
                             </div>
-                        </div>
+                        </div>}
+
+
                         {/* <div className="h-full min-w-[70px] flex items-center justify-center px-1 border-r border-r-border_primary relative">
                             <Tooltip title="PROFILE">
                                 <button className="alert-notif w-full h-full items-center justify-center flex text-[20px] text-blue border-b-[6px] border-border_primary" onClick={() => {

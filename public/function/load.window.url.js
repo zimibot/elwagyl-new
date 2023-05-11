@@ -2,19 +2,19 @@ const isDev = require('electron-is-dev');
 const path = require('path');
 const WindowConfig = require("./browser.window")
 const { ipcMain, app, shell } = require('electron');
-const OtherViewBrowser = require('./other.view')
 const Sidebar = require('./sidebar')
 const url = require('url');
 const Ping = require("ping")
 const childProcess = require("child_process");
 const licensePopup = require('./license');
+const ProfilePopup = require("./profilePopup")
 
-module.exports = function CreateWindow({ urlCurrent, prodUrl, config = {}, webConfig = {}, maximize, load }) {
+module.exports = function CreateWindow({ urlCurrent, prodUrl, config = {}, webConfig = {}, maximize, load, other, hash, frame }) {
     const cUrl = urlCurrent ? urlCurrent : "http://localhost:3000/"
     const win = WindowConfig({
         ...config,
         ...webConfig
-    })
+    }, {}, frame)
     win.setIcon(path.join(__dirname, "../logo.png"))
 
     win.loadURL(
@@ -22,18 +22,22 @@ module.exports = function CreateWindow({ urlCurrent, prodUrl, config = {}, webCo
             ? cUrl
             : url.format({
                 pathname: path.join(__dirname, prodUrl),
-                hash: "/",
+                hash: hash ? hash : "/",
                 slashes: true,
             })
     );
 
 
 
+
     win.webContents.once("did-finish-load", async () => {
 
-
+        if (other) {
+            win.show()
+        }
         if (load) {
-            load.close()
+            load.destroy()
+
             load = null
             if (!load) {
                 if (maximize) {
@@ -41,33 +45,10 @@ module.exports = function CreateWindow({ urlCurrent, prodUrl, config = {}, webCo
                 }
                 let side = Sidebar()
                 win.show()
-                
-                OtherViewBrowser(win)
-
                 win.focus()
 
 
-                ipcMain.handle('exit-full-screen', async () => {
-                    return new Promise(function () {
-                        // do stuff
-                        if (true) {
-                            if (win.isMaximized()) {
-                                win.unmaximize();
-                            } else {
-                                win.maximize();
-                            }
-                        }
-                    });
-                });
 
-                ipcMain.handle('minimize', async () => {
-                    return new Promise(function () {
-                        // do stuff
-                        if (true) {
-                            win.minimize()
-                        }
-                    });
-                });
                 ipcMain.handle('message-close', async () => {
                     return new Promise(function () {
                         // do stuff
@@ -84,6 +65,7 @@ module.exports = function CreateWindow({ urlCurrent, prodUrl, config = {}, webCo
                         }
                     });
                 });
+
                 let LicensePopup = licensePopup()
 
                 ipcMain.handle('license-open', async (ev, args) => {
@@ -97,7 +79,7 @@ module.exports = function CreateWindow({ urlCurrent, prodUrl, config = {}, webCo
                         }
                     });
                 });
-                
+
                 ipcMain.handle('license-close', async (ev, args) => {
                     return new Promise(function () {
                         // do stuff
@@ -108,15 +90,30 @@ module.exports = function CreateWindow({ urlCurrent, prodUrl, config = {}, webCo
                 });
 
 
-                ipcMain.handle('close', async () => {
+                let popProfile = ProfilePopup()
+
+                ipcMain.handle('profile-open', async (ev, args) => {
                     return new Promise(function () {
                         // do stuff
                         if (true) {
-                            app.quit()
-                            Sidebar().close()
+                            popProfile.show()
+                            popProfile.webContents.executeJavaScript(`
+                                document.getElementsByClassName("menu-window")[0].remove()
+                            `)
                         }
                     });
                 });
+
+                ipcMain.handle('profile-close', async (ev, args) => {
+                    return new Promise(function () {
+                        // do stuff
+                        if (true) {
+                            LicensePopup.hide()
+                        }
+                    });
+                });
+
+
 
                 ipcMain.handle('network', async () => {
                     return new Promise(function () {

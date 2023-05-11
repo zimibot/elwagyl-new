@@ -678,4 +678,5 @@ span.ant-menu-title-content {
 
 .ant-switch .ant-switch-inner {
   display: flex;
+  padding-inline-start: 40px;
 }

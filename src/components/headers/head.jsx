@@ -13,6 +13,8 @@ import { GetAndUpdateContext } from "../../model/context.function";
 import { MenuEha } from "../../components.eha/menu";
 import { API_GET, path } from "../../api/elwagyl";
 import { DATEVALUE, DATEVIEW, DATEVIEWSIEM } from "../../model/view.items";
+import { AppstoreAddOutlined } from "@ant-design/icons";
+// import { remote } from 'electron';
 
 export const Heads = () => {
 
@@ -22,32 +24,43 @@ export const Heads = () => {
     </div>
 }
 
+export const LocalStorage = () => {
+    let allStorage = {};
+    for (let i = 0; i < localStorage.length; i++) {
+        let key = localStorage.key(i);
+        let value = localStorage.getItem(key);
+        allStorage[key] = value;
+    }
+
+    return allStorage
+}
+
 export const HeadFunction = (menu, setStatus, VALUEMENU) => {
     if (menu.url) {
 
-        setStatus(d => ({ ...d, headHidden: true, loading: false }))
+        let height
 
-        setTimeout(() => {
-            setStatus(d => ({ ...d, loading: true }))
-            let height
+        height = VALUEMENU.data + 10
+        setStatus(d => ({ ...d, headHidden: false, loading: false }))
 
-            if (VALUEMENU.data > 150) {
-                height = VALUEMENU.data - 70
-            } else {
-                height = VALUEMENU.data + 15
+        window.api.invoke('routesItem', {
+            url: menu.url,
+            status: false,
+            size: {
+                y: height,
+                width: window.outerWidth,
+                height: window.outerHeight - height
+            },
+            attribute: document.body?.getAttribute("name"),
+        }).then(d => {
+            if (d === "load success") {
+                setStatus(w => ({ ...w, headHidden: false, loading: true }))
             }
-           
+        }).catch(d => {
+            setStatus(w => ({ ...w, headHidden: false, loading: true }))
+            alert("We apologize for the inconvenience, but the connection to the server could not be established. We suggest trying again, and checking your internet or VPN connection to ensure it is stable. If the issue persists, please contact our technical support team for further assistance. Thank you.")
+        })
 
-            window.api.invoke('routesItem', {
-                url: menu.url,
-                status: false,
-                size: {
-                    y: height,
-                    width: window.outerWidth,
-                    height: window.outerHeight - height
-                }
-            })
-        }, 300);
 
     } else {
         setStatus(d => ({ ...d, headHidden: false, loading: false }))
@@ -58,7 +71,8 @@ export const HeadFunction = (menu, setStatus, VALUEMENU) => {
                 y: 0,
                 width: 0,
                 height: 0
-            }
+            },
+            attribute: document.body?.getAttribute("name"),
         })
     }
 }
@@ -94,30 +108,35 @@ const HeadTop = () => {
 
     return (
         <div className="grid grid-cols-11 gap-1 border-t border-t-border_primary border-b border-b-border_second">
+
             <div className={` ${location?.ums ? "col-span-8" : "col-span-3"} flex items-center gap-5 relative pr-4`}>
-                <div className="flex gap-[1px] menu-prev">
-                    <Tooltip placement="bottom" title="Previous Pages">
-                        <button className={`w-[72px] h-[43px] flex items-center justify-center ${menuIndex === 0 ? "bg-opacity-50 cursor-no-drop" : "hover:bg-[#fff]"} bg-primary `} onClick={onPrev}>
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M12 20L4 12L12 4L13.425 5.4L7.825 11H20V13H7.825L13.425 18.6L12 20Z" fill="#101C26" />
-                                <path d="M12 20L4 12L12 4L13.425 5.4L7.825 11H20V13H7.825L13.425 18.6L12 20Z" fill="#111D27" />
-                            </svg>
-                        </button>
-                    </Tooltip>
-                    <Tooltip placement="bottom" title="Next Pages">
-                        <button className={`w-[72px] h-[43px] flex items-center justify-center  bg-primary ${menuIndex === Menu.length ? "bg-opacity-50 cursor-no-drop" : "hover:bg-[#fff]"}`} onClick={
-                            onNext
-                        }>
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M12 20L20 12L12 4L10.575 5.4L16.175 11H4V13H16.175L10.575 18.6L12 20Z" fill="#101C26" />
-                                <path d="M12 20L20 12L12 4L10.575 5.4L16.175 11H4V13H16.175L10.575 18.6L12 20Z" fill="#101C26" />
-                            </svg>
-                        </button>
-                    </Tooltip>
-                </div>
-                <div className="text-ellipsis overflow-hidden title-page">
-                    <span className="text-[24px] uppercase text-blue"> {menuIndex !== -1 ? ` ${('0' + (menuIndex + 1)).slice(-2)} // ${Menu[menuIndex].label}` : state?.title}</span>
-                </div>
+                {!document.body.getAttribute("key") && <>
+                    <div className="flex gap-[1px] menu-prev">
+                        <Tooltip placement="bottom" title="Previous Pages">
+                            <button className={`w-[72px] h-[43px] flex items-center justify-center ${menuIndex === 0 ? "bg-opacity-50 cursor-no-drop" : "hover:bg-[#fff]"} bg-primary `} onClick={onPrev}>
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M12 20L4 12L12 4L13.425 5.4L7.825 11H20V13H7.825L13.425 18.6L12 20Z" fill="#101C26" />
+                                    <path d="M12 20L4 12L12 4L13.425 5.4L7.825 11H20V13H7.825L13.425 18.6L12 20Z" fill="#111D27" />
+                                </svg>
+                            </button>
+                        </Tooltip>
+                        <Tooltip placement="bottom" title="Next Pages">
+                            <button className={`w-[72px] h-[43px] flex items-center justify-center  bg-primary ${menuIndex === Menu.length ? "bg-opacity-50 cursor-no-drop" : "hover:bg-[#fff]"}`} onClick={
+                                onNext
+                            }>
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M12 20L20 12L12 4L10.575 5.4L16.175 11H4V13H16.175L10.575 18.6L12 20Z" fill="#101C26" />
+                                    <path d="M12 20L20 12L12 4L10.575 5.4L16.175 11H4V13H16.175L10.575 18.6L12 20Z" fill="#101C26" />
+                                </svg>
+                            </button>
+                        </Tooltip>
+                    </div>
+                </>}
+                    <div className="text-ellipsis overflow-hidden title-page pl-4">
+                        <span className="text-[24px] uppercase text-blue"> {menuIndex !== -1 ? ` ${('0' + (menuIndex + 1)).slice(-2)} // ${Menu[menuIndex].label}` : state?.title}</span>
+                    </div>
+
+
                 {!location?.ums && <LineBorderRight />}
 
             </div>
@@ -169,7 +188,9 @@ const HeadTop = () => {
     )
 }
 const HeadBottom = () => {
-    const { status, setvalue } = GetAndUpdateContext()
+    const { status, setvalue, setStatus, value } = GetAndUpdateContext()
+    const VALUEMENU = value.VALUEMENU
+
     let API_SEVERITY = API_GET.ALERT_SEVERITY()
     const param = API_SEVERITY.error ? "ERROR" : API_SEVERITY.isLoading ? "" : API_SEVERITY.system.name
     const indicator = param === "high" ? "RED-CODE" : param === "medium" ? "ATTENTION" : param === "low" ? "SECURE" : "NORMAL"
@@ -183,12 +204,15 @@ const HeadBottom = () => {
         status: true
     });
 
-    let location = useLocation().state
-
+    let location = useLocation()
+    let locaitonState = location.state
 
     var incomeTicker = 10;
 
+    // const browserWindow = remote.getCurrentWindow();
+    // const browserId = browserWindow.id;
 
+    // console.log(browserId)
 
     useEffect(() => {
         let pmnd = setInterval(() => {
@@ -216,6 +240,7 @@ const HeadBottom = () => {
 
         };
     }, [pingCount]);
+
 
 
     useEffect(() => {
@@ -281,10 +306,16 @@ const HeadBottom = () => {
         }
     }
 
+    useEffect(() => {
+        if (document.body.getAttribute("key")) {
+
+            setStatus(w => ({ ...w, headHidden: false, loading: true }))
+        }
+    }, [])
 
     return (!status.headHidden ?
         <div className="grid grid-cols-11 gap-1 ">
-            {!location?.ums && <div className="col-span-3 flex items-center gap-5 relative px-7 py-2">
+            {!locaitonState?.ums && <div className="col-span-3 flex items-center gap-5 relative px-7 py-2">
                 <div>
                     <div>PING</div>
                     <div className="text-[24px]">{pingCount} <span className="text-[11px]">MS</span></div>
@@ -304,8 +335,8 @@ const HeadBottom = () => {
                 <LineBorderRight />
             </div>}
 
-            {location?.eha && <MenuEha></MenuEha>}
-            {!location?.eha && !location?.ums && <>
+            {locaitonState?.eha && <MenuEha></MenuEha>}
+            {!locaitonState?.eha && !locaitonState?.ums && <>
                 <div className="col-span-5 p-1">
                     <div className="relative flex items-center justify-center h-full">
                         <ReactSVG src={Banner} className="banner" />
@@ -314,7 +345,7 @@ const HeadBottom = () => {
                         </div>
                     </div>
                 </div>
-                <div className="col-span-3 pr-4 relative pl-4">
+                <div className="col-span-3 pr-4 relative pl-4 flex justify-between">
                     <div className="h-full w-full flex items-center gap-3">
                         <div className="border border-primary p-2 relative switch-item">
                             <SquareMedium></SquareMedium>
@@ -332,6 +363,28 @@ const HeadBottom = () => {
                             </div>
                         </div>
                     </div>
+                    {!document.body.getAttribute("key") && <div className="p-4 flex items-center z-10">
+                        <button className="text-[25px] bg-primary p-2 cursor-pointer" onClick={() => {
+                            let height
+
+                            height = VALUEMENU.data + 10
+                            let data = {
+                                path: location.pathname,
+                                url: locaitonState?.menuUrl,
+                                status: false,
+                                size: {
+                                    y: height,
+                                    width: window.outerWidth,
+                                    height: window.outerHeight - height
+                                },
+                                attribute: document.body?.getAttribute("name"),
+
+                            }
+
+                            window.api.invoke('createPage', data)
+                        }}><AppstoreAddOutlined /> </button>
+                    </div>}
+
                     <LineBorderLeft />
                 </div>
 
