@@ -5,13 +5,13 @@ const isDev = require('electron-is-dev');
 
 module.exports = function ProfilePopup() {
     let ProfilePopup = WindowConfig({
-        minWidth: 400,
-        maxWidth: 400,
-        width: 400,
-        minHeight: 700,
-        maxHeight: 700,
+        minWidth: 800,
+        maxWidth: 800,
+        width: 800,
+        minHeight: 300,
+        maxHeight: 300,
         fullscreenable: false,
-        height: 700,
+        height: 300,
         webPreferences: {
             zoomFactor: 1.0
         }
@@ -19,13 +19,13 @@ module.exports = function ProfilePopup() {
 
     let pio = url.format({
         pathname: path.join(__dirname, "../index.html"),
-        hash: "#/license",
+        hash: "#/profile",
         slashes: true,
     })
 
     ProfilePopup.loadURL(
         isDev
-            ? 'http://localhost:3000/#/license'
+            ? 'http://localhost:3000/#/profile'
             : pio
     )
     ProfilePopup.center()

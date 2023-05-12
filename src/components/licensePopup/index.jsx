@@ -1,4 +1,3 @@
-import { CloseOutlined } from "@ant-design/icons"
 import styled from "styled-components"
 
 import elwagyl from "../../assets/license/elwagyl.svg"

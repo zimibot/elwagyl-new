@@ -108,7 +108,7 @@ module.exports = function CreateWindow({ urlCurrent, prodUrl, config = {}, webCo
                     return new Promise(function () {
                         // do stuff
                         if (true) {
-                            LicensePopup.hide()
+                            popProfile.hide()
                         }
                     });
                 });

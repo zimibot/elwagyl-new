@@ -7,6 +7,7 @@ import { GetAndUpdateContext } from "../../model/context.function";
 import { SquareMedium } from "../decoration/square";
 import { Heads } from "./head";
 import MenuItems from "./menu";
+import { UserOutlined } from "@ant-design/icons";
 
 export const HeadersTop = ({ background }) => {
     const { maximize, setmaximize, setvalue, status } = GetAndUpdateContext()
@@ -143,15 +144,13 @@ export const HeadersTop = ({ background }) => {
                             </div>
                         </div>}
 
-
-                        {/* <div className="h-full min-w-[70px] flex items-center justify-center px-1 border-r border-r-border_primary relative">
+                        {!document.body.getAttribute("key") && <div className="h-full min-w-[70px] flex items-center justify-center px-1 border-r border-r-border_primary relative">
                             <Tooltip title="PROFILE">
                                 <button className="alert-notif w-full h-full items-center justify-center flex text-[20px] text-blue border-b-[6px] border-border_primary" onClick={() => {
-                                    setmaximize(d => ({ ...d, MESSAGES: !d.MESSAGES }))
-                                    window.api.invoke('message-open', maximize.MESSAGES)
+                                    window.api.invoke('profile-open')
 
                                 }}>
-                                  <UserOutlined></UserOutlined>
+                                    <UserOutlined></UserOutlined>
                                 </button>
                             </Tooltip>
                             <div className="absolute left-[-3px]">
@@ -160,7 +159,8 @@ export const HeadersTop = ({ background }) => {
                                     <path d="M6 3L3 0V19L6 16V3Z" fill="#101C26" />
                                 </svg>
                             </div>
-                        </div> */}
+                        </div>}
+
                         <div className="h-full w-full relative flex items-center">
                             <div className="absolute left-[-4px]">
                                 <svg width="3" height="19" viewBox="0 0 3 19" fill="none" xmlns="http://www.w3.org/2000/svg">

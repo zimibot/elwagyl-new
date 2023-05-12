@@ -27,6 +27,7 @@ import { Result } from "antd";
 import UserManagement from "./pages-ums/usermanagement";
 import WelcomeEha from "./pages-eha/welcome";
 import { LicensePoup } from "./components/licensePopup";
+import ProfilePage from "./pages/profile";
 const CyberDeck = lazy(() => import('./pages/cyber.deck/index.jsx'));
 const Executive = lazy(() => import('./pages/executive/index.jsx'));
 const AvailabilityPages = lazy(() => import('./pages/availability/index.jsx'));
@@ -55,6 +56,7 @@ export default function App() {
                 <Route path="/" element={<LoginPages></LoginPages>} />
                 <Route path="/message" element={<MassagesDrawer />} />
                 <Route path="/license" element={<LicensePoup />} />
+                <Route path="/profile" element={<ProfilePage />} />
                 <Route path="/dashboard" element={<Container></Container>}>
                   <Route index element={<CyberDeck />} />
                   <Route path="executive" element={<Executive />} />

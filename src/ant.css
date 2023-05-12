@@ -680,3 +680,13 @@ span.ant-menu-title-content {
   display: flex;
   padding-inline-start: 40px;
 }
+
+.ant-descriptions .ant-descriptions-item-label, .ant-descriptions.ant-descriptions-bordered .ant-descriptions-item-label {
+  font-size: 16px;
+  color: #00d8ff;
+}
+
+.ant-descriptions .ant-descriptions-item-content {
+  font-size: 16px;
+  color: #00d8ff;
+}

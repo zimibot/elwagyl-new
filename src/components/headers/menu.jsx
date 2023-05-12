@@ -16,10 +16,7 @@ const MenuItems = () => {
         if (document.body.getAttribute("key")) {
             let keys = document.body.getAttribute("key")
             let menuKey = MENUDATA.findIndex(a => a.key === keys)
-
             setMenu([MENUDATA[menuKey]])
-
-
         }
     }, [])
 
