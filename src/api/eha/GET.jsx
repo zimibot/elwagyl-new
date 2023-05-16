@@ -48,9 +48,9 @@ export const GET_API_EHA = {
         },
         protectedSite: (status) => {
             if (status) {
-                const { isLoading, data, error } = useQuery(['protectedSite', status.UpdateStatus], () => fetch(`${path}/api/protected-sites`, { method: "GET" }).then(res => { return res.json() }),)
+                const { isLoading, data, error, refetch } = useQuery(['protectedSite', status.UpdateStatus], () => fetch(`${path}/api/protected-sites`, { method: "GET" }).then(res => { return res.json() }),)
                 return {
-                    isLoading, data, error,
+                    isLoading, data, error, refetch
                 }
             }
         },
@@ -111,8 +111,8 @@ export const GET_API_EHA = {
         },
         platformDetail: async (propsItem) => {
             try {
-
                 const { platform_id } = propsItem || {}
+
                 if (platform_id) {
 
                     let items = await fetch(`${path}/api/platforms/${platform_id}`, { method: "GET" }).then(res => { return res.json() })
@@ -128,6 +128,22 @@ export const GET_API_EHA = {
                 return false
             }
 
+        },
+        getAssetsPlatformName: (propsItem) => {
+            const { idPlatform, page, refresh } = propsItem || {}
+
+            const { isLoading, data, error, refetch } = useQuery(['getAssetsPlatformName', idPlatform, page, refresh], () => {
+                if (idPlatform && page) {
+                    return fetch(`${path}/api/platform-categories/?category=${idPlatform}&page=${page}`, { method: "GET" }).then(res => { return res.json() })
+                } else {
+                    return {
+                        data: []
+                    }
+                }
+            },)
+            return {
+                isLoading, data, error, refetch
+            }
         },
         getAssetsDetail: async (propsItem) => {
             const { idAssets } = propsItem || {}
@@ -150,13 +166,19 @@ export const GET_API_EHA = {
                 }
             }
         },
+        getCategoryPlatform: (status) => {
+            const { isLoading, data, error, } = useQuery(['scan'], () => fetch(`${path}/api/general/platform-category-list`, { method: "GET" }).then(res => { return res.json() }),)
+            return {
+                isLoading, data, error,
+            }
+        },
         mainDeckStatisticSoverdueFinding: (status) => {
             if (status) {
                 const { data, error, isLoading, ...props } = useInfiniteQuery(
                     "overdue-finding", ({ pageParam = 1 }) => fetch(`${path}/api/protected-sites/statistic/overdue-finding?page=${pageParam}`, { method: "GET" }).then((res) => res.json()),
                     {
                         getNextPageParam: (lastPage) => {
-                            return lastPage.pagination.next_page ? lastPage.pagination.next_page.split("=")[1] + "=40" : undefined
+                            return lastPage && lastPage.pagination ? lastPage.pagination.next_page.split("=")[1] + "=40" : undefined
                         },
 
                     }
@@ -224,26 +246,23 @@ export const GET_API_EHA = {
                 data: {},
                 loading: [],
                 error: [],
-                refecth: [],
+                refresh: {}
             };
 
             let parse = GET_API_EHA.data
 
-
-
             data.map(async d => {
                 let item = parse[d.active](status)
                 if (item) {
-                    if (item.isLoading !== undefined) {
-                        p["loading"].push(item.isLoading)
-                        p["error"].push(item.error ? true : false)
-                        p["data"][d.active] = item.data
-                        if (item.props) {
-                            p["data"][d.active] = { ...item.data, props: item.props }
-                        }
-                        if (item.data?.code !== 200) {
-                            p["msg"] = item.data?.message
-                        }
+                    p["loading"].push(item?.isLoading)
+                    p["error"].push(item.error ? true : false)
+                    p["data"][d.active] = item.data
+                    p["refresh"][d.active] = item.refetch
+                    if (item.props) {
+                        p["data"][d.active] = { ...item.data, props: item.props }
+                    }
+                    if (item.data?.code !== 200) {
+                        p["msg"] = item.data?.message
                     }
                 }
                 p[d.active] = parse[d.active]
@@ -253,8 +272,6 @@ export const GET_API_EHA = {
                 ...p,
                 error: checkStatement(p.error),
                 loading: checkStatement(p.loading),
-                refecth: p.refecth.every(Boolean),
-
             }
 
         } else {

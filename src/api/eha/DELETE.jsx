@@ -3,24 +3,29 @@ import { path } from "./GET"
 import { toast } from "react-hot-toast";
 
 export const DELETE_API = {
-    deleteProtectedSite: (data, setStatus) => ToastData({ name: data.site_name, url: `${path}/api/protected-sites/${data.id}`, setStatus, data: { deleted_by: data.name } }),
-    deleteScanManage: (data, setStatus) => ToastData({ name: data.site_name, url: `${path}/api/tool-scanners/${data.id}`, setStatus, data: { deleted_by: data.name } }),
-    deleteVulnerabilities: (data, setStatus) => ToastData({ name: data.site_name, url: `${path}/api/vulnerabilities/${data.id}`, setStatus, data: { deleted_by: data.name } }),
-    deleteAssets: (data, setStatus) => ToastData({ name: data.site_name, url: `${path}/api/assets/${data.id}`, setStatus, data: { deleted_by: data.name } }),
-    deleteScanAssets: (data, setStatus) => ToastData({ name: data.site_name, url: `${path}/api/scans/${data.id}`, setStatus, data: { deleted_by: data.name } }),
+    deleteProtectedSite: (data, setStatus, refresh) => ToastData({ name: data.site_name, url: `${path}/api/protected-sites/${data.id}`, setStatus, data: { deleted_by: data.name }, refresh }),
+    deleteScanManage: (data, setStatus, refresh) => ToastData({ name: data.site_name, url: `${path}/api/tool-scanners/${data.id}`, setStatus, data: { deleted_by: data.name }, refresh }),
+    deleteVulnerabilities: (data, setStatus, refresh) => ToastData({ name: data.site_name, url: `${path}/api/vulnerabilities/${data.id}`, setStatus, data: { deleted_by: data.name }, refresh }),
+    deleteAssets: (data, setStatus, refresh) => ToastData({ name: data.site_name, url: `${path}/api/assets/${data.id}`, setStatus, data: { deleted_by: data.name }, refresh }),
+    deleteScanAssets: (data, setStatus, refresh) => ToastData({ name: data.site_name, url: `${path}/api/scans/${data.id}`, setStatus, data: { deleted_by: data.name }, refresh }),
+    deleteManagePlatform: (data, setStatus, refresh) => ToastData({ name: data.site_name, url: `${path}/api/platform-categories/${data.id}`, setStatus, data: { deleted_by: data.name }, refresh }),
 }
 
-const ToastData = ({ name, url, setStatus, data }) => {
+const ToastData = ({ name, url, setStatus, data, refresh }) => {
     toast.promise(
         axios.delete(url, { data: data }),
         {
             loading: 'LOADING...',
             success: () => {
-
-                setStatus((d) => ({
-                    ...d,
-                    UpdateStatus: !d?.UpdateStatus
-                }))
+                if (refresh) {
+                    refresh()
+                }
+                if (setStatus) {
+                    setStatus((d) => ({
+                        ...d,
+                        UpdateStatus: !d?.UpdateStatus
+                    }))
+                }
                 return <span className="uppercase">DELETED <b className="text-blue">{name}</b> SUCCESS!</span>
             },
             error: <span className="uppercase">DELETED <b className="text-blue">{name}</b> FAILED</span>,

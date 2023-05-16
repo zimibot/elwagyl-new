@@ -690,3 +690,7 @@ span.ant-menu-title-content {
   font-size: 16px;
   color: #00d8ff;
 }
+
+.ant-select-disabled .ant-select-selection-item {
+  color: #00a8cc;
+}

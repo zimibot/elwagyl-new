@@ -41,7 +41,7 @@ export const ListProtectedSite = () => {
                     }}>ADD PROTECTED SITE</ButtonComponents>
                 </div>
             </TitleContent>
-            {api.msg || api.error ? <ErrorHtml error={api.msg}></ErrorHtml> : api.loading ? <Loading /> : !api.refecth ? <Loading /> : <Data api={api} setStatus={setStatus} />}
+            {api.msg || api.error ? <ErrorHtml error={api.msg}></ErrorHtml> : api.loading ? <Loading /> : <Data api={api} setStatus={setStatus} />}
 
             <EditAndAdd name={"addProtected"} />
         </CardBox>
@@ -91,8 +91,6 @@ const EditAndAdd = ({ name }) => {
 
 const Data = ({ api, setStatus }) => {
     const { data, protectedSiteDetail } = api
-
-
 
     const confirm = (id, name, site_name) => {
         DELETE_API.deleteProtectedSite(({ id, name, site_name }), setStatus)

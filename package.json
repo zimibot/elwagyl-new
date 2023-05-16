@@ -5,12 +5,12 @@
   "main": "public/electron.js",
   "description": "This is the base project for the CIC.Bas.Web project also called CIC One - New Technologies",
   "author": "OnePgr, Inc <amsystango@gmail.com>",
-
   "scripts": {
     "start": "vite",
     "electron": "wait-on tcp:3000 && electron . ----force-gpu-mem-available-mb=2000",
     "dev": "concurrently -k \"npm run start\" \"npm:electron\"",
     "build": "vite build",
+    "dist": "electron-builder -l -c.extraMetadata.main=build/electron.js",
     "preview": "vite preview",
     "electron:package:mac": "npm run build && electron-builder  -mw -c.extraMetadata.main=build/electron.js",
     "electron:package:win": "npm run build  &&  electron-builder -w -c.extraMetadata.main=build/electron.js --publish never && node archiver/archive.js ",
@@ -147,7 +147,7 @@
     "autoprefixer": "^10.4.13",
     "concurrently": "^7.6.0",
     "electron": "^24.3.0",
-    "electron-builder": "^23.6.0",
+    "electron-builder": "^24.4.0",
     "postcss": "^8.4.21",
     "react-error-overlay": "^6.0.11",
     "tailwindcss": "^3.2.4",

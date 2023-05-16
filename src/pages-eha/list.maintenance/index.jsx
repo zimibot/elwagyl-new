@@ -4,7 +4,7 @@ import { LayoutDashboard } from "../../components/layout/dashboard.layout"
 import { ListProtectedSite } from "./list.protected.site"
 import { ListEmailManage } from "./list.manage.email"
 import { ListManageScan } from "./list.manage.scan"
-import ListManageAsset from "./list.manage.asset"
+import ListManagePlatform from "./list.manage.platform"
 import { Result } from "antd"
 import { LoadingOutlined } from "@ant-design/icons"
 import { AuditLogs } from "./list.audit.logs"
@@ -71,8 +71,8 @@ const ListMaintenance = () => {
         },
         {
             key: 6,
-            title: " manage asset",
-            content: <ListManageAsset />
+            title: " manage platform",
+            content: <ListManagePlatform />
         },
         {
             key: 7,

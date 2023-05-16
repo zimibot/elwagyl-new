@@ -6,13 +6,14 @@ export const UPDATE_API = {
     updateProtectedSite: (id, data, setStatus) => ToastData({ name: data.site_name, url: `${path}/api/protected-sites/${id}`, setStatus, data: { ...data, updated_by: data.created_by } }),
     updateScanManage: (id, data, setStatus) => ToastData({ name: data.name, url: `${path}/api/tool-scanners/${id}`, setStatus, data }),
     updateScanAssets: (id, data, setStatus) => ToastData({ name: data.asset.name, url: `${path}/api/scans/${id}`, setStatus, data }),
+    updatePlatformCategory: (id, data, setStatus, success) => ToastData({ name: data.name, url: `${path}/api/platform-categories/${id}`, setStatus, data, success }),
     updateAssets: (id, data, setStatus, success, error) => ToastData({ name: data.name, url: `${path}/api/assets/${id}`, setStatus, data, success, error }),
 }
 
 const ToastData = ({ name, url, data, setStatus, success, error }) => {
 
-    if (!name || !url || !data || !setStatus) {
-        toast.error(`required ${!name && "name"} ${!url && "url"} ${!data && "data"} ${!setStatus && "setStatus"}`)
+    if (!name || !url || !data ) {
+        toast.error(`required ${!name && "name"} ${!url && "url"} ${!data && "data"}`)
     }
 
     toast.promise(
@@ -23,12 +24,14 @@ const ToastData = ({ name, url, data, setStatus, success, error }) => {
                 if (success) {
                     success(items);
                 }
-                setStatus((a) => ({
-                    ...a,
-                    addProtected: false,
-                    editScanTools: false,
-                    UpdateStatus: !a?.UpdateStatus
-                }))
+                if (setStatus) {     
+                    setStatus((a) => ({
+                        ...a,
+                        addProtected: false,
+                        editScanTools: false,
+                        UpdateStatus: !a?.UpdateStatus
+                    }))
+                }
                 return <span className="uppercase">UPDATE <b className="text-blue">{name}</b> SUCCESS!</span>
             },
             error: d => {

@@ -125,7 +125,7 @@ export const TableInline = ({
             statistics: 32,
             total: 1240,
         },
-    ], height = "auto", error, currentPage = 1, onChange, pageSize = 1, infiniteScroll, hoverDisable, paggination, borderLast, tooltip, style = { columns: {}, row: {} }, onLoad = () => { }, className = "flex-auto flex flex-col", classTable, onClick = () => { }, border, active = null, totalPages = 30 }) => {
+    ], height = "auto", error, name, currentPage = 1, onChange, custom, pageSize = 1, infiniteScroll, hoverDisable, paggination, borderLast, tooltip, style = { columns: {}, row: {} }, onLoad = () => { }, className = "flex-auto flex flex-col", classTable, onClick = () => { }, border, active = null, totalPages = 30 }) => {
 
 
     const parentRef = useRef()
@@ -233,7 +233,17 @@ export const TableInline = ({
 
             {paggination &&
                 <div className="bg-primary px-2 py-1 flex text-[16px] justify-center ">
-                    {error ? "" : !Loading ? <Pagination onChange={onChange} simple defaultCurrent={currentPage} pageSize={pageSize} total={totalPages} /> : "LOADING"}
+                    {error ? "" : !Loading ? <Pagination onChange={(d => {
+                        if (custom) {
+                            let data = {
+                                [name]: d
+                            }
+                            onChange(data)
+                        } else {
+
+                            onChange(d)
+                        }
+                    })} simple defaultCurrent={currentPage} pageSize={pageSize} total={totalPages} /> : "LOADING"}
                 </div>
             }
         </div>
