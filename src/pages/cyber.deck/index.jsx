@@ -151,8 +151,8 @@ const CyberDeck = () => {
                     </>}
                 </CardAnimation>
             </div>
-            <div className="border-t border-t-primary  flex justify-center items-center ">
-                <div className="w-full  bg-opacity-40 backdrop-blur-sm  p-4 z-10">
+            <div className="border-t border-t-primary  flex justify-center items-center flex-1 relative">
+                <div className="w-full  bg-opacity-40 backdrop-blur-sm  p-4 z-10 absolute top-0">
                     <TitleContent date={value.DATEVALUE.uniq} className={"z-10 w-full flex"} statusMinimize={!maximize?.GLOBESHOW} time={true} maximizeItem={"GLOBESHOW"}>
                         <div className="flex items-center flex-1 w-full">
                             <div className="text-[24px] uppercase text-blue">EL SENSE</div>
@@ -165,7 +165,11 @@ const CyberDeck = () => {
                 {value.GLOBEVALUE.value === "satelite" ?
                     // <Globe status={!maximize?.GLOBESHOW} /> 
                     <GlobeGl status={!maximize?.GLOBESHOW} />
-                    : <MapHighcharts valueReset={value.GLOBEVALUE.value} />}
+                    : 
+                            <div className="absolute w-full h-full top-0 left-0 flex flex-1">
+                                <MapHighcharts className="absolute" valueReset={value.GLOBEVALUE.value} />
+                            </div>
+                    }
 
             </div>
         </ColumnCenter>

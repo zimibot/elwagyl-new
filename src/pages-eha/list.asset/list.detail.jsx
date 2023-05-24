@@ -8,6 +8,7 @@ import { GetAndUpdateContext } from "../../model/context.function"
 import { ErrorHtml, Loading } from "../list.maintenance"
 import { DELETE_API } from "../../api/eha/DELETE"
 import { Popconfirm } from "antd"
+import { NavLink } from "react-router-dom"
 
 export const ListDetail = () => {
     const { setStatus } = GetAndUpdateContext()
@@ -41,9 +42,11 @@ export const ListDetail = () => {
                         }}>
                             [ + ] ADD
                         </ButtonComponents>
-                        <ButtonComponents>
-                            NET DISCOVERY
-                        </ButtonComponents>
+                        <NavLink to={"/eha/assets/net-discovery"} state={{ title: `09 // eha // assets // net dicovery`, eha: true }}>
+                            <ButtonComponents>
+                                NET DISCOVERY
+                            </ButtonComponents>
+                        </NavLink>
                     </div>
                 </div>
             </CardBox>

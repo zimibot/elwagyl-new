@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Heatmap } from '@ant-design/plots';
+import { Empty } from 'antd';
 
 export const HeatmapComponent = ({data = []}) => {
 
@@ -25,6 +26,11 @@ export const HeatmapComponent = ({data = []}) => {
     // }, []);
 
 
+    console.log(data)
+
+    if (data.length === 0) {
+        return <div className="p-4"><Empty></Empty></div>
+    }
 
 
     const config = {

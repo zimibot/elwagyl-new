@@ -2,7 +2,7 @@
 import { HashRouter, Routes, Route, Outlet, Navigate } from "react-router-dom";
 import { ContextGlobal } from "./helper/context";
 import { ValueContext } from "./model/context";
-import { Suspense, lazy } from "react";
+import { Suspense, lazy, useState } from "react";
 import Logo from "./assets/logo.svg"
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { LayoutDashboard } from "./components/layout/dashboard.layout";
@@ -28,6 +28,10 @@ import UserManagement from "./pages-ums/usermanagement";
 import WelcomeEha from "./pages-eha/welcome";
 import { LicensePoup } from "./components/licensePopup";
 import ProfilePage from "./pages/profile";
+import { useEffect } from "react";
+import { CardAnimation } from "./components/layout/card";
+import { ShadowError } from "./components/shadow";
+import { NetDiscovery } from "./pages-eha/list.netdiscovery";
 const CyberDeck = lazy(() => import('./pages/cyber.deck/index.jsx'));
 const Executive = lazy(() => import('./pages/executive/index.jsx'));
 const AvailabilityPages = lazy(() => import('./pages/availability/index.jsx'));
@@ -55,8 +59,8 @@ export default function App() {
                 <Route path="*" element={<HeadersTop />} />
                 <Route path="/" element={<LoginPages></LoginPages>} />
                 <Route path="/message" element={<MassagesDrawer />} />
-                <Route path="/license" element={<LicensePoup />} />
                 <Route path="/profile" element={<ProfilePage />} />
+                <Route path="/license" element={<LicensePoup />} />
                 <Route path="/dashboard" element={<Container></Container>}>
                   <Route index element={<CyberDeck />} />
                   <Route path="executive" element={<Executive />} />
@@ -77,7 +81,10 @@ export default function App() {
                   <Route path="welcome" element={<WelcomeEha />} />
                   <Route path="home" element={<MainDeck />} />
                   <Route path="profile-indicator" element={<ProfileIndicator />} />
-                  <Route path="assets" element={<AssetsList />} />
+                  <Route path="assets" >
+                    <Route index element={<AssetsList />}></Route>
+                    <Route path="net-discovery" element={<NetDiscovery></NetDiscovery>}></Route>
+                  </Route>
                   <Route path="task">
                     <Route index element={<Navigate to={"/task/scan"} state={{ title: "SCAN" }}></Navigate>} />
                     <Route path="scan" element={<ListTask />} />
@@ -129,42 +136,78 @@ export const Container = () => {
   let ping = API_GET.API_PING()
 
 
+  const [alive, setAlive] = useState(true)
 
   let API_SEVERITY = API_GET.ALERT_SEVERITY()
 
   let ColorChange = API_SEVERITY.isLoading ? "" : API_SEVERITY.system.color
 
+  useEffect(() => {
+    if (!ping.isLoading) {
+      if (ping.data.alive) {
+        setAlive(true)
+      } else {
+        setAlive(false)
+      }
+    }
 
+  }, [ping])
 
-  return (ping.isLoading ? "" : ping.data.alive ? <PrivateRoute>
+  return <PrivateRoute>
     <Main className="flex flex-col flex-1" color={ColorChange} style={{
       color: ColorChange
     }}>
       <HeadersTop />
       <Outlet></Outlet>
+      <CardAnimation className="z-50">
+        {!alive && <ShadowError></ShadowError>}
+      </CardAnimation>
     </Main>
-  </PrivateRoute> : <div className="flex items-center justify-center flex-1">
-    <Result
-      status="warning"
-      title={<span className="uppercase">You are offline, please check your internet network and VPN network</span>}
-      extra={
-        <button className="border border-primary px-4 py-2 hover:bg-blue hover:text-[#000]" onClick={() => {
-          window.api.invoke('network', ["network"])
-        }}>
-          CHECK YOUR NETWORK
-        </button>
-      }
-    />
-  </div>)
+  </PrivateRoute>
+
+  // return (ping.isLoading ? "" : ping.data.alive ? <PrivateRoute>
+  //   <Main className="flex flex-col flex-1" color={ColorChange} style={{
+  //     color: ColorChange
+  //   }}>
+  //     <HeadersTop />
+  //     <Outlet></Outlet>
+  //   </Main>
+  // </PrivateRoute> : <div className="flex items-center justify-center flex-1">
+  //   <Result
+  //     status="warning"
+  //     title={<span className="uppercase">You are offline, please check your internet network and VPN network</span>}
+  //     extra={
+  //       <button className="border border-primary px-4 py-2 hover:bg-blue hover:text-[#000]" onClick={() => {
+  //         window.api.invoke('network', ["network"])
+  //       }}>
+  //         CHECK YOUR NETWORK
+  //       </button>
+  //     }
+  //   />
+  // </div>)
 }
 
 const ContainerNoHead = ({ eha = false, ums = false }) => {
 
   let ping = API_GET.API_PING()
 
+  const [alive, setAlive] = useState(true)
+
+  useEffect(() => {
+    if (!ping.isLoading) {
+      if (ping.data.alive) {
+        setAlive(true)
+      } else {
+        setAlive(false)
+      }
+    } else {
+      setAlive(false)
+    }
+
+  }, [ping])
 
 
-  return ping.isLoading ? "" : ping.data.alive ? <PrivateRoute>
+  return <PrivateRoute>
 
     <HeadersTop background={"#101C26"} nohead={{
       eha,
@@ -172,17 +215,30 @@ const ContainerNoHead = ({ eha = false, ums = false }) => {
     }} />
 
     <Outlet></Outlet>
-  </PrivateRoute> : <div className="flex items-center justify-center flex-1">
-    <Result
-      status="warning"
-      title={<span className="uppercase">You are offline, please check your internet network and VPN network</span>}
-      extra={
-        <button className="border border-primary px-4 py-2 hover:bg-blue hover:text-[#000]" onClick={() => {
-          window.api.invoke('network', ["network"])
-        }}>
-          CHECK YOUR NETWORK
-        </button>
-      }
-    />
-  </div>
+    <CardAnimation className="z-50">
+      {!alive && <ShadowError></ShadowError>}
+    </CardAnimation>
+  </PrivateRoute>
+
+  // return ping.isLoading ? "" : ping.data.alive ? <PrivateRoute>
+
+  //   <HeadersTop background={"#101C26"} nohead={{
+  //     eha,
+  //     ums
+  //   }} />
+
+  //   <Outlet></Outlet>
+  // </PrivateRoute> : <div className="flex items-center justify-center flex-1">
+  //   <Result
+  //     status="warning"
+  //     title={<span className="uppercase">You are offline, please check your internet network and VPN network</span>}
+  //     extra={
+  //       <button className="border border-primary px-4 py-2 hover:bg-blue hover:text-[#000]" onClick={() => {
+  //         window.api.invoke('network', ["network"])
+  //       }}>
+  //         CHECK YOUR NETWORK
+  //       </button>
+  //     }
+  //   />
+  // </div>
 }

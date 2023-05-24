@@ -23,6 +23,22 @@ export const GET_API_EHA = {
                 }
             }
         },
+        toolsScanner: (status) => {
+            if (status) {
+                const { isLoading, data, error } = useQuery(['toolsScanner', status.UpdateStatus], () => fetch(`${path}/api/general/tool-scanner-list`, { method: "GET" }).then(res => { return res.json() }),)
+                return {
+                    isLoading, data, error,
+                }
+            }
+        },
+        emailSettings: (status) => {
+            if (status) {
+                const { isLoading, data, error, refetch } = useQuery(['emailSettings', status.UpdateStatus], () => fetch(`${path}/api/manage-email-notification`, { method: "GET" }).then(res => { return res.json() }),)
+                return {
+                    isLoading, data, error, refetch
+                }
+            }
+        },
         vulnerability: (status) => {
             if (status) {
                 const stateLocation = useLocation()
@@ -137,10 +153,12 @@ export const GET_API_EHA = {
                     return fetch(`${path}/api/platform-categories/?category=${idPlatform}&page=${page}`, { method: "GET" }).then(res => { return res.json() })
                 } else {
                     return {
-                        data: []
+                        result: []
                     }
                 }
-            },)
+            },
+
+            )
             return {
                 isLoading, data, error, refetch
             }
@@ -166,10 +184,19 @@ export const GET_API_EHA = {
                 }
             }
         },
-        getCategoryPlatform: (status) => {
+        getCategoryPlatform: () => {
             const { isLoading, data, error, } = useQuery(['scan'], () => fetch(`${path}/api/general/platform-category-list`, { method: "GET" }).then(res => { return res.json() }),)
             return {
                 isLoading, data, error,
+            }
+        },
+
+        getLogsActivity: (status) => {
+            if (status) {
+                const { isLoading, data, error, } = useQuery(['logs', status.pages_logs], () => fetch(`${path}/api/logs?page=${status.pages_logs ? status.pages_logs : 1}&limit=15`, { method: "GET" }).then(res => { return res.json() }),)
+                return {
+                    isLoading, data, error,
+                }
             }
         },
         mainDeckStatisticSoverdueFinding: (status) => {
@@ -178,7 +205,7 @@ export const GET_API_EHA = {
                     "overdue-finding", ({ pageParam = 1 }) => fetch(`${path}/api/protected-sites/statistic/overdue-finding?page=${pageParam}`, { method: "GET" }).then((res) => res.json()),
                     {
                         getNextPageParam: (lastPage) => {
-                            return lastPage && lastPage.pagination ? lastPage.pagination.next_page.split("=")[1] + "=40" : undefined
+                            return lastPage && lastPage.pagination && lastPage.pagination.next_page ? lastPage.pagination.next_page.split("=")[1] + "=40" : undefined
                         },
 
                     }
@@ -246,7 +273,6 @@ export const GET_API_EHA = {
                 data: {},
                 loading: [],
                 error: [],
-                refresh: {}
             };
 
             let parse = GET_API_EHA.data
@@ -256,10 +282,9 @@ export const GET_API_EHA = {
                 if (item) {
                     p["loading"].push(item?.isLoading)
                     p["error"].push(item.error ? true : false)
-                    p["data"][d.active] = item.data
-                    p["refresh"][d.active] = item.refetch
+                    p["data"][d.active] = { ...item.data, refetch: item?.refetch }
                     if (item.props) {
-                        p["data"][d.active] = { ...item.data, props: item.props }
+                        p["data"][d.active] = { ...item.data, props: item.props, refetch: item?.refetch }
                     }
                     if (item.data?.code !== 200) {
                         p["msg"] = item.data?.message

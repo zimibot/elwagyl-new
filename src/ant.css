@@ -694,3 +694,7 @@ span.ant-menu-title-content {
 .ant-select-disabled .ant-select-selection-item {
   color: #00a8cc;
 }
+
+.ant-empty-description {
+  color: #00a8cc!important;
+}

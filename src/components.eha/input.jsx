@@ -112,7 +112,7 @@ export const Form = {
     },
     check: ({ text, register, error, classRoot = "", ...props }) => {
         return <Check className={`flex items-center gap-3 relative p-3 cursor-pointer ${error ? "text-red-500" : ""} `}>
-            <Input className="opacity-0 absolute" type="checkbox" {...register} {...props} />
+            <Input className="opacity-0 absolute"  type="checkbox" {...register} {...props} />
             {/* <div className="bg-[#101C26] w-full h-full absolute left-0 top-0 bg-ss"></div> */}
             <div className={`checkmark h-5 w-5  relative border-[2px]  ${error ? "border-red-500" : "border-blue"}`} />
             <span className="relative text-sc uppercase"> {text}</span>
@@ -124,7 +124,7 @@ export const Form = {
             <Input className="opacity-0 absolute" type="radio" {...register} {...props} />
             {/* <div className="bg-[#101C26] w-full h-full absolute left-0 top-0 bg-ss"></div> */}
             <div className={`checkmark h-5 w-5  relative border-[2px]  ${error ? "border-red-500" : "border-blue"}`} />
-            <span className="relative text-sc">  {text}</span>
+            <span className="relative text-sc top-1 "> {text}</span>
         </Check>
     },
     switch: ({ error, required = false, control, name, label, nonControl, type, ...props }) => {

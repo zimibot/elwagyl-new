@@ -8,7 +8,7 @@ const NavPage = ({ to, title, dropdown, noTop, icons = () => { }, ...param }) =>
     let resolved = useResolvedPath(to);
     let match = useMatch({ path: resolved.pathname, end: true });
     let matchUrl = match?.pathname === to
-    return <NavLink state={{ title: `10 // eha // ${title}`, eha: true }} to={to} {...param}>
+    return <NavLink state={{ title: `09 // eha // ${title}`, eha: true }} to={to} {...param}>
 
         <div className="flex items-center gap-4">
             {icons({ match: matchUrl })}
@@ -77,7 +77,7 @@ export const MenuEha = () => {
                     </svg>
                 }}
                 className={({ isActive }) =>
-                    isActive ? 'py-4 px-5 flex items-center gap-4 text-[18px] uppercase bg-blue text-primary font-bold' : 'py-4 px-5 flex items-center gap-4 text-[18px] uppercase bg-primary'
+                    isActive ? 'py-4 px-5 flex items-center gap-4 text-[18px] uppercase active-menu bg-blue text-primary font-bold' : 'py-4 px-5 flex items-center gap-4 text-[18px] uppercase bg-primary'
                 }></NavPage>
             <NavPage
                 to={"/eha/profile-indicator"}
@@ -89,7 +89,7 @@ export const MenuEha = () => {
 
                 }}
                 className={({ isActive }) =>
-                    isActive ? 'py-4 px-5 flex items-center gap-4 text-[18px] uppercase bg-blue text-primary font-bold' : 'py-4 px-5 flex items-center gap-4 text-[18px] uppercase bg-primary'
+                    isActive ? 'py-4 px-5 flex items-center gap-4 text-[18px] uppercase active-menu bg-blue text-primary font-bold' : 'py-4 px-5 flex items-center gap-4 text-[18px] uppercase bg-primary'
                 }></NavPage>
             <NavPage
                 to={"/eha/assets"}
@@ -100,7 +100,7 @@ export const MenuEha = () => {
                     </svg>
                 }}
                 className={({ isActive }) =>
-                    isActive ? 'py-4 px-5 flex items-center gap-4 text-[18px] uppercase bg-blue text-primary font-bold' : 'py-4 px-5 flex items-center gap-4 text-[18px] uppercase bg-primary'
+                    isActive ? 'py-4 px-5 flex items-center gap-4 text-[18px] uppercase active-menu bg-blue text-primary font-bold' : 'py-4 px-5 flex items-center gap-4 text-[18px] uppercase bg-primary'
                 }></NavPage>
             <Dropdown
                 rootClassName="custom-dropdown"
@@ -124,7 +124,7 @@ export const MenuEha = () => {
                             </svg>
                         }}
                         className={({ isActive }) =>
-                            isActive ? 'py-4 px-5 w-full justify-between flex items-center gap-4 text-[18px] uppercase bg-blue text-primary font-bold' : 'py-4 px-5 w-full justify-between flex items-center gap-4 text-[18px] uppercase bg-primary'
+                            isActive ? 'py-4 px-5 w-full justify-between flex items-center gap-4 text-[18px] uppercase active-menu bg-blue text-primary font-bold' : 'py-4 px-5 w-full justify-between flex items-center gap-4 text-[18px] uppercase bg-primary'
                         }></NavPage>
                 </div>
             </Dropdown>
@@ -140,7 +140,7 @@ export const MenuEha = () => {
                     </svg>
                 }}
                 className={({ isActive }) =>
-                    isActive ? 'py-4 px-5 flex items-center gap-4 text-[18px] uppercase bg-blue text-primary font-bold' : 'py-4 px-5 flex items-center gap-4 text-[18px] uppercase bg-primary'
+                    isActive ? 'py-4 px-5 flex items-center gap-4 text-[18px] uppercase active-menu bg-blue text-primary font-bold' : 'py-4 px-5 flex items-center gap-4 text-[18px] uppercase bg-primary'
                 }></NavPage>
             <NavPage
                 to={"/eha/maintenance"}
@@ -152,7 +152,7 @@ export const MenuEha = () => {
                     </svg>
                 }}
                 className={({ isActive }) =>
-                    isActive ? 'py-4 px-5 flex items-center gap-4 text-[18px] uppercase bg-blue text-primary font-bold' : 'py-4 px-5 flex items-center gap-4 text-[18px] uppercase bg-primary'
+                    isActive ? 'py-4 px-5 flex items-center gap-4 text-[18px] uppercase active-menu bg-blue text-primary font-bold' : 'py-4 px-5 flex items-center gap-4 text-[18px] uppercase bg-primary'
                 }></NavPage>
         </div>
     </div>

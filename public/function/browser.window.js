@@ -33,7 +33,9 @@ module.exports = function WindowConfig(mainConfig = {},  webPreferences = {}, fr
     },
   });
 
+
   enable(win)
 
   return win
 }
+

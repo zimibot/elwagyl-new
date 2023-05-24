@@ -22,11 +22,14 @@ export const ChartRadialBar = ({ data = [] }) => {
     }
 
     for (const key in data) {
-        items.push({
-            name: key.toUpperCase(),
-            count: data[key],
-            color: color(key)
-        })
+
+        if (key !== "refetch") {
+            items.push({
+                name: key.toUpperCase(),
+                count: data[key],
+                color: color(key)
+            })
+        }
     }
 
 
@@ -95,13 +98,15 @@ export const ChartRadialBar = ({ data = [] }) => {
 
     };
 
-    
+
 
     useEffect(() => {
         if (refChart.current) {
             let chart = refChart.current.getChart()
 
             let data = chart.options.data
+
+            console.log(data)
 
             setvalue(d => ({
                 ...d,

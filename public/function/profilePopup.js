@@ -2,7 +2,6 @@ const WindowConfig = require("./browser.window")
 const path = require('path')
 const url = require('url')
 const isDev = require('electron-is-dev');
-
 module.exports = function ProfilePopup() {
     let ProfilePopup = WindowConfig({
         minWidth: 800,
@@ -36,7 +35,8 @@ module.exports = function ProfilePopup() {
     // LicensePopup.blur()
     // if (isDev) {
 
-    //     LicensePopup.webContents.openDevTools({ mode: 'detach' });
+    //     ProfilePopup.webContents.openDevTools({ mode: 'detach' });
     // }
     return ProfilePopup
 }
+

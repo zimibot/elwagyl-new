@@ -28,11 +28,18 @@ module.exports = function ({ title = "NOTIFICATION", content = "NOTIFICATION CON
     })
 
     notif.setIcon(path.join(__dirname, favicon));
+
+    notif.on("close", () => {
+        app.quit()
+    })
+
     notif.webContents.once("dom-ready", () => {
         load.close()
         load = null
         if (!load) {
-            notif.show()
+            setTimeout(() => {
+                notif.show()
+            }, 300);
             notif.focus()
             sound.play(path.join(__dirname, "../../../../sound/error.wav"));
             ipcMain.handle('minimize', async () => {
@@ -59,8 +66,6 @@ module.exports = function ({ title = "NOTIFICATION", content = "NOTIFICATION CON
                     if (true) {
                         app.relaunch();
                         app.quit();
-
-
                     }
                 });
             });
@@ -74,6 +79,8 @@ module.exports = function ({ title = "NOTIFICATION", content = "NOTIFICATION CON
                 });
             });
 
+
+
             ipcMain.handle('notifText', () => {
                 return {
                     title: title,
@@ -83,6 +90,7 @@ module.exports = function ({ title = "NOTIFICATION", content = "NOTIFICATION CON
                 }
             });
         }
-
     })
+
+    return notif
 }

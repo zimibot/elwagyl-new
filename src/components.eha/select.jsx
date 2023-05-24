@@ -2,7 +2,7 @@ import { Select, Tooltip } from "antd"
 import { SquareMedium } from "../components/decoration/square"
 import styled from "styled-components"
 import { Controller } from "react-hook-form";
-import { DeleteFilled, ExclamationCircleFilled, ExclamationCircleOutlined } from "@ant-design/icons";
+import { DeleteFilled, DeleteOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 import { isArray, sift } from "radash";
 
 const Selecable = styled(Select)`
@@ -46,7 +46,7 @@ export const SelectMultiple = ({ height, className, width, data = [
     </div>
 
 }
-export const SelectComponent = ({ required = true, width = 160, error, height, control, name, className, loading, label, onChangeData, data = [
+export const SelectComponent = ({ onDelete, button, ClassLabel, ClassButton, required = true, width = 160, error, height, control, name, className, loading, label, onChangeData, data = [
     {
         value: 'jack',
         label: " ALL",
@@ -67,15 +67,21 @@ export const SelectComponent = ({ required = true, width = 160, error, height, c
 
     let items = data.map(d => ({
         ...d,
-        label: <div className="flex items-center gap-2">
-            {props.mode !== "multiple" && props.mode !== "tag" && <img src="./cube.svg"></img>}
-            {d.label}
+        label: <div className="flex justify-between items-center">
+            <div className="flex items-center gap-2">
+                {props.mode !== "multiple" && props.mode !== "tag" && <img src="./cube.svg"></img>}
+                {d.label}
+            </div>
+            {/* {onDelete && <button onClick={() => onDelete(d)}><DeleteOutlined></DeleteOutlined></button>} */}
         </div>
     })) || [];
 
     return <div className="space-y-4">
-        {label && <label className="uppercase">{label}</label>}
+        {label && <div className={ClassLabel ? ClassLabel : ""}>
+            <label className="uppercase">{label}</label>
+        </div>}
         <div className="relative flex items-center justify-end">
+
             <Controller
                 control={control}
                 name={name}
@@ -98,6 +104,7 @@ export const SelectComponent = ({ required = true, width = 160, error, height, c
                             className={className ? className : ""}
                             showSearch={false}
                             placeholder="please Select"
+                            
                             allowClear
                             clearIcon={<DeleteFilled></DeleteFilled>}
                             style={{
@@ -111,6 +118,10 @@ export const SelectComponent = ({ required = true, width = 160, error, height, c
 
                             showArrow={error ? false : true}
                             onChange={d => {
+                                if (onChangeData) {
+                                    onChangeData(d)
+                                }
+
                                 if (isArray(d)) {
                                     if (d.length === 0) {
                                         onChange(null)
@@ -121,9 +132,7 @@ export const SelectComponent = ({ required = true, width = 160, error, height, c
                                     onChange(d)
                                 }
 
-                                if (onChangeData) {
-                                    onChangeData(d)
-                                }
+
                             }}
 
                             options={items}
@@ -132,7 +141,10 @@ export const SelectComponent = ({ required = true, width = 160, error, height, c
                     )
                 }}
             />
-            {error && <div className="text-red-400 absolute px-4  font-[20px] top-[25%]">
+            <div className={`${ClassButton ? "" : ""} absolute right-10`}>
+                {button}
+            </div>
+            {error && <div className="text-red-400 absolute px-4 font-[20px] top-[25%]">
                 <Tooltip title={error.message ? error.message : "INPUT IS REQUIRED"}>
                     <ExclamationCircleOutlined />
                 </Tooltip>

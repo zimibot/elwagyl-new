@@ -34,7 +34,6 @@ const AddCategory = ({ data }) => {
         }
     }, [status.categoryEdit])
 
-    console.log(status.categoryEdit)
 
     const submit = (d) => {
         d = {
@@ -67,7 +66,7 @@ const AddCategory = ({ data }) => {
         </TitleContent>
         <form onSubmit={handleSubmit(submit)} className="space-y-4">
             <div className="space-y-4">
-                <SelectComponent disabled={status.categoryEdit ? true : false} error={errors.category} label={"Category"} name={"category"} width={"100%"} height={45} control={control} data={data?.result.map(d => {
+                <SelectComponent disabled={status.categoryEdit ? true : false} error={errors.category} label={"Category"} name={"category"} width={"100%"} height={45} control={control} data={data?.result?.map(d => {
                     return {
                         label: d,
                         value: d

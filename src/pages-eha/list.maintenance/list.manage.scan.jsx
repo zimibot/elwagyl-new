@@ -23,8 +23,12 @@ export const ListManageScan = () => {
         },
         {
             active: "scanToolsDetail"
-        }
+        },
+        {
+            active: "toolsScanner"
+        },
     ])
+
     const { setStatus } = GetAndUpdateContext()
     return (
         <CardBox className="flex-1">
@@ -125,13 +129,14 @@ export const ListManageScan = () => {
                     api.data.scanTools.result
                 } />}
 
-            <EditAndAdd></EditAndAdd>
+            <EditAndAdd data={api.data.toolsScanner.result}></EditAndAdd>
         </CardBox>
     )
 }
 
 
-const EditAndAdd = () => {
+const EditAndAdd = (data) => {
+    console.log(data)
     const { setStatus, status } = GetAndUpdateContext()
     const { register, handleSubmit, control, reset, setValue } = useForm();
     const onSubmit = data => {
@@ -159,8 +164,11 @@ const EditAndAdd = () => {
         </TitleContent>
         <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
             <Form.input register={register("name", { required: true })} label={"Name"} />
-            <Form.input register={register("scanning_tools", { required: true })} label={"Scanning tools"} />
-            <SelectComponent control={control} name={"role"} defaultValue={"admin"} className={"w-full"} width={"100%"} height={"45"} label={"role"}
+            {/* <Form.input register={register("scanning_tools", { required: true })} label={"Scanning tools"} /> */}
+            <SelectComponent control={control} name={"scanning_tools"} className={"w-full"} width={"100%"} height={"45"} label={"Scanning tools"}
+                data={data.data ? data.data : []}
+            ></SelectComponent>
+            <SelectComponent control={control} name={"role"} className={"w-full"} width={"100%"} height={"45"} label={"role"}
                 data={[
                     {
                         value: "admin",
@@ -180,7 +188,7 @@ const EditAndAdd = () => {
                     },
                 ]}
             ></SelectComponent>
-            <SelectComponent control={control} name={"status"} defaultValue={"active"} className={"w-full"} width={"100%"} height={"45"} label={"status"}
+            <SelectComponent control={control} name={"status"} className={"w-full"} width={"100%"} height={"45"} label={"status"}
                 data={[
                     {
                         value: "success",

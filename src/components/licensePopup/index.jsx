@@ -65,12 +65,12 @@ export const LicensePoup = () => {
                     <div className="font-bold p-4">PRODUCT NAME</div>
                     <div className="border-l border-primary p-4">VM-100 - PALO ALTO NETWORKS</div>
                 </div>
-                <div className="grid grid-cols-2 border-t border-primary">
+                {/* <div className="grid grid-cols-2 border-t border-primary">
                     <div className="font-bold p-4">IDENTIFICATION NUMBER</div>
                     <div className="border-l border-primary p-4">
                         <div>2197301408120740123</div>
                     </div>
-                </div>
+                </div> */}
                 <div className="grid grid-cols-2 border-t border-primary">
                     <div className="font-bold p-4">VALIDITY TYPE</div>
                     <div className="border-l border-primary p-4">ON PREMISE [MAY-2025]</div>
@@ -80,10 +80,10 @@ export const LicensePoup = () => {
                 <div className="p-5">
                     <img src={paloalto}></img>
                 </div>
-                <div className="grid grid-cols-2 border-t border-primary">
+                {/* <div className="grid grid-cols-2 border-t border-primary">
                     <div className="font-bold p-4">PRODUCT NAME</div>
                     <div className="border-l border-primary p-4">PA - 5220 - XDR PALO ALTO NETWORKS</div>
-                </div>
+                </div> */}
                 <div className="grid grid-cols-2 border-t border-primary">
                     <div className="font-bold p-4">IDENTIFICATION NUMBER</div>
                     <div className="border-l border-primary p-4">
@@ -103,12 +103,12 @@ export const LicensePoup = () => {
                     <div className="font-bold p-4">PRODUCT NAME</div>
                     <div className="border-l border-primary p-4">CORTEX XDR PALO ALTO NETWORKS</div>
                 </div>
-                <div className="grid grid-cols-2 border-t border-primary">
+                {/* <div className="grid grid-cols-2 border-t border-primary">
                     <div className="font-bold p-4">IDENTIFICATION NUMBER</div>
                     <div className="border-l border-primary p-4">
                         <div>2197301408120740123</div>
                     </div>
-                </div>
+                </div> */}
                 <div className="grid grid-cols-2 border-t border-primary">
                     <div className="font-bold p-4">VALIDITY TYPE</div>
                     <div className="border-l border-primary p-4">ON PREMISE [MAY-2025]</div>

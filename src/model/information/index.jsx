@@ -191,7 +191,8 @@ const MENUDATA = [
     {
         label: 'SASE',
         key: '/dashboard/sase',
-        url: "https://colorlib.com/etc/404/colorlib-error-404-6/",
+        // url: "https://colorlib.com/etc/404/colorlib-error-404-6/",
+        url: "https://sase.paloaltonetworks.com",
         icon: <div className="absolute w-full h-full left-0 top-0">
             <div className="absolute top-0 block px-1 !text-lg left-0" style={{
                 color: "rgba(0, 216, 255, 0.3)"

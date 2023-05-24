@@ -452,6 +452,10 @@ ul.slick-dots li.slick-active button:after {
   animation: color 2s linear infinite;
 }
 
+.active-menu svg path {
+  fill: #152A36!important;
+}
+
 :focus {
   outline: none!Important;
 }

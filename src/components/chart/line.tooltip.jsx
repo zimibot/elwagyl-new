@@ -3,6 +3,7 @@ import { ERRORCOMPONENT } from '../../model/information';
 import barIcon from '../../assets/images/icon/bar-chart.png'
 import moment from 'moment';
 import { Formatter } from '../../helper/formater';
+import { Empty } from 'antd';
 
 export const ChartLineTooltip = ({ height = 115, mode = "", className = "", data = [], date, xField = "date", yField = "count", customTextTooltip }) => {
 
@@ -80,8 +81,8 @@ export const ChartLineTooltip = ({ height = 115, mode = "", className = "", data
     return <div className={`relative ${className}`}>
         {data.length === 0 &&
             <div className="uppercase text-[white] w-full absolute items-center justify-center flex  flex-col gap-2">
-                <img className="w-10" src={barIcon}></img>
-                {ERRORCOMPONENT.dataNotAvailable}
+               <Empty ></Empty>
+
             </div>
         }
         <Line smooth={true} animation={false} {...config} />

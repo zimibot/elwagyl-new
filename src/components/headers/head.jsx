@@ -36,48 +36,45 @@ export const LocalStorage = () => {
 }
 
 export const HeadFunction = (menu, setStatus, VALUEMENU) => {
-    if (menu.url) {
 
-        let height
+    let height
 
-        height = VALUEMENU.data + 10
-        setStatus(d => ({ ...d, headHidden: false, loading: false }))
+    height = VALUEMENU.data + 20
+    setStatus(d => ({ ...d, headHidden: false, loading: false }))
 
+    window.api.invoke('routesItem', {
+        url: menu?.url,
+        status: false,
+        size: {
+            y: height,
+            width: window.outerWidth,
+            height: window.outerHeight - height
+        },
+        attribute: document.body?.getAttribute("name"),
+    }).then(d => {
+        setStatus(w => ({ ...w, headHidden: false, loading: true, otherPages: d.status }))
+        console.log(d)
+
+    }).catch(d => {
+        console.log(d)
+        setStatus(w => ({ ...w, headHidden: false, loading: true }))
         window.api.invoke('routesItem', {
-            url: menu.url,
-            status: false,
             size: {
                 y: height,
-                width: window.outerWidth,
-                height: window.outerHeight - height
-            },
-            attribute: document.body?.getAttribute("name"),
-        }).then(d => {
-            if (d === "load success") {
-                setStatus(w => ({ ...w, headHidden: false, loading: true }))
-            }
-        }).catch(d => {
-            setStatus(w => ({ ...w, headHidden: false, loading: true }))
-            alert("We apologize for the inconvenience, but the connection to the server could not be established. We suggest trying again, and checking your internet or VPN connection to ensure it is stable. If the issue persists, please contact our technical support team for further assistance. Thank you.")
-        })
-
-
-    } else {
-        setStatus(d => ({ ...d, headHidden: false, loading: false }))
-        window.api.invoke('routesItem', {
-            url: null,
-            status: true,
-            size: {
-                y: 0,
                 width: 0,
                 height: 0
             },
             attribute: document.body?.getAttribute("name"),
         })
-    }
+        // alert("We apologize for the inconvenience, but the connection to the server could not be established. We suggest trying again, and checking your internet or VPN connection to ensure it is stable. If the issue persists, please contact our technical support team for further assistance. Thank you.")
+    })
 }
 
+
+
 const HeadTop = () => {
+    const license = JSON.parse(localStorage.getItem("license"))
+
     const { setStatus, value } = GetAndUpdateContext()
     const [show, setShow] = useState(false);
     const { pathname, state } = useLocation()
@@ -106,6 +103,18 @@ const HeadTop = () => {
     let param = API_SEVERITY.error ? "ERROR" : API_SEVERITY.isLoading ? "" : API_SEVERITY.system.name
     let color = API_SEVERITY.error ? "ERROR" : API_SEVERITY.isLoading ? "" : API_SEVERITY.system.color
 
+ 
+    useEffect(() => {
+        if (document.body?.getAttribute("name") !== "elwagyl-0") {
+            setStatus(w => ({ ...w, headHidden: false, loading: true }))
+        }
+
+
+        // return () => {
+        //     clearInterval(sap)
+        // }
+    }, [])
+
     return (
         <div className="grid grid-cols-11 gap-1 border-t border-t-border_primary border-b border-b-border_second">
 
@@ -132,9 +141,9 @@ const HeadTop = () => {
                         </Tooltip>
                     </div>
                 </>}
-                    <div className="text-ellipsis overflow-hidden title-page pl-4">
-                        <span className="text-[24px] uppercase text-blue"> {menuIndex !== -1 ? ` ${('0' + (menuIndex + 1)).slice(-2)} // ${Menu[menuIndex].label}` : state?.title}</span>
-                    </div>
+                <div className="text-ellipsis overflow-hidden title-page pl-4">
+                    <span className="text-[24px] uppercase text-blue"> {menuIndex !== -1 ? ` ${('0' + (menuIndex + 1)).slice(-2)} // ${Menu[menuIndex].label}` : state?.title}</span>
+                </div>
 
 
                 {!location?.ums && <LineBorderRight />}
@@ -174,8 +183,10 @@ const HeadTop = () => {
                     <div className="text-[24px]">PROTECTION DURATION</div>
                     <div className="h-full items-center relative justify-center flex pregress-license" onMouseEnter={() => setShow(true)} onMouseLeave={() => setShow(false)}>
                         <div className="w-full bg-primary text-border_primary font-bold relative">
-                            <div className={`bg-blue flex justify-center items-center  w-[0%]  ${show ? "h-5" : "h-3"}`}>
-                                {show && <span className="absolute w-full right-0 text-white justify-center items-center flex">Expired: 2 years</span>}
+                            <div className={`bg-blue flex justify-center items-center  ${show ? "h-5" : "h-3"}`} style={{
+                                width: `${license.detailLicense.progress}%`
+                            }}>
+                                {show && <span className="absolute w-full right-0 text-white justify-center items-center flex">{license.detailLicense.duration}</span>}
                             </div>
                         </div>
                     </div>

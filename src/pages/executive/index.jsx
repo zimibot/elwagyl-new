@@ -161,7 +161,7 @@ const Executive = () => {
             <CardAnimation>
 
                 {!maximize.SERVICEPORT && <> <FillterDay data={value.OPTIONALDATE} keyText={"OPTIONALDATE"}></FillterDay>
-                    <div className="grid grid-cols-8  bg-opacity-40 backdrop-blur-sm z-10 border-b border-b-primary">
+                    <div className="grid grid-cols-8  bg-opacity-40 backdrop-blur-sm z-10 border-b border-b-primary h-[300px] overflow-hidden relative">
                         <div className="col-span-3 flex flex-col">
                             <TitleContent date={value.DATEVALUE.uniq} className={"border-b border-b-primary"} noBorder={true} subTitle={"A-1"}>
                                 <div className="text-[24px] uppercase text-blue">ALIVE TIME</div>

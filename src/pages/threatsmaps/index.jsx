@@ -110,14 +110,14 @@ const ThreatsMaps = ({ titlePath }) => {
                     <GlobalListSource />
                 </CardAnimation>
             </CardBox>
-            <CardBox className={"flex-1"}>
+            <CardBox className={"flex-1 max-h-[500px]"}>
                 <TitleContent date={value.DATEVALUE.uniq} time={true} >
                     <div className="text-[24px] uppercase text-blue">THREAT STATISTIC</div>
                 </TitleContent>
                 <SubtitleInfo title={'STATISTIC TIMELINE'}>
                     {STASTISTIC_ALERT_DESC}
                 </SubtitleInfo>
-                <div className="relative flex-1 flex flex-col">
+                <div className="relative flex-1 flex flex-col ">
                     <div className="absolute w-full h-full">
                         {root.error ? "ERROR" : root.isLoading ? <Loading></Loading> : <ChartLineTooltip data={root.data.THREATSMAP_CYBER_ATTACK_STATISTIC.data} className="h-full w-full flex flex-col items-center justify-center" height={"auto"} />}
                     </div>
@@ -202,7 +202,7 @@ const ThreatsAttackList = ({ props, data }) => {
 
                 let date = post ? moment(post.date).format("LLLL") : ""
 
-                return (<div className={`flex flex-col py-2 index-${virtualItem.index}`}
+                return (<div className={`flex flex-col relative py-2 index-${virtualItem.index}`}
                     key={virtualItem.key}
                     style={{
                         position: 'absolute',
@@ -212,7 +212,7 @@ const ThreatsAttackList = ({ props, data }) => {
                         // height: `${virtualItem.size}px`,
                         transform: `translateY(${virtualItem.start}px)`,
                     }}>
-                    {allRows.length === 0 ? <div>DATA NOT FOUND</div> : isLoaderRow
+                    {allRows.length === 0 ? <div className="flex items-center p-4 w-full  justify-center text-white">NO DATA AVAILABLE</div> : isLoaderRow
                         ? hasNextPage
                             ? <div className="p-4 flex justify-center w-full items-center">Loading more...</div>
                             : <div className="p-4 flex justify-center w-full items-center">Nothing more to load</div>

@@ -18,10 +18,10 @@ export const AddModal = () => {
             active: "assetsList"
         },
         {
-            active: "scanTools"
+            active: "scanDetails"
         },
         {
-            active: "scanDetails"
+            active: "toolsScanner"
         },
     ])
     const { register, handleSubmit, control, reset, setValue, formState: { errors } } = useForm();
@@ -83,7 +83,7 @@ export const AddModal = () => {
                     </TitleContent>
                     <div className="grid grid-cols-3 gap-7">
                         <div className="space-y-8">
-                            <SelectComponent error={errors.asset_id} required={true} loading={API.loading} data={API.data?.assetsList?.result.map(d => {
+                            <SelectComponent error={errors.asset_id} required={true} loading={API.loading} data={API?.data?.assetsList?.result?.map(d => {
                                 return ({
                                     label: d.name,
                                     value: d.id
@@ -91,11 +91,10 @@ export const AddModal = () => {
                             })} control={control} name={"asset_id"} width={"100%"} height={45} label={"TARGET TO SCAN"}></SelectComponent>
                             {/* <Form.input register={register("target_scan")} label={"TARGET TO SCAN"} /> */}
                             {/* <Form.input register={register("tools_scanner")} label={"TOOLS SCANNER"} /> */}
-                            <SelectComponent error={errors.tool_scanner_id} required={true} loading={API.loading} data={API.data.scanTools?.result.map(d => {
+                            <SelectComponent error={errors.tool_scanner_id} required={true} loading={API.loading} data={API.data.toolsScanner?.result?.map(d => {
                                 return ({
-                                    label: d.scanning_tools,
-                                    value: d.id
-                                })
+                                    label: d,
+                                    value: d                                })
                             })} control={control} name={"tool_scanner_id"} width={"100%"} height={45} label={"TOOLS SCANNER"}></SelectComponent>
 
                             <div className="grid grid-cols-2 gap-4">

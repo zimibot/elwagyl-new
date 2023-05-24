@@ -51,12 +51,13 @@ export const getCookie = (name) => {
 }
 
 
-const Options = () => {
+const Options = (config = {}) => {
     return ({
         headers: {
             'Authorization': `Bearer ${localStorage.getItem("token")}`,
             'Content-Type': 'application/json',
         },
+        ...config
     })
 }
 
@@ -106,6 +107,33 @@ const API_GET = {
         return { isLoading, error, data, ...props }
 
     },
+    // VERIFY_LICENSE: () => {
+    //     const { isLoading, error, data, ...props } = useQuery(['VERIFY_LICENSE'], () =>
+    //         fetch(`${path}/license-v2/verify`, {
+    //             ...Options({
+    //                 method: "POST",
+    //                 body: {
+    //                     "license_id": {
+    //                         "license_elwagyl": "string",
+    //                         "license_eha": "",
+    //                         "license_sase": ""
+    //                     },
+    //                     "mac_address": "string"
+    //                 }
+    //             })
+    //         }).then(res => {
+
+    //             return res.json()
+    //         }
+    //         ),
+    //         {
+    //             refetchOnWindowFocus: false,
+    //             refetchInterval: false
+    //         }
+    //     )
+
+    //     return { data, error: data?.detail, isLoading, props }
+    // },
     ALERT_SEVERITY: () => {
         const { value } = GetAndUpdateContext()
         let item = []
@@ -202,6 +230,7 @@ const API_GET = {
 
         return { data: item, error: data?.detail, isLoading, props }
     },
+   
     DASHBOARD_STATUS: () => {
         const { value } = GetAndUpdateContext()
         const { isLoading, error, data, ...props } = useQuery(['dashboardStatus', value.APIURLDEFAULT, value.DATEVALUE.value], () =>
@@ -325,7 +354,7 @@ const API_GET = {
                             newPingMap.set(d.hostname, Array(20).fill(0));
                         }
                     }));
-                    setPingMap({ data: newPingMap, alive});
+                    setPingMap({ data: newPingMap, alive });
                 }, 1000);
                 return () => clearInterval(pingInterval);
             }

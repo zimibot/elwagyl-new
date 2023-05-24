@@ -9,127 +9,126 @@ const extract = require('extract-zip');
 const fs = require('fs');
 const { app } = require('electron');
 
-module.exports = async function DownloadFIles() {
-    const tempDir = process.env.TEMP;
-    const zipFilePath = path.join(tempDir, 'elwagyl-update', 'updater.zip');
-    const updateAvailable = path.join(tempDir, 'updater', "files" , 'update.zip');
-    const downloaders = (versi, progress) => [
-        {
-            url: 'http://157.245.49.164:8080/update/elwagylUpdate/updater.zip',
-            directory: path.join(tempDir, 'elwagyl-update'),
-            fileName: 'updater.zip',
-            cloneFiles: false,
-        },
-        {
-            url: `http://157.245.49.164:8080/update/elwagylUpdate/elwagyl-v-${versi}.zip`,
-            directory: path.join(tempDir, "updater", "files"),
-            fileName: "update.zip",
-            cloneFiles: false,
-            onProgress: function (percentage, chunk, remainingSize) {
-                progress.value = parseInt(percentage);
-            }
-        },
+let url = "http://157.245.49.164:8080"
 
-        // add more downloader objects here as needed
-    ];
-
-    try {
-        let get = await axios({
-            method: 'get',
-            url: 'http://157.245.49.164:8080/update/elwagylUpdate/log_install.json',
-        });
-
-        if (get.data.newVersion !== version) {
-            let msg = await errorMsg({ msg: "The latest update is available" })
-
-            if (msg === 0) {
-                fs.access(updateAvailable, fs.constants.F_OK, async (err) => {
-                    if (err) {
-                        var progressBar = new ProgressBar({
-                            indeterminate: false,
-                            text: "Download New Update ELWAGYL",
-                            detail: 'Wait...'
-                        });
-
-
-
-                        progressBar
-                            .on('completed', async function () {
-                                extract(zipFilePath, { dir: tempDir });
-                                progressBar.detail = ' Download completed. Exiting...';
-                                setTimeout(() => {
-                                    setTimeout(() => {
-                                        app.quit()
-                                    }, 200);
-                                    const subprocess =  child(path.join(tempDir, "updater", "update.bat"), {
-                                        detached: true, // jalankan di background
-                                        stdio: 'ignore' // abaikan input/output dari child process
-                                    });
-                                    subprocess.unref();
-                                }, 300);
-
-                            })
-                            .on('aborted', function (value) {
-                                console.info(`aborted... ${value}`);
-                            })
-                            .on('progress', function (value) {
-                                progressBar.detail = `Progress Download ${value}% out of ${progressBar.getOptions().maxValue}%...`;
-                            });
-                            
-                        for (const d of downloaders(get.data.newVersion, progressBar)) {
-                            const downloader = new Downloader(d);
-                            await downloader.download();
-                        }
-                    } else {
-                        setTimeout(() => {
-                            app.quit()
-                        }, 500);
-                        
-                        const subprocess = child(path.join(tempDir, "updater", "update.bat"), {
-                            detached: true, // jalankan di background
-                            stdio: 'ignore' // abaikan input/output dari child process
-                        });
-                        subprocess.unref();
-                       
+module.exports = async function DownloadFIles(msgBtn, window) {
+    return new Promise(async function (resolve, reject) {
+        // do stuff
+        if (true) {
+            const tempDir = process.env.TEMP;
+            const zipFilePath = path.join(tempDir, 'elwagyl-update', 'updater.zip');
+            const updateAvailable = path.join(tempDir, 'updater', "files", 'update.zip');
+            const downloaders = (versi, progress) => [
+                {
+                    url: `${url}/update/elwagylUpdate/updater.zip`,
+                    directory: path.join(tempDir, 'elwagyl-update'),
+                    fileName: 'updater.zip',
+                    cloneFiles: false,
+                },
+                {
+                    url: `${url}/update/elwagylUpdate/elwagyl-v-${versi}.zip`,
+                    directory: path.join(tempDir, "updater", "files"),
+                    fileName: "update.zip",
+                    cloneFiles: false,
+                    onProgress: function (percentage, chunk, remainingSize) {
+                        progress.value = parseInt(percentage);
                     }
+                },
+
+                // add more downloader objects here as needed
+            ];
+
+            try {
+                let get = await axios({
+                    method: 'get',
+                    url: `${url}/update/elwagylUpdate/log_install.json`,
+                    headers: {
+                        'Cache-Control': 'no-cache',
+                        'Pragma': 'no-cache',
+                        'Expires': '0',
+                    },
                 });
 
+                if (get.data.newVersion !== version) {
+                    let msg = await errorMsg({ msg: "The latest update is available", btnMsg: msgBtn })
+                    if (msg === 0) {
 
+                        fs.access(updateAvailable, fs.constants.F_OK, async (err) => {
+                            if (err) {
+                                var progressBar = new ProgressBar({
+                                    indeterminate: false,
+                                    text: "Download New Update ELWAGYL",
+                                    detail: 'Wait...'
+                                });
 
+                             
 
+                                progressBar
+                                    .on('completed', async function () {
+                                        extract(zipFilePath, { dir: tempDir });
+                                        progressBar.detail = ' Download completed. Exiting...';
+                                        setTimeout(() => {
+                                            setTimeout(() => {
+                                                app.quit()
+                                            }, 200);
+                                            const subprocess = child(path.join(tempDir, "updater", "update.bat"), {
+                                                detached: true, // jalankan di background
+                                                stdio: 'ignore' // abaikan input/output dari child process
+                                            });
+                                            subprocess.unref();
+                                        }, 300);
 
-                // const downloader = new Downloader({
-                //     url: `http://157.245.49.164:8080/update/elwagylUpdate/elwagyl-v-${get.data.newVersion}.zip`,
-                //     directory: path.join(tempDir, "updater", "files"), //Sub directories will also be automatically created if they do not exist.
-                //     cloneFiles: false,
-                //     fileName: "update.zip",
-                //     onProgress: function (percentage, chunk, remainingSize) {
-                //         progressBar.value = parseInt(percentage);
+                                    })
+                                    .on('aborted', function (value) {
+                                        app.quit()
+                                        console.info(`aborted... ${value}`);
+                                    })
+                                    .on('progress', function (value) {
+                                        progressBar.detail = `Progress Download ${value}% out of ${progressBar.getOptions().maxValue}%...`;
+                                    });
 
-                //     },
-                // });
+                                for (const d of downloaders(get.data.newVersion, progressBar)) {
+                                    const downloader = new Downloader(d);
+                                    await downloader.download();
+                                }
+                            } else {
+                                setTimeout(() => {
+                                    app.quit()
+                                }, 500);
 
-                // await downloader.download();
+                                const subprocess = child(path.join(tempDir, "updater", "update.bat"), {
+                                    detached: true, // jalankan di background
+                                    stdio: 'ignore' // abaikan input/output dari child process
+                                });
+                                subprocess.unref();
 
-                return "update"
-            } else {
-                return "next"
+                            }
+                        });
+
+                        resolve("update")
+                    } else {
+                        if (msg === 1) {
+                            resolve("next")
+                        }
+                    }
+                } else {
+                    resolve("update nothing")
+                }
+
+            } catch (error) {
+                reject(error)
             }
-        } else {
-            return "update nothing"
         }
+    });
 
-    } catch (error) {
-        return error
-    }
 
 }
 
 
-const errorMsg = ({ msg }) => {
+const errorMsg = ({ msg, btnMsg }) => {
     let response = dialog.showMessageBoxSync({
         type: "info",
-        buttons: ['Update', 'Cancel'],
+        buttons: ['Update', btnMsg ? btnMsg : 'Run EL WAGYL'],
         title: `INFORMATION`,
         message: msg
     });

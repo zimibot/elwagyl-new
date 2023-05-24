@@ -112,6 +112,11 @@ export const HeadersTop = ({ background }) => {
                                             USER MANAGEMENT
                                         </NavLink>
                                         <div className="border-b pb-2 border-blue hover:text-white hover:border-white cursor-pointer" onClick={() => {
+                                            window.api.invoke('update')
+                                        }}>
+                                            CHECK UPDATE
+                                        </div>
+                                        <div className="border-b pb-2 border-blue hover:text-white hover:border-white cursor-pointer" onClick={() => {
                                             localStorage.removeItem("token")
                                             window.api.invoke('routesItem', {
                                                 url: null,
@@ -126,6 +131,7 @@ export const HeadersTop = ({ background }) => {
                                         }}>
                                             LOG OUT
                                         </div>
+                                       
 
                                     </div>
                                 </>

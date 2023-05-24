@@ -11,14 +11,14 @@ import { SquareFull } from "../../components/decoration/square"
 import { ChartLineTooltip } from "../../components/chart/line.tooltip"
 import { DetailDeck } from "./detail"
 import { ChartRadialBar } from "../../components/chart/chart.radial"
-import { max } from "radash"
+import { isObject, max } from "radash"
 import { GET_API_EHA } from "../../api/eha/GET"
 import { ErrorHtml } from "../list.maintenance"
 import List from 'react-virtualized/dist/commonjs/List';
 import AutoSizer from 'react-virtualized/dist/commonjs/AutoSizer';
 import { ErrorItems } from "../../pages/cyber.deck"
 import MapChart from "../../components/maps/simple.chart"
-import { Drawer, Tooltip } from "antd"
+import { Drawer, Empty, Tooltip } from "antd"
 import { CloseOutlined } from "@ant-design/icons"
 
 
@@ -50,6 +50,7 @@ const MainDeck = () => {
         active: "mainDeckStatisticsMaps"
     },
     ])
+    
 
 
     if (API.error || API.msg) {
@@ -231,7 +232,6 @@ const MainDeck = () => {
                     <div className="flex-1 relative ">
                         <div className="space-y-4 overflow-hidden absolute h-full w-full pb-3">
                             <OverdueFinding current={API} loading={API.loading} data={API.data}></OverdueFinding>
-
                         </div>
                     </div>
                 </CardBox>
@@ -248,6 +248,7 @@ const ChartFindingMonthly = ({ loading, data }) => {
         return <Loading></Loading>
     }
 
+    
     function getShortMonth(fullMonth) {
         const monthNames = {
             "january": "Jan",
@@ -268,6 +269,12 @@ const ChartFindingMonthly = ({ loading, data }) => {
 
 
     let { mainDeckStatisticsMontly } = data
+
+   if (isObject(mainDeckStatisticsMontly.result) ) {
+        return <div className="flex items-center justify-center w-full">
+            <Empty></Empty>
+        </div>
+   }
 
     let items = mainDeckStatisticsMontly
 
@@ -297,10 +304,10 @@ const OverdueFinding = ({ data, loading }) => {
 
     const items = mainDeckStatisticSoverdueFinding.pages.flatMap((page) => page.result) || [];
 
+   
     const rowRenderer = ({ key, index, style }) => {
         const item = items[index];
-        return (
-            <div key={key} style={style} className="pr-2">
+        return (  <div key={key} style={style} className="pr-2">
                 <div className="grid  border border-primary text-[16px]">
                     <div className="flex flex-col border-r border-primary">
                         <div className="px-4 py-5 border-b border-primary">
@@ -326,7 +333,7 @@ const OverdueFinding = ({ data, loading }) => {
         );
     };
 
-    return <div className="h-full w-full relative">
+    return mainDeckStatisticSoverdueFinding.pages.length === 1 ? <div className="p-4 w-full h-full absolute flex justify-center items-center"><Empty></Empty></div> : <div className="h-full w-full relative">
         <AutoSizer>
             {({ width, height }) => (
                 <List
@@ -363,7 +370,7 @@ const ProtectedSite = ({ loading, data, setvalue }) => {
     let { mainDeckStatisticsOverall } = data
 
     return <div className="space-y-4 max-h-96 overflow-auto pr-2">
-        {mainDeckStatisticsOverall.result.map((d, k) => {
+        {mainDeckStatisticsOverall.result.length === 0 ? <div className="flex items-center justify-center p-4"><Empty></Empty></div> : mainDeckStatisticsOverall.result.map((d, k) => {
             return <div key={k} className="grid grid-cols-5 border border-primary text-[16px]">
                 <div className="col-span-3 flex flex-col border-r border-primary">
                     <div className="px-4 py-5 border-b border-primary uppercase">// {d.name}</div>

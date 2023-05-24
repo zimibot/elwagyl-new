@@ -5,18 +5,21 @@ const { ipcMain, app, shell } = require('electron');
 const Sidebar = require('./sidebar')
 const url = require('url');
 const Ping = require("ping")
-const childProcess = require("child_process");
+// const childProcess = require("child_process");
 const licensePopup = require('./license');
 const ProfilePopup = require("./profilePopup")
 
+
+
 module.exports = function CreateWindow({ urlCurrent, prodUrl, config = {}, webConfig = {}, maximize, load, other, hash, frame }) {
+    let side, LicensePopup, popProfile
+
     const cUrl = urlCurrent ? urlCurrent : "http://localhost:3000/"
     const win = WindowConfig({
         ...config,
         ...webConfig
     }, {}, frame)
     win.setIcon(path.join(__dirname, "../logo.png"))
-
     win.loadURL(
         isDev
             ? cUrl
@@ -27,8 +30,18 @@ module.exports = function CreateWindow({ urlCurrent, prodUrl, config = {}, webCo
             })
     );
 
+    win.on("close", () => {
+        if (side) {
+            side.close()
+        }
 
-
+        if (licensePopup) {
+            LicensePopup.close()
+        }
+        if (popProfile) {
+            popProfile.close()
+        }
+    })
 
     win.webContents.once("did-finish-load", async () => {
 
@@ -43,7 +56,7 @@ module.exports = function CreateWindow({ urlCurrent, prodUrl, config = {}, webCo
                 if (maximize) {
                     win.maximize()
                 }
-                let side = Sidebar()
+                side = Sidebar()
                 win.show()
                 win.focus()
 
@@ -66,7 +79,7 @@ module.exports = function CreateWindow({ urlCurrent, prodUrl, config = {}, webCo
                     });
                 });
 
-                let LicensePopup = licensePopup()
+                LicensePopup = licensePopup()
 
                 ipcMain.handle('license-open', async (ev, args) => {
                     return new Promise(function () {
@@ -90,7 +103,7 @@ module.exports = function CreateWindow({ urlCurrent, prodUrl, config = {}, webCo
                 });
 
 
-                let popProfile = ProfilePopup()
+                popProfile = ProfilePopup()
 
                 ipcMain.handle('profile-open', async (ev, args) => {
                     return new Promise(function () {
@@ -136,11 +149,26 @@ module.exports = function CreateWindow({ urlCurrent, prodUrl, config = {}, webCo
 
 
     if (isDev) {
-        let ds = path.join(__dirname, "../../git.bat")
-        childProcess.spawn(ds);
+        // let ds = path.join(__dirname, "../../git.bat")
+        // console.log(ds)
+        // let de = childProcess.spawn(ds);
+        // de.stdout.on('data', function (data) {
+        //     console.log(data);
+        // });
+        // de.stderr.on('data', function (data) {
+        //     console.log(data);
+        // });
+        // de.on('close', function (code) {
+        //     if (code == 0)
+        //         console.log('Stop');
+        //     else
+        //         console.log('Start');
+        // });
         win.webContents.openDevTools({ mode: 'detach' });
     }
 
     return win
 
 }
+
+

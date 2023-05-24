@@ -8,11 +8,12 @@ export const UPDATE_API = {
     updateScanAssets: (id, data, setStatus) => ToastData({ name: data.asset.name, url: `${path}/api/scans/${id}`, setStatus, data }),
     updatePlatformCategory: (id, data, setStatus, success) => ToastData({ name: data.name, url: `${path}/api/platform-categories/${id}`, setStatus, data, success }),
     updateAssets: (id, data, setStatus, success, error) => ToastData({ name: data.name, url: `${path}/api/assets/${id}`, setStatus, data, success, error }),
+    updateEmail: (id, data, setStatus, refresh) => ToastData({ name: data.name, url: `${path}/api/manage-email-notification/${id}`, setStatus, data, refresh }),
 }
 
-const ToastData = ({ name, url, data, setStatus, success, error }) => {
+const ToastData = ({ name, url, data, setStatus, success, error, refresh }) => {
 
-    if (!name || !url || !data ) {
+    if (!name || !url || !data) {
         toast.error(`required ${!name && "name"} ${!url && "url"} ${!data && "data"}`)
     }
 
@@ -24,7 +25,10 @@ const ToastData = ({ name, url, data, setStatus, success, error }) => {
                 if (success) {
                     success(items);
                 }
-                if (setStatus) {     
+                if (refresh) {
+                    refresh()
+                }
+                if (setStatus) {
                     setStatus((a) => ({
                         ...a,
                         addProtected: false,

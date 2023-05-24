@@ -5,6 +5,8 @@ const {
 
 
 window.addEventListener('DOMContentLoaded', () => {
+
+
   const replaceText = (selector, text) => {
     const element = document.getElementById(selector)
     if (element) element.innerText = text
@@ -18,7 +20,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
 contextBridge.exposeInMainWorld("api", {
   invoke: (channel, data) => {
-    let validChannels = ["close", "minimize", "exit-full-screen", "network","createPage", "tryAgain", "notifText", "routesItem", "license-open", "license-close", "ping-window", "message-close", "message-open", "profile-open", "profile-close"]; // list of ipcMain.handle channels you want access in frontend to
+    let validChannels = ["close", "update", "minimize", "dataOS", "exit-full-screen", "network", "createPage", "tryAgain", "notifText", "routesItem", "license-open", "license-close", "ping-window", "message-close", "message-open", "profile-open", "profile-close"]; // list of ipcMain.handle channels you want access in frontend to
     if (validChannels.includes(channel)) {
 
       return ipcRenderer.invoke(channel, data);

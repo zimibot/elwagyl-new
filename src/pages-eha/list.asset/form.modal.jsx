@@ -11,6 +11,7 @@ import { isEmpty } from "radash";
 import { GET_API_EHA } from "../../api/eha/GET";
 import { POST_API } from "../../api/eha/POST";
 import { UPDATE_API } from "../../api/eha/UPDATE";
+import { useState } from "react";
 
 export const FormModal = () => {
     const API = GET_API_EHA.root([
@@ -29,10 +30,17 @@ export const FormModal = () => {
         {
             active: "platformDetail"
         },
+        {
+            active: "getCategoryPlatform",
+        },
+        {
+            active: "getAssetsPlatformName",
+        },
     ])
 
     const { setStatus, status } = GetAndUpdateContext()
-    const { register, handleSubmit, reset, control, setValue, setError, formState: { errors } } = useForm();
+    const [selectPlatform, setSelectPlatform] = useState()
+    const { register, handleSubmit, reset, watch, control, setValue, resetField, setError, formState: { errors } } = useForm();
     const { idAssets } = status
     const {
         fields,
@@ -42,6 +50,8 @@ export const FormModal = () => {
         control,
         name: "platform"
     });
+
+
 
     const onSubmit = async (data) => {
 
@@ -193,7 +203,7 @@ export const FormModal = () => {
                                 // setValue("system_owner_email", email)
                                 setValue("system_owner_id", id)
                                 // setSelectOwner(true)
-                            }} error={errors.existing_system_owner} loading={API.loading} data={API.data.systemOwner?.result.map(d => ({
+                            }} error={errors.existing_system_owner} loading={API.loading} data={API.data.systemOwner?.result?.map(d => ({
                                 label: d.name,
                                 value: d.name
                             }))} control={control} label={"select existing system owner *"} height={45} name={"existing_system_owner"} width={"100%"}></SelectComponent>
@@ -299,27 +309,32 @@ export const FormModal = () => {
                                     {fields.map((d, k) => {
                                         return <div key={d.id} className="flex justify-between gap-4">
                                             <div className="grid grid-cols-4 gap-4 flex-1" >
-                                                {/* <SelectComponent data={[
-                                                    {
-                                                        label: "windows 10",
-                                                        value: "window10"
-                                                    },
-                                                    {
-                                                        label: "windows 11",
-                                                        value: "window11"
-                                                    },
-                                                    {
-                                                        label: "Linux",
-                                                        value: "Linux"
-                                                    },
-                                                ]} height={48} error={errors && errors.platform && errors.platform[k] && errors.platform[k].platform} label={"platform"} name={`platform.${k}.platform`} control={control} width={"100%"}></SelectComponent> */}
-                                                <Form.input register={register(`platform.${k}.categories`)} label={"categories"}></Form.input>
-                                                <Form.input register={register(`platform.${k}.name`)} label={"name"}></Form.input>
+                                                {API.error ? "" : API.loading ? "" : <SelectComponent data={API.data.getCategoryPlatform.result.map(d => ({
+                                                    label: d,
+                                                    value: d
+                                                }))} height={48} onChangeData={(d) => {
+                                                    setSelectPlatform(s => ({ ...s, [`platform-${k}`]: d }))
+                                                    // const getAssetsPlatformName = API.getAssetsPlatformName({
+                                                    //     idPlatform: d,
+                                                    //     page: 1,
+                                                    // });
+
+                                                    resetField(`platform.${k}.name`)
+
+                                                }} error={errors && errors.platform && errors.platform[k] && errors.platform[k].platform} label={"platform"} name={`platform.${k}.platform`} control={control} width={"100%"}></SelectComponent>}
+
+                                                <SelectName API={API} param={selectPlatform ? selectPlatform[`platform-${k}`] : null} id={k} control={control} errors={errors}></SelectName>
                                                 <Form.input register={register(`platform.${k}.port`)} label={"port"}></Form.input>
                                                 <Form.input register={register(`platform.${k}.version`)} label={"version"}></Form.input>
                                             </div>
                                             <div className="flex justify-end items-end">
-                                                <ButtonComponents nonSubmit className="py-4" click={() => remove(k)}>DELETE</ButtonComponents>
+                                                <ButtonComponents nonSubmit className="py-4" click={() => {
+                                                    remove(k)
+                                                    delete selectPlatform[`platform-${k}`]
+                                                    setSelectPlatform(selectPlatform)
+
+
+                                                }}>DELETE</ButtonComponents>
                                             </div>
                                         </div>
                                     })}
@@ -328,7 +343,7 @@ export const FormModal = () => {
                                 <div className="col-span-full flex gap-4">
                                     <div className="flex-1">
                                         <ButtonComponents nonSubmit className="w-full flex items-center justify-center" click={() => {
-                                            append({ categories: "", name: "", port: "", version: "" });
+                                            append({ categories: "", port: "", version: "" });
                                         }}>
                                             <div className="flex items-center gap-4 py-2 px-5">
                                                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -362,13 +377,7 @@ export const FormModal = () => {
                     </div>
                     <div className="flex justify-end gap-4">
                         <div className=" cursor-pointer min-w-[120px] bg-primary py-4 text-center text-red-500" onClick={() => {
-                            ModalSuccess({
-                                title: "are you sure you want to leave this page!", type: "warning", clickOk: () => {
-                                    setTimeout(() => {
-                                        setStatus(d => ({ ...d, ADDASSET: false, idAssets: null }))
-                                    }, 500);
-                                }
-                            })
+                            setStatus(d => ({ ...d, ADDASSET: false, idAssets: null }))
 
                         }}>CANCEL</div>
                         <button type="submit" className=" min-w-[120px] bg-primary py-4">SAVE</button>
@@ -377,4 +386,18 @@ export const FormModal = () => {
             </CardBox>
         </ModalsComponent>
     )
+}
+
+const SelectName = ({ param, errors, control, id, API }) => {
+
+    const getAssetsPlatformName = API.getAssetsPlatformName({
+        idPlatform: param,
+        page: 1,
+    });
+    return <SelectComponent data={!getAssetsPlatformName.data ? [] : getAssetsPlatformName.data.result.map(d => ({
+        label: d.name,
+        value: d.id
+    }))} height={48} error={errors && errors.platform && errors.platform[id] && errors.platform[id].platform} disabled={param ? false : true} placeholder={` ${param ? `Select ${param}` : "Please Select"}`} label={"name"} name={`platform.${id}.name`} control={control} width={"100%"}></SelectComponent>
+
+
 }

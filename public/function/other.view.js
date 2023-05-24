@@ -16,3 +16,5 @@ module.exports = function OtherViewBrowser() {
 
   return viewBrowser
 };
+
+

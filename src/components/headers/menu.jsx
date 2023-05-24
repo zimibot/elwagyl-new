@@ -11,15 +11,16 @@ const MenuItems = () => {
 
     const VALUEMENU = value.VALUEMENU
 
-    useEffect(() => {
+    let keys = document.body.getAttribute("key")
 
-        if (document.body.getAttribute("key")) {
-            let keys = document.body.getAttribute("key")
+    useEffect(() => {
+        if (keys) {
             let menuKey = MENUDATA.findIndex(a => a.key === keys)
             setMenu([MENUDATA[menuKey]])
         }
-    }, [])
+    }, [keys])
 
+    
     const navi = useNavigate()
     const onClick = (e) => {
         let menuKey = MENUDATA.findIndex(a => a.key === e.key)

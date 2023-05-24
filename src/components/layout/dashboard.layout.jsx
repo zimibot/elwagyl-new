@@ -24,9 +24,7 @@ export const LayoutDashboard = ({ children, className = "" }) => {
         };
     }, []);
 
-    return ( <div className={`${locations?.ums ? `flex flex-1 ${className}` : `flex flex-1 flex-col ${className}`}`} onClick={() => {
-        window.api.invoke('message-close') 
-    }}>
+    return ( <div className={`${locations?.ums ? `flex flex-1 ${className}` : `flex flex-1 flex-col ${className}`}`}>
         {statusStep && !ishow &&
             <Steps
                 enabled={!ishow}
