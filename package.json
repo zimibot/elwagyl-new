@@ -1,7 +1,7 @@
 {
   "name": "elwagyl",
   "private": true,
-  "version": "4.1.1",
+  "version": "4.1.5",
   "main": "public/electron.js",
   "description": "This is the base project for the CIC.Bas.Web project also called CIC One - New Technologies",
   "author": "OnePgr, Inc <amsystango@gmail.com>",

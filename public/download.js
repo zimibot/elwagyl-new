@@ -11,7 +11,7 @@ const { app } = require('electron');
 
 let url = "http://157.245.49.164:8080"
 
-module.exports = async function DownloadFIles(msgBtn, window) {
+module.exports = async function DownloadFIles(msgBtn) {
     return new Promise(async function (resolve, reject) {
         // do stuff
         if (true) {
@@ -51,6 +51,7 @@ module.exports = async function DownloadFIles(msgBtn, window) {
 
                 if (get.data.newVersion !== version) {
                     let msg = await errorMsg({ msg: "The latest update is available", btnMsg: msgBtn })
+
                     if (msg === 0) {
 
                         fs.access(updateAvailable, fs.constants.F_OK, async (err) => {

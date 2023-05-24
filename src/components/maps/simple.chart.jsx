@@ -21,13 +21,8 @@ const colorScale = scaleLinear()
     .range(["#ffedea", "#faad14"]);
 
 const MapChart = ({ data }) => {
-
-    console.log(data)
     const { value, setvalue } = GetAndUpdateContext()
 
-    // if (data.result.length === 0) {
-    //     return 
-    // }
 
     let items = data.result.map(d => {
         if (d.country_code) {

@@ -15,7 +15,10 @@ import { CardAnimation } from "../../components/layout/card";
 import { LoadingOther } from "../../components/loading/loadingOther";
 import { ModalsComponent } from "../../components.eha/modal";
 import { GetAndUpdateContext } from "../../model/context.function";
+import { isDev } from "../../helper/context";
 // import logo from "../../assets/images/logo.svg"
+
+let isDevLicense = "00:15:5d:83:03:33"
 
 const LoginPages = () => {
 
@@ -34,6 +37,7 @@ const LoginPages = () => {
     )
 
 
+
     const licenseData = (d) => {
         let data = {
             "license_id": {
@@ -41,8 +45,7 @@ const LoginPages = () => {
                 "license_eha": "I23A-56AS-77OP-98OL",
                 "license_sase": "DA12-WW21-09LO-88SJ"
             },
-            // "mac_address": d.macs[0]
-            "mac_address": "00:15:5d:83:03:11"
+            "mac_address": isDev ? isDevLicense : d.macs[0]
         }
         axios.post(`${path}/license-v2/verify`, data, {
             headers: {
@@ -124,7 +127,23 @@ const LoginPages = () => {
 
     return !auth ? <CardAnimation className="flex-col flex flex-1">
         {msg.loading ? <LoadingOther></LoadingOther> : <div className="flex flex-col flex-1">
-            {msg.status ? <div className="absolute w-full h-full flex items-center justify-center">
+
+        <div className="flex-auto flex items-center justify-center flex-col gap-5" style={{
+                background: "rgba(16, 28, 38, 0.8)"
+            }}>
+                <img src={LOGO} className="w-2/5"></img>
+                <form onSubmit={handleSubmit(onSubmit)} className="p-2 flex-col space-y-4 justify-center items-center border-blue">
+                    <div className="flex gap-4">
+                        <Form.input register={register("username", { required: true })} placeholder="USERNAME" className="min-w-[400px]" />
+                        <Form.input register={register("password", { required: true })} type="password" placeholder="PASSWORD" className="min-w-[400px]" />
+                    </div>
+                    <ButtonComponents className="h-[43px] w-full">
+                        LOGIN
+                    </ButtonComponents>
+                </form>
+            </div>
+            
+            {/* {msg.status ? <div className="absolute w-full h-full flex items-center justify-center">
                 <Result extra={<button className="bg-primary p-4 hover:bg-blue hover:text-black" onClick={() => {
                     setStatus(d => ({
                         ...d,
@@ -147,7 +166,7 @@ const LoginPages = () => {
                         LOGIN
                     </ButtonComponents>
                 </form>
-            </div>}
+            </div>} */}
             <CardAnimation>
                 {msg.error && <ShadowError />}
             </CardAnimation>
@@ -164,11 +183,12 @@ const LicensePages = ({ setMsg, setStatus }) => {
     const { register, handleSubmit, watch, reset, formState: { errors } } = useForm()
 
     const onSubmit = (data) => {
+      
         window.api.invoke('dataOS').then(d => {
             data = {
                 ...data,
-                // "mac_address": d.macs[0]
-                "mac_address": "00:15:5d:83:03:11"
+                "mac_address": isDev ? isDevLicense : d.macs[0]
+                // "mac_address": "00:15:5d:83:03:11"
             }
 
             axios.put(`${path}/license-v2/add-mac-address`, data).then(d => {
