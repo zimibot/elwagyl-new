@@ -30,8 +30,13 @@ export const ListDetail = () => {
                         <ButtonComponents>
                             EXPORT
                         </ButtonComponents> */}
-                         <ButtonComponents>
-                            EXPORT
+                        <ButtonComponents nonSubmit
+                            href="/pdf/reporteha.pdf"
+                            download="reporteha.pdf"
+                            target="_blank"
+                            rel="noreferrer"
+                        >
+                            EXPORT PDF
                         </ButtonComponents>
                         <ButtonComponents click={() => {
                             setStatus(d => ({
@@ -77,6 +82,9 @@ export const ListDetail = () => {
                         title: 'LAST SCAN',
                         key: 'updated_at',
                         rowClass: "w-[200px]",
+                        html: () => {
+                            return "-"
+                        }
                     },
 
                     {
@@ -91,29 +99,44 @@ export const ListDetail = () => {
                         columnClass: "text-center"
                     },
                     {
-                        title: 'CRIT',
+                        title: 'LOW',
                         rowClass: "w-[80px] text-center",
                         columnClass: "text-center",
-                        key: 'critical',
-                    },
-                    {
-                        title: 'HIGH',
-                        rowClass: "w-[80px] text-center",
-                        columnClass: "text-center",
-                        key: 'high',
+                        key: 'low',
+                        html: (d) => {
+                            return d ? d : 0
+                        }
                     },
                     {
                         title: 'MEDIUM',
                         rowClass: "w-[80px] text-center",
                         columnClass: "text-center",
                         key: 'medium',
+                        html: (d) => {
+                            return d ? d : 0
+                        }
                     },
                     {
-                        title: 'LOW',
+                        title: 'HIGH',
                         rowClass: "w-[80px] text-center",
                         columnClass: "text-center",
-                        key: 'low',
+                        key: 'high',
+                        html: (d) => {
+                            return d ? d : 0
+                        }
                     },
+                    {
+                        title: 'CRIT',
+                        rowClass: "w-[80px] text-center",
+                        columnClass: "text-center",
+                        key: 'critical',
+                        html: (d) => {
+                            return d ? d : 0
+                        }
+                    },
+
+
+
                     {
                         title: 'EDIT',
                         key: "id",

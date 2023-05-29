@@ -3,8 +3,6 @@ const path = require('path')
 const url = require('url')
 const isDev = require('electron-is-dev');
 
-const { app } = require("electron")
-
 module.exports = function licensePopup() {
     let LicensePopup = WindowConfig({
         minWidth: 400,

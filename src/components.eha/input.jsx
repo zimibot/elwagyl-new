@@ -1,13 +1,11 @@
 import { CalendarOutlined, ClockCircleOutlined, ExclamationCircleFilled, ExclamationCircleOutlined, EyeFilled, EyeInvisibleFilled, FieldTimeOutlined } from "@ant-design/icons"
-import { DatePicker, Switch, Tag, TimePicker, Timeline, Tooltip } from "antd"
+import { DatePicker, Slider, Switch, Tag, TimePicker, Timeline, Tooltip } from "antd"
 import { useState } from "react"
 import styled from "styled-components"
 import { Dropdown } from 'antd';
 import { Controller } from "react-hook-form";
 import dayjs from 'dayjs';
 import moment from "moment";
-import { SwitchCustom } from "../components/form.input";
-import { SquareMedium } from "../components/decoration/square";
 const { RangePicker } = DatePicker;
 
 
@@ -112,24 +110,36 @@ export const Form = {
     },
     check: ({ text, register, error, classRoot = "", ...props }) => {
         return <Check className={`flex items-center gap-3 relative p-3 cursor-pointer ${error ? "text-red-500" : ""} `}>
-            <Input className="opacity-0 absolute"  type="checkbox" {...register} {...props} />
+            <Input className="opacity-0 absolute" type="checkbox" {...register} {...props} />
             {/* <div className="bg-[#101C26] w-full h-full absolute left-0 top-0 bg-ss"></div> */}
             <div className={`checkmark h-5 w-5  relative border-[2px]  ${error ? "border-red-500" : "border-blue"}`} />
             <span className="relative text-sc uppercase"> {text}</span>
         </Check>
 
     },
-    radio: ({ text, error, register, ...props }) => {
+    radio: ({ name, control, text, error, register, ...props }) => {
         return <Check className={`flex items-center gap-3 relative p-3 cursor-pointer ${error ? "text-red-500" : ""} `}>
-            <Input className="opacity-0 absolute" type="radio" {...register} {...props} />
+            <Controller
+                control={control}
+                name={name}
+                // defaultValue={null}
+                render={({
+                    field: { onChange, onBlur, value, ref },
+                }) => {
+                    console.log(value)
+                    return (
+                        <Input ref={ref} name={name} className="opacity-0 absolute" type="radio" onChange={onChange} onBlur={onBlur} {...props} />
+                    )
+                }}
+            />
             {/* <div className="bg-[#101C26] w-full h-full absolute left-0 top-0 bg-ss"></div> */}
             <div className={`checkmark h-5 w-5  relative border-[2px]  ${error ? "border-red-500" : "border-blue"}`} />
             <span className="relative text-sc top-1 "> {text}</span>
         </Check>
     },
-    switch: ({ error, required = false, control, name, label, nonControl, type, ...props }) => {
+    switch: ({ error, required = false, control, name, label, nonControl, type, onchangeData, ...props }) => {
         if (nonControl) {
-            return <Switch  className="w-full" {...props}  ></Switch>
+            return <Switch className="w-full" {...props}  ></Switch>
         }
         if (!control || !name) {
             return <div className="w-full p-4 h-12 bg-red-500 text-white uppercase">control/name is required </div>
@@ -144,7 +154,44 @@ export const Form = {
                 render={({
                     field: { onChange, value, ref },
                 }) => {
-                    return (<Switch {...props} className="w-full" ref={ref} checked={value} onChange={onChange}></Switch>)
+                    console.log(value)
+                    return (<Switch checkedChildren="ON" unCheckedChildren="OFF" className="w-full" ref={ref} checked={value ? value : false} onChange={(d) => {
+                        onChange(d)
+                        if (onchangeData) {
+                            onchangeData(d)
+                        }
+                    }}></Switch>)
+
+                }}
+            />
+
+        </div>
+    },
+    slider: ({ error, required = false, control, name, label, nonControl, type, marks = {
+        0: 'Low',
+        50: 'Medium',
+        100: "High",
+    }, ...props }) => {
+        if (nonControl) {
+            return <Switch className="w-full" {...props}  ></Switch>
+        }
+        if (!control || !name) {
+            return <div className="w-full p-4 h-12 bg-red-500 text-white uppercase">control/name is required </div>
+        }
+        return <div className="relative">
+            <Controller
+                control={control}
+                name={name}
+                rules={{
+                    required: required
+                }}
+                render={({
+                    field: { onChange, value, ref },
+                }) => {
+                    return (<Slider onChange={onChange} tooltip={(d) => {
+                        console.log(d)
+                        return ""
+                    }} marks={marks} step={null} value={value} ref={ref} />)
 
                 }}
             />

@@ -15,6 +15,8 @@ import { POST_API } from "../../api/eha/POST"
 import { useEffect } from "react"
 import { UPDATE_API } from "../../api/eha/UPDATE"
 import { DELETE_API } from "../../api/eha/DELETE"
+import { GET_API_UMS } from "../../api/ums/GET"
+import { useState } from "react"
 
 export const ListManageScan = () => {
     const api = GET_API_EHA.root([
@@ -136,10 +138,16 @@ export const ListManageScan = () => {
 
 
 const EditAndAdd = (data) => {
-    console.log(data)
     const { setStatus, status } = GetAndUpdateContext()
-    const { register, handleSubmit, control, reset, setValue } = useForm();
+    const elwagylAPi = GET_API_UMS.root(["UserGetRoles", "UserGetUser"])
+
+    console.log(elwagylAPi)
+    const { register, handleSubmit, control, reset, setValue, formState: { errors } } = useForm();
     const onSubmit = data => {
+        data = {
+            ...data,
+            created_by: localStorage.getItem("user")
+        }
         status.getData ? UPDATE_API.updateScanManage(status.getData.id, data, setStatus) : POST_API.addScanManage(data, reset, setStatus)
     };
 
@@ -163,12 +171,23 @@ const EditAndAdd = (data) => {
 
         </TitleContent>
         <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
-            <Form.input register={register("name", { required: true })} label={"Name"} />
+            {/* <Form.input register={register("name", { required: true })} label={"Name"} /> */}
+            <SelectComponent onChangeData={(data) => {
+                let findItem = elwagylAPi.data.UserGetUser.data.find(d => d.username === data)
+                setValue("role", findItem.role.name)
+            }} error={errors.name} control={control} name={"name"} className={"w-full"} width={"100%"} height={"45"} label={"name"}
+                data={elwagylAPi.data.UserGetUser.data ? elwagylAPi.data.UserGetUser.data.map(d => ({
+                    label: d.username,
+                    value: d.username
+                })) : []}
+            ></SelectComponent>
             {/* <Form.input register={register("scanning_tools", { required: true })} label={"Scanning tools"} /> */}
-            <SelectComponent control={control} name={"scanning_tools"} className={"w-full"} width={"100%"} height={"45"} label={"Scanning tools"}
+            <SelectComponent error={errors.scanning_tools} control={control} name={"scanning_tools"} className={"w-full"} width={"100%"} height={"45"} label={"Scanning tools"}
                 data={data.data ? data.data : []}
             ></SelectComponent>
-            <SelectComponent control={control} name={"role"} className={"w-full"} width={"100%"} height={"45"} label={"role"}
+            <Form.input disabled placeholder="Please First Select Name" error={errors.role} register={register("role", { required: true })} label={"role"} />
+
+            {/* <SelectComponent control={control} name={"role"} className={"w-full"} width={"100%"} height={"45"} label={"role"}
                 data={[
                     {
                         value: "admin",
@@ -187,7 +206,7 @@ const EditAndAdd = (data) => {
                         label: "SECURITY ANALYST"
                     },
                 ]}
-            ></SelectComponent>
+            ></SelectComponent> */}
             <SelectComponent control={control} name={"status"} className={"w-full"} width={"100%"} height={"45"} label={"status"}
                 data={[
                     {
@@ -212,7 +231,7 @@ const EditAndAdd = (data) => {
 
 
             {/* <Form.input label={"status"} /> */}
-            <Form.input register={register("created_by", { required: true })} label={"Created By"} />
+            {/* <Form.input register={register("created_by", { required: true })} label={"Created By"} /> */}
             <div className="flex justify-end gap-4">
                 <ButtonComponents>SUBMIT</ButtonComponents>
                 <ButtonComponents nonSubmit className="text-red-500" click={() => {

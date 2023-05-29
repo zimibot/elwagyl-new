@@ -1,76 +1,166 @@
-import { EditFilled } from "@ant-design/icons"
-import { Tooltip } from "antd"
-import { InputCheck } from "../../components.eha/input.check"
+import { DeleteOutlined, EditFilled } from "@ant-design/icons"
+import { Popconfirm, Tooltip } from "antd"
 import { InputNumbers } from "../../components.eha/input.number"
-import { ModalsComponent } from "../../components.eha/modal"
+import { ModalSuccess, ModalsComponent } from "../../components.eha/modal"
 import { SelectComponent } from "../../components.eha/select"
-import { CardBox } from "../../components/layout/card"
+import { CardAnimation, CardBox } from "../../components/layout/card"
 import { LayoutDashboard } from "../../components/layout/dashboard.layout"
 import { TableInline } from "../../components/table"
 import { GetAndUpdateContext } from "../../model/context.function"
+import { GET_API_EHA } from "../../api/eha/GET"
+import { useForm } from "react-hook-form"
+import { useEffect, useState } from "react"
+import { isEmpty } from "radash"
+import { Form } from "../../components.eha/input"
+import { ButtonComponents } from "../../components.eha/button"
+import { POST_API } from "../../api/eha/POST"
+import { Loading } from "../list.maintenance"
+import { TitleContent } from "../../components/layout/title"
+import { UPDATE_API } from "../../api/eha/UPDATE"
+import { DELETE_API } from "../../api/eha/DELETE"
 
 const ProfileIndicator = () => {
-    const { setStatus } = GetAndUpdateContext()
+    const { setStatus, status } = GetAndUpdateContext()
+    const api = GET_API_EHA.root([
+        {
+            active: "assetRiskGroup"
+        },
+        {
+            active: "getAssetsRiskGroupDetail"
+        },
+    ])
+
+    const [riskLevel, setRiskLevel] = useState([
+        {
+            label: "low",
+            value: 20
+        },
+        {
+            label: "medium",
+            value: 40
+        },
+        {
+            label: "high",
+            value: 60
+        },
+    ])
+    const [show, setshow] = useState(false)
+    const { reset, handleSubmit, control, setValue, resetField, formState: { errors } } = useForm()
+
+    useEffect(() => {
+        if (!isEmpty(errors)) {
+            ModalSuccess({ type: "error", onlyShowOk: true, title: "Please  completing all the inputs ." })
+        }
+    }, [errors])
+
+
+    const onSubmit = (a) => {
+        setStatus(d => ({
+            ...d,
+            stateData: a,
+            resetForm: reset,
+            SAVEMODAL: !d["SAVEMODAL"]
+        }))
+    }
 
     return <LayoutDashboard>
-        <div className="grid grid-cols-5 col-span-full text-[16px] bg-[#101C26] gap-6">
-            <div className="col-span-2 flex flex-col border-r border-primary py-4">
+        <CardAnimation className="grid grid-cols-5 col-span-full text-[16px] bg-[#101C26] gap-6">
+            <div className={`${show ? "col-span-2" : " col-span-full"} flex flex-col border-r border-primary py-4`}>
                 <CardBox className={"flex-1 pb-9"}>
-                    <div className="flex items-center justify-between">
-                        <div>
-                            ASSET GROUP
+                    <TitleContent subTitle={false}>
+                        <div className="flex items-center justify-between w-full">
+                            <div>
+                                ASSET GROUP
+                            </div>
+                            <ButtonComponents click={() => {
+                                setshow(true)
+                                setStatus(d => ({
+                                    ...d,
+                                    dataSave: null
+                                }))
+                                reset()
+                                if (status.resetData) {
+                                    status.resetData()
+                                }
+                            }}>[ + ] ADD PROFILE</ButtonComponents>
                         </div>
-                        <button className="flex justify-center items-center relative">
-                            <span className="absolute">( + ) ADD PROFILE</span>
-                            <svg width="135" height="26" viewBox="0 0 135 26" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <rect width="135" height="26" fill="#152A36" />
-                                <path d="M5 0.5H0.5V5" stroke="#00D8FF" />
-                                <path d="M5 25.5H0.5V21" stroke="#00D8FF" />
-                                <path d="M134.5 5L134.5 0.5L130.5 0.5" stroke="#00D8FF" />
-                                <path d="M134.5 21L134.5 25.5L130 25.5" stroke="#00D8FF" />
-                            </svg>
-
-                        </button>
-                    </div>
-                    <TableInline
+                    </TitleContent>
+                    {api.error ? "" : api.loading ? <Loading></Loading> : <TableInline
                         border
                         hoverDisable
-                        paggination={true}
                         columns={
                             [
                                 {
                                     title: 'EDIT',
-                                    key: 'edit',
-                                    rowClass: 'w-[50px]',
-                                    html: () => {
-                                        return <Tooltip title="EDIT">
+                                    key: 'id',
+                                    rowClass: 'w-[50px] text-center',
+                                    columnClass: "w-[50px] text-center",
+                                    html: (id) => {
+                                        return <button onClick={async () => {
+                                            setshow(true)
+                                            let data = await api.getAssetsRiskGroupDetail({ idAssets: id })
+                                            let result = data.items.result
+                                            setStatus(d => ({
+                                                ...d,
+                                                dataSave: result
+                                            }))
+                                            for (const key in result) {
+                                                setValue(key, result[key])
+                                            }
+
+                                        }}>
+                                            <EditFilled></EditFilled>
+                                        </button>
+                                    }
+                                },
+                                {
+                                    title: 'DELETE',
+                                    key: 'id',
+                                    rowClass: 'w-[50px] text-center',
+                                    columnClass: "w-[50px] text-center",
+                                    html: (id, full) => {
+                                        return <Popconfirm onConfirm={() => {
+                                            let data = {
+                                                id: id,
+                                                site_name: full.name
+                                            }
+                                            DELETE_API.deleteAssetsGroup(data, api.data.assetRiskGroup.refetch)
+                                        }} placement="right" title="Do you wish to delete this data?">
                                             <button>
-                                                <EditFilled></EditFilled>
+                                                <DeleteOutlined></DeleteOutlined>
                                             </button>
-                                        </Tooltip>
+                                        </Popconfirm>
                                     }
                                 },
                                 {
                                     title: 'NAME',
                                     key: 'name',
+                                    rowClass: 'w-[230px]',
+                                    columnClass: "w-[230px]",
                                 },
                                 {
                                     title: 'DESCRIPTION',
                                     key: 'description',
+                                    html: (d) => {
+                                        return d ? d : "-"
+                                    }
                                 },
                                 {
                                     title: 'RISK',
-                                    key: 'risk',
+                                    key: 'risk_level',
+                                    rowClass: 'w-[100px] text-center',
+                                    columnClass: "w-[100px] text-center",
                                 },
 
                             ]
                         }
                         data={
-                            new Array(20).fill({
-                                name: "DEFAULT RISK PROFILE",
-                                description: "Default risk profile (no DEADLINE ADJUSTMENT)",
-                                risk: "medium"
-                            })
+                            api.data.assetRiskGroup.result
+                            // new Array(20).fill({
+                            //     name: "DEFAULT RISK PROFILE",
+                            //     description: "Default risk profile (no DEADLINE ADJUSTMENT)",
+                            //     risk_level: "medium"
+                            // })
                         }
                         style={{
                             row: {
@@ -79,59 +169,78 @@ const ProfileIndicator = () => {
                             columns: {
                                 fontSize: "16px"
                             }
-                        }}></TableInline>
+                        }}></TableInline>}
+
                 </CardBox>
             </div>
-            <div className="col-span-3 border-l border-primary">
+
+            {show && <form onSubmit={handleSubmit(onSubmit)} className="border-l col-span-3 border-primary">
                 <CardBox className={" mx-[-13px]"}>
                     <div>
+
                         <div className="space-y-6 px-4 py-4 border-b border-primary">
-                            <div>RISK PROFILE</div>
-                            <div>
-                                <b>LOW VULNERABILITY RISK LEVEL</b>
+                            <div>{!status.dataSave ? "ADD RISK PROFILE" : "EDIT RISK PROFILE"}</div>
+                            <div >
+                                <b>REMEDIATION DEADLINE ADJUSTMENT</b>
+                            </div>
+                        </div>
+
+                        <div className="px-4 py-6 border-b border-primary">
+                            <div className="grid grid-cols-3 gap-8">
+                                {riskLevel.map((d, k) => {
+                                    return <div key={`z${k}`} className="grid grid-cols-2 items-center uppercase">
+                                        <div>
+                                            {d.label} ASSET GROUP
+                                            <br></br>
+                                            RISK SCORE
+                                        </div>
+                                        <div className="space-y-2">
+                                            <p>RISK LEVEL</p>
+                                            <div>
+                                                <InputNumbers error={errors.remediation_deadline_adjustment_configs && errors.remediation_deadline_adjustment_configs[d.label]} control={control} name={`remediation_deadline_adjustment_configs.${d.label}`} onChangeData={(c) => {
+
+                                                    const index = riskLevel.findIndex((item) => item.label === d.label);
+                                                    resetField(`low_vulnerability_risk_level_configs.${d.label}`)
+                                                    resetField(`medium_vulnerability_risk_level_configs.${d.label}`)
+                                                    resetField(`high_vulnerability_risk_level_configs.${d.label}`)
+                                                    resetField(`critical_vulnerability_risk_level_configs.${d.label}`)
+                                                    if (index !== -1) {
+
+                                                        const updatedRiskLevel = [...riskLevel];
+                                                        updatedRiskLevel[index] = { ...updatedRiskLevel[index], value: c };
+                                                        setRiskLevel(updatedRiskLevel);
+                                                    }
+
+                                                }}></InputNumbers>
+                                            </div>
+                                        </div>
+                                    </div>
+                                })}
+
                             </div>
                         </div>
                         <div className="px-4 py-6 border-b border-primary">
+                            <b>LOW VULNERABILITY RISK LEVEL</b>
+                        </div>
+                        <div className="px-4 py-6 border-b border-primary">
                             <div className="grid grid-cols-3 gap-8">
-                                <div className="grid grid-cols-2 items-center">
-                                    <div>
-                                        LOW ASSET GROUP
-                                        <br></br>
-                                        RISK SCORE
-                                    </div>
-                                    <div className="space-y-2">
-                                        <p>RISK LEVEL</p>
+                                {riskLevel.map((d, k) => {
+                                    return <div key={`s${k}`} className="grid grid-cols-2 items-center uppercase">
                                         <div>
-                                            <SelectComponent width={"100%"}></SelectComponent>
+                                            {d.label} ASSET GROUP
+                                            <br></br>
+                                            RISK SCORE
+                                        </div>
+                                        <div className="space-y-2">
+                                            <p>RISK LEVEL</p>
+                                            <div>
+                                                <SelectComponent error={errors.low_vulnerability_risk_level_configs && errors.low_vulnerability_risk_level_configs[d.label]} data={riskLevel} control={control} name={`low_vulnerability_risk_level_configs.${d.label}`} width={"100%"}></SelectComponent>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div className="grid grid-cols-2 items-center">
-                                    <div className=" text-yellow-400">
-                                        MEDIUM ASSET
-                                        <br></br>
-                                        GROUP RISK SCORE
-                                    </div>
-                                    <div className="space-y-2">
-                                        <p>RISK LEVEL</p>
-                                        <div>
-                                            <SelectComponent width={"100%"}></SelectComponent>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="grid grid-cols-2 items-center">
-                                    <div className=" text-red-400">
-                                        HIGH ASSET
-                                        <br></br>
-                                        GROUP RISK SCORE
-                                    </div>
-                                    <div className="space-y-2">
-                                        <p>RISK LEVEL</p>
-                                        <div>
-                                            <SelectComponent width={"100%"}></SelectComponent>
-                                        </div>
-                                    </div>
-                                </div>
+
+                                })}
+
                             </div>
                         </div>
                         <div className="px-4 py-6 border-b border-primary">
@@ -139,45 +248,22 @@ const ProfileIndicator = () => {
                         </div>
                         <div className="px-4 py-6 border-b border-primary">
                             <div className="grid grid-cols-3 gap-8">
-                                <div className="grid grid-cols-2 items-center">
-                                    <div>
-                                        LOW ASSET GROUP
-                                        <br></br>
-                                        RISK SCORE
-                                    </div>
-                                    <div className="space-y-2">
-                                        <p>RISK LEVEL</p>
+                                {riskLevel.map((d, k) => {
+                                    return <div key={`a${k}`} className="grid grid-cols-2 items-center uppercase">
                                         <div>
-                                            <SelectComponent width={"100%"}></SelectComponent>
+                                            {d.label} ASSET GROUP
+                                            <br></br>
+                                            RISK SCORE
+                                        </div>
+                                        <div className="space-y-2">
+                                            <p>RISK LEVEL</p>
+                                            <div>
+                                                <SelectComponent error={errors.medium_vulnerability_risk_level_configs && errors.medium_vulnerability_risk_level_configs[d.label]} data={riskLevel} control={control} name={`medium_vulnerability_risk_level_configs.${d.label}`} width={"100%"}></SelectComponent>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div className="grid grid-cols-2 items-center">
-                                    <div className=" text-yellow-400">
-                                        MEDIUM ASSET
-                                        <br></br>
-                                        GROUP RISK SCORE
-                                    </div>
-                                    <div className="space-y-2">
-                                        <p>RISK LEVEL</p>
-                                        <div>
-                                            <SelectComponent width={"100%"}></SelectComponent>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="grid grid-cols-2 items-center">
-                                    <div className=" text-red-400">
-                                        HIGH ASSET
-                                        <br></br>
-                                        GROUP RISK SCORE
-                                    </div>
-                                    <div className="space-y-2">
-                                        <p>RISK LEVEL</p>
-                                        <div>
-                                            <SelectComponent width={"100%"}></SelectComponent>
-                                        </div>
-                                    </div>
-                                </div>
+
+                                })}
                             </div>
                         </div>
                         <div className="px-4 py-6 border-b border-primary">
@@ -185,45 +271,22 @@ const ProfileIndicator = () => {
                         </div>
                         <div className="px-4 py-6 border-b border-primary">
                             <div className="grid grid-cols-3 gap-8">
-                                <div className="grid grid-cols-2 items-center">
-                                    <div>
-                                        LOW ASSET GROUP
-                                        <br></br>
-                                        RISK SCORE
-                                    </div>
-                                    <div className="space-y-2">
-                                        <p>RISK LEVEL</p>
+                                {riskLevel.map((d, k) => {
+                                    return <div key={`e${k}`} className="grid grid-cols-2 items-center uppercase">
                                         <div>
-                                            <SelectComponent width={"100%"}></SelectComponent>
+                                            {d.label} ASSET GROUP
+                                            <br></br>
+                                            RISK SCORE
+                                        </div>
+                                        <div className="space-y-2">
+                                            <p>RISK LEVEL</p>
+                                            <div>
+                                                <SelectComponent error={errors.high_vulnerability_risk_level_configs && errors.high_vulnerability_risk_level_configs[d.label]} data={riskLevel} control={control} name={`high_vulnerability_risk_level_configs.${d.label}`} width={"100%"}></SelectComponent>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div className="grid grid-cols-2 items-center">
-                                    <div className=" text-yellow-400">
-                                        MEDIUM ASSET
-                                        <br></br>
-                                        GROUP RISK SCORE
-                                    </div>
-                                    <div className="space-y-2">
-                                        <p>RISK LEVEL</p>
-                                        <div>
-                                            <SelectComponent width={"100%"}></SelectComponent>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="grid grid-cols-2 items-center">
-                                    <div className=" text-red-400">
-                                        HIGH ASSET
-                                        <br></br>
-                                        GROUP RISK SCORE
-                                    </div>
-                                    <div className="space-y-2">
-                                        <p>RISK LEVEL</p>
-                                        <div>
-                                            <SelectComponent width={"100%"}></SelectComponent>
-                                        </div>
-                                    </div>
-                                </div>
+
+                                })}
                             </div>
                         </div>
                         <div className="px-4 py-6 border-b border-primary">
@@ -231,118 +294,107 @@ const ProfileIndicator = () => {
                         </div>
                         <div className="px-4 py-6 border-b border-primary">
                             <div className="grid grid-cols-3 gap-8">
-                                <div className="grid grid-cols-2 items-center">
-                                    <div>
-                                        LOW ASSET GROUP
-                                        <br></br>
-                                        RISK SCORE
-                                    </div>
-                                    <div className="space-y-2">
-                                        <p>RISK LEVEL</p>
+                                {riskLevel.map((d, k) => {
+                                    return <div key={`t${k}`} className="grid grid-cols-2 items-center uppercase">
                                         <div>
-                                            <SelectComponent width={"100%"}></SelectComponent>
+                                            {d.label} ASSET GROUP
+                                            <br></br>
+                                            RISK SCORE
+                                        </div>
+                                        <div className="space-y-2">
+                                            <p>RISK LEVEL</p>
+                                            <div>
+                                                <SelectComponent error={errors.critical_vulnerability_risk_level_configs && errors.critical_vulnerability_risk_level_configs[d.label]} data={riskLevel} control={control} name={`critical_vulnerability_risk_level_configs.${d.label}`} width={"100%"}></SelectComponent>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div className="grid grid-cols-2 items-center">
-                                    <div className=" text-yellow-400">
-                                        MEDIUM ASSET
-                                        <br></br>
-                                        GROUP RISK SCORE
-                                    </div>
-                                    <div className="space-y-2">
-                                        <p>RISK LEVEL</p>
-                                        <div>
-                                            <SelectComponent width={"100%"}></SelectComponent>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="grid grid-cols-2 items-center">
-                                    <div className=" text-red-400">
-                                        HIGH ASSET
-                                        <br></br>
-                                        GROUP RISK SCORE
-                                    </div>
-                                    <div className="space-y-2">
-                                        <p>RISK LEVEL</p>
-                                        <div>
-                                            <SelectComponent width={"100%"}></SelectComponent>
-                                        </div>
-                                    </div>
-                                </div>
+
+                                })}
                             </div>
                         </div>
-                        <div className="px-4 py-6 border-b border-primary">
-                            <b>REMEDIATION DEADLINE ADJUSTMENT</b>
-                        </div>
-                        <div className="px-4 py-6">
-                            <div className="grid grid-cols-3 gap-8">
-                                <div className="grid grid-cols-2 items-center">
-                                    <div>
-                                        LOW ASSET GROUP
-                                        <br></br>
-                                        RISK SCORE
-                                    </div>
-                                    <div className="space-y-2">
-                                        <p>RISK LEVEL</p>
-                                        <div>
-                                            <InputNumbers></InputNumbers>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="grid grid-cols-2 items-center">
-                                    <div className=" text-yellow-400">
-                                        MEDIUM ASSET
-                                        <br></br>
-                                        GROUP RISK SCORE
-                                    </div>
-                                    <div className="space-y-2">
-                                        <p>RISK LEVEL</p>
-                                        <div>
-                                            <InputNumbers></InputNumbers>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="grid grid-cols-2 items-center">
-                                    <div className=" text-red-400">
-                                        HIGH ASSET
-                                        <br></br>
-                                        GROUP RISK SCORE
-                                    </div>
-                                    <div className="space-y-2">
-                                        <p>RISK LEVEL</p>
-                                        <div>
-                                            <InputNumbers></InputNumbers>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="flex justify-end p-4">
-                            <button className="bg-primary w-[150px] py-6"
-                                onClick={() => {
-                                    setStatus(d => ({
-                                        ...d,
-                                        SAVEMODAL: !d["SAVEMODAL"]
-                                    }))
-                                }}>SAVE</button>
+
+                        <div className="flex justify-end p-4 gap-4">
+                            <div className="bg-primary w-[150px] py-6 text-center text-red-500 cursor-pointer" onClick={() => {
+                                setshow(false)
+                                reset()
+                                if (status.resetData) {
+                                    status.resetData()
+                                }
+                            }}>CANCEL</div>
+                            <button className="bg-primary w-[150px] py-6">SAVE</button>
                         </div>
                     </div>
                 </CardBox>
-            </div>
-        </div>
-        <ModalsComponent modalName={"SAVEMODAL"}>
-            <div> HOW WOULD YOU LIKE TO ENTER THE RISK SCORE FOR THE NEW ASSET RISK GROUP ?</div>
-            <div className="space-y-4">
-                <div>
-                    <InputCheck text="HOW WOULD YOU LIKE TO ENTER THE RISK SCORE FOR THE NEW ASSET RISK GROUP ?"></InputCheck>
-                </div>
-                <div>
-                    <InputCheck text={"ENTERED MANUALLY"}></InputCheck>
-                </div>
-            </div>
-        </ModalsComponent>
+            </form>}
+        </CardAnimation>
+        <ModalAssetsGroup refresh={api.data.assetRiskGroup}></ModalAssetsGroup>
     </LayoutDashboard>
 }
 
 export default ProfileIndicator
+
+const ModalAssetsGroup = ({ refresh }) => {
+    const { status, setStatus } = GetAndUpdateContext()
+    const { register, control, reset, setValue, handleSubmit, formState: { errors } } = useForm({
+        defaultValues: {
+            risk_level: 0
+        }
+    })
+
+    useEffect(() => {
+
+        if (status.dataSave) {
+            let data = status.dataSave
+            for (const key in data) {
+                if (key === "risk_level") {
+                    setValue(key, data[key] === "low" ? 0 : data[key] === "medium" ? 50 : 100)
+                } else {
+                    setValue(key, data[key])
+                }
+            }
+            setStatus(d => ({
+                ...d,
+                resetData: reset
+            }))
+        }
+
+    }, [status.dataSave])
+
+    const onSubmit = (d) => {
+        d = {
+            ...status.stateData,
+            ...d,
+            created_by: localStorage.getItem("user"),
+            risk_level: d.risk_level === 0 ? "low" : d.risk_level === 50 ? "medium" : "high",
+            updated_by: localStorage.getItem("user")
+        }
+
+
+        const success = () => {
+            status.resetForm()
+
+        }
+        if (status.dataSave) {
+            let id = status.dataSave.id
+            UPDATE_API.updateRiskGroup(id, d, refresh.refetch)
+        } else {
+            POST_API.addRiskGroup(d, reset, refresh.refetch, success)
+        }
+
+
+    }
+    return (
+        <ModalsComponent title={"ASSET RISK GROUP"} modalName={"SAVEMODAL"}>
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                <Form.input error={errors.name} register={register("name", { required: true })} label={"Assets risk group name"} />
+                <Form.texarea register={register("description")} label={"Description"} />
+                <div className="px-4 py-2">
+                    <Form.slider name={"risk_level"} control={control}></Form.slider>
+                </div>
+                <div className="flex justify-end">
+                    <ButtonComponents className="h-[45px]">SAVE</ButtonComponents>
+                </div>
+            </form>
+        </ModalsComponent>
+    )
+}

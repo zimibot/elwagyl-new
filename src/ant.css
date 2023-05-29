@@ -698,3 +698,22 @@ span.ant-menu-title-content {
 .ant-empty-description {
   color: #00a8cc!important;
 }
+.ant-descriptions-title {
+  font-size: 22px!important;
+  color: #00d8ff!important;
+}
+
+.ant-descriptions.ant-descriptions-bordered .ant-descriptions-item-label {
+  background: #152a3680;
+}
+
+.ant-slider-mark-text {
+  background: #152a36;
+  padding: 5px 10px;
+  margin-top: 5px;
+  color: white!important;
+}
+
+.ant-slider .ant-slider-track {
+  background: #00d8ff;
+}

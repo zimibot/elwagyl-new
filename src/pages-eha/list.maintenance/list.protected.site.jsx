@@ -24,6 +24,8 @@ export const ListProtectedSite = () => {
             active: "protectedSiteDetail"
         }
     ])
+
+    
     const { setStatus } = GetAndUpdateContext()
 
 
@@ -56,13 +58,18 @@ const EditAndAdd = ({ name }) => {
     });
 
     const submit = (data) => {
+        data = {
+            ...data,
+            created_by: localStorage.getItem("user")
+        }
+
         !status.getData ? POST_API.addProtectedSite(data, reset, setStatus) : UPDATE_API.updateProtectedSite(status.getData.id, data, setStatus)
     }
 
     useEffect(() => {
         if (status.getData) {
             setValue("site_name", status.getData.site_name)
-            setValue("created_by", status.getData.created_by)
+            // setValue("created_by", status.getData.created_by)
         } else {
             reset()
         }
@@ -74,7 +81,7 @@ const EditAndAdd = ({ name }) => {
         </TitleContent>
         <form className="flex gap-4 flex-col" onSubmit={handleSubmit(submit)}>
             <Form.input register={register("site_name", { required: true })} label={"site name"} placeholder="Fill in this input..." />
-            <Form.input register={register("created_by", { required: true })} label={"created by"} placeholder="Fill in this input..." />
+            {/* <Form.input register={register("created_by", { required: true })} label={"created by"} placeholder="Fill in this input..." /> */}
             <div className="flex justify-end gap-4">
                 <ButtonComponents className="py-4">SUBMIT</ButtonComponents>
                 <ButtonComponents nonSubmit className="py-4 text-red-500 hover:bg-red-500" click={() => {

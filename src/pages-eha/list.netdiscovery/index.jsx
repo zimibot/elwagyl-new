@@ -5,8 +5,42 @@ import { LayoutDashboard } from "../../components/layout/dashboard.layout"
 import { TitleContent } from "../../components/layout/title"
 import { useNavigate } from "react-router-dom"
 import { TableInline } from "../../components/table"
+import { ModalsComponent } from "../../components.eha/modal"
+import { GetAndUpdateContext } from "../../model/context.function"
+import { Form } from "../../components.eha/input"
+import { SelectComponent } from "../../components.eha/select"
+import { useForm } from "react-hook-form"
+
+const ModalDiscovery = () => {
+    const { setStatus } = GetAndUpdateContext()
+
+    const { register, reset, setValue, control, handleSubmit, formState: { errors } } = useForm()
+    const onSubmit = () => {
+
+    }
+    return <ModalsComponent title={"new discovery scan"} modalName={"modalDiscovery"}>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            <SelectComponent width={"100%"} height={45} control={control} name={"type"} label={"TYPE"}></SelectComponent>
+            <SelectComponent width={"100%"} height={45} control={control} name={"target"} label={"target"}></SelectComponent>
+            <SelectComponent width={"100%"} height={45} control={control} name={"protected"} label={"PROTECTED SITE"}></SelectComponent>
+            <SelectComponent width={"100%"} height={45} control={control} name={"scanning_tools"} label={"SCANNING TOOL"}></SelectComponent>
+            <SelectComponent width={"100%"} height={45} control={control} name={"scanning_profile"} label={"SCANNING PROFILE"}></SelectComponent>
+            <Form.check text={"START SCAN NOW"}></Form.check>
+            <div className="flex justify-end gap-4">
+                <ButtonComponents nonSubmit click={() => {
+                    setStatus(d => ({
+                        ...d,
+                        modalDiscovery: false,
+                    }))
+                }} className="py-4 text-red-500">cancel</ButtonComponents>
+                <ButtonComponents className="py-4">SUBMIT</ButtonComponents>
+            </div>
+        </form>
+    </ModalsComponent>
+}
 
 export const NetDiscovery = () => {
+    const { setStatus } = GetAndUpdateContext()
     const prevPage = useNavigate()
     return <LayoutDashboard className="bg-[#101C26] text-[16px]">
         <div className="col-span-full space-y-4 flex flex-col">
@@ -20,11 +54,10 @@ export const NetDiscovery = () => {
                     </div>
                     <div className="space-x-4 flex">
                         <ButtonComponents click={() => {
-                            // setStatus(d => ({
-                            //     ...d,
-                            //     ADDASSET: !d.ADDASSET,
-                            //     idAssets: null
-                            // }))
+                            setStatus(d => ({
+                                ...d,
+                                modalDiscovery: !d.ADDASSET,
+                            }))
                         }}>
                             [ + ] ADD
                         </ButtonComponents>
@@ -34,8 +67,6 @@ export const NetDiscovery = () => {
 
             </CardBox>
             <CardBox className={"flex-1"}>
-
-
                 <div className="flex-1 flex flex-col">
                     <div className="grid grid-cols-2 flex-1 gap-4">
                         <div className="flex flex-1 flex-col p-4 border border-border_second gap-4">
@@ -44,7 +75,7 @@ export const NetDiscovery = () => {
                                     <div className="text-[24px] uppercase text-blue">NETWORK DISCOVERY</div>
                                 </div>
                             </TitleContent>
-                            <TableInline border hoverDisable paggination data={new Array(20).fill({
+                            <TableInline border hoverDisable data={new Array(0).fill({
                                 target: "192.168.1.1",
                                 status: "Completed",
                                 scheduled: "2023-09-23 5:21pm",
@@ -79,7 +110,7 @@ export const NetDiscovery = () => {
                                     <div className="text-[24px] uppercase text-blue">PORT SCANS</div>
                                 </div>
                             </TitleContent>
-                            <TableInline border hoverDisable paggination data={new Array(20).fill({
+                            <TableInline border hoverDisable data={new Array(0).fill({
                                 target: "192.168.1.1",
                                 date: "2023-09-23 5:21pm",
                                 protected: "SITE A",
@@ -107,5 +138,6 @@ export const NetDiscovery = () => {
                 </div>
             </CardBox>
         </div>
+        <ModalDiscovery></ModalDiscovery>
     </LayoutDashboard>
 }

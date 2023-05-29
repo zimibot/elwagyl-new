@@ -75,71 +75,8 @@ const STEPBYSTEP = [
 
 const MENUDATA = [
     {
-        label: 'CYBER DECK',
-        key: '/dashboard',
-        icon: <div className="absolute w-full h-full left-0 top-0">
-            <div className="absolute top-0 block px-1 !text-lg left-0" style={{
-                color: "rgba(0, 216, 255, 0.3)"
-            }}>01</div>
-            <div className="absolute left-[-3px]">
-                <svg width="6" height="19" viewBox="0 0 6 19" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M0 3L3 0V19L0 16V3Z" fill="#101C26" />
-                    <path d="M6 3L3 0V19L6 16V3Z" fill="#101C26" />
-                </svg>
-            </div>
-
-        </div>
-    },
-    {
-        label: 'EXECUTIVE',
-        key: '/dashboard/executive',
-        icon: <div className="absolute w-full h-full left-0 top-0">
-            <div className="absolute top-0 block px-1 !text-lg left-0" style={{
-                color: "rgba(0, 216, 255, 0.3)"
-            }}>02</div>
-            <div className="absolute left-[-3px]">
-                <svg width="6" height="19" viewBox="0 0 6 19" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M0 3L3 0V19L0 16V3Z" fill="#101C26" />
-                    <path d="M6 3L3 0V19L6 16V3Z" fill="#101C26" />
-                </svg>
-            </div>
-        </div>
-    },
-    {
-        label: 'AVAILABILITY',
-        key: '/dashboard/availability',
-        icon: <div className="absolute w-full h-full left-0 top-0">
-            <div className="absolute top-0 block px-1 !text-lg left-0" style={{
-                color: "rgba(0, 216, 255, 0.3)"
-            }}>03</div>
-
-            <div className="absolute left-[-3px]">
-                <svg width="6" height="19" viewBox="0 0 6 19" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M0 3L3 0V19L0 16V3Z" fill="#101C26" />
-                    <path d="M6 3L3 0V19L6 16V3Z" fill="#101C26" />
-                </svg>
-            </div>
-        </div>
-    },
-    {
-        label: 'THREATS MAP',
-        key: '/dashboard/threats-maps',
-        icon: <div className="absolute w-full h-full left-0 top-0">
-            <div className="absolute top-0 block px-1 !text-lg left-0" style={{
-                color: "rgba(0, 216, 255, 0.3)"
-            }}>04</div>
-
-            <div className="absolute left-[-3px]">
-                <svg width="6" height="19" viewBox="0 0 6 19" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M0 3L3 0V19L0 16V3Z" fill="#101C26" />
-                    <path d="M6 3L3 0V19L6 16V3Z" fill="#101C26" />
-                </svg>
-            </div>
-        </div>
-    },
-    {
         label: 'SOAR',
-        key: '/dashboard/soar',
+        key: '/elwagyl/soar',
         url: "https://10.22.24.2/#/login ",
         icon: <div className="absolute w-full h-full left-0 top-0">
             <div className="absolute top-0 block px-1 !text-lg left-0" style={{
@@ -156,7 +93,7 @@ const MENUDATA = [
     },
     {
         label: 'XDR',
-        key: '/dashboard/xdr',
+        key: '/elwagyl/xdr',
         url: "https://sockari.xdr.sg.paloaltonetworks.com",
         icon: <div className="absolute w-full h-full left-0 top-0">
             <div className="absolute top-0 block px-1 !text-lg left-0" style={{
@@ -173,7 +110,7 @@ const MENUDATA = [
     },
     {
         label: 'FIREWALL',
-        key: '/dashboard/firewall',
+        key: '/elwagyl/firewall',
         url: "https://10.22.24.4/php/login.php",
         icon: <div className="absolute w-full h-full left-0 top-0">
             <div className="absolute top-0 block px-1 !text-lg left-0" style={{
@@ -190,29 +127,13 @@ const MENUDATA = [
     },
     {
         label: 'SASE',
-        key: '/dashboard/sase',
+        key: '/elwagyl/sase',
         // url: "https://colorlib.com/etc/404/colorlib-error-404-6/",
         url: "https://sase.paloaltonetworks.com",
         icon: <div className="absolute w-full h-full left-0 top-0">
             <div className="absolute top-0 block px-1 !text-lg left-0" style={{
                 color: "rgba(0, 216, 255, 0.3)"
             }}>08</div>
-
-            <div className="absolute left-[-3px]">
-                <svg width="6" height="19" viewBox="0 0 6 19" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M0 3L3 0V19L0 16V3Z" fill="#101C26" />
-                    <path d="M6 3L3 0V19L6 16V3Z" fill="#101C26" />
-                </svg>
-            </div>
-        </div>
-    },
-    {
-        label: 'EHA',
-        key: '/eha',
-        icon: <div className="absolute w-full h-full left-0 top-0">
-            <div className="absolute top-0 block px-1 !text-lg left-0" style={{
-                color: "rgba(0, 216, 255, 0.3)"
-            }}>09</div>
 
             <div className="absolute left-[-3px]">
                 <svg width="6" height="19" viewBox="0 0 6 19" fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -63,6 +63,15 @@ export const POST_API = {
             setStatus,
             refresh
         }),
+    addRiskGroup: (data, reset, refresh, success) =>
+        ToastData({
+            name: "RISK GROUP",
+            url: `${path}/api/asset-risk-groups`,
+            data,
+            reset,
+            refresh,
+            success
+        }),
 };
 
 

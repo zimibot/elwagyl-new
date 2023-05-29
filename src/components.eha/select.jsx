@@ -2,8 +2,8 @@ import { Select, Tooltip } from "antd"
 import { SquareMedium } from "../components/decoration/square"
 import styled from "styled-components"
 import { Controller } from "react-hook-form";
-import { DeleteFilled, DeleteOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
-import { isArray, sift } from "radash";
+import { DeleteFilled, ExclamationCircleOutlined } from "@ant-design/icons";
+import { isArray } from "radash";
 
 const Selecable = styled(Select)`
     .ant-select-selector {
@@ -67,12 +67,11 @@ export const SelectComponent = ({ onDelete, button, ClassLabel, ClassButton, req
 
     let items = data.map(d => ({
         ...d,
-        label: <div className="flex justify-between items-center">
+        label: <div className="flex justify-between items-center" data={d.label}>
             <div className="flex items-center gap-2">
                 {props.mode !== "multiple" && props.mode !== "tag" && <img src="./cube.svg"></img>}
                 {d.label}
             </div>
-            {/* {onDelete && <button onClick={() => onDelete(d)}><DeleteOutlined></DeleteOutlined></button>} */}
         </div>
     })) || [];
 
@@ -104,7 +103,7 @@ export const SelectComponent = ({ onDelete, button, ClassLabel, ClassButton, req
                             className={className ? className : ""}
                             showSearch={false}
                             placeholder="please Select"
-                            
+
                             allowClear
                             clearIcon={<DeleteFilled></DeleteFilled>}
                             style={{
@@ -117,9 +116,9 @@ export const SelectComponent = ({ onDelete, button, ClassLabel, ClassButton, req
                             }}
 
                             showArrow={error ? false : true}
-                            onChange={d => {
+                            onChange={(d, w) => {
                                 if (onChangeData) {
-                                    onChangeData(d)
+                                    onChangeData(d, w)
                                 }
 
                                 if (isArray(d)) {

@@ -1,4 +1,4 @@
-import { Tabs } from 'antd';
+import { Empty, Tabs } from 'antd';
 import { DatePicker } from 'antd';
 import { DefaultLimitText } from '../limitText';
 
@@ -12,7 +12,10 @@ const items = [
         key: '1',
         label: `TODAY`,
         children: <div>
-            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((d,k) => {
+            <div className="py-8 text-blue flex justify-center items-center">
+                <Empty></Empty>
+            </div>
+            {/* {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((d,k) => {
                 return <div key={d} className="p-6 border-b !border-primary text-blue text-[16px] space-y-2 fadein2sc opacity-0" style={{
                     animationDelay: `${k * 100}ms`
                 }}>
@@ -25,14 +28,17 @@ const items = [
                         className: "opacity-60",
                     }} text={"Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud"}></DefaultLimitText>
                 </div>
-            })}
+            })} */}
         </div>,
     },
     {
         key: '2',
         label: `MONTH`,
         children: <div>
-            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((d,k) => {
+             <div className="py-8 text-blue flex justify-center items-center">
+                <Empty></Empty>
+            </div>
+            {/* {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((d,k) => {
                 return <div key={d} className="p-6 border-b !border-primary text-blue text-[16px] space-y-2 fadein2sc opacity-0" style={{
                     animationDelay: `${k * 100}ms`
                 }}>
@@ -45,14 +51,17 @@ const items = [
                         className: "opacity-60",
                     }} text={"Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud"}></DefaultLimitText>
                 </div>
-            })}
+            })} */}
         </div>,
     },
     {
         key: '3',
         label: `ALL TIMES`,
         children: <div>
-            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((d,k) => {
+             <div className="py-8 text-blue flex justify-center items-center">
+                <Empty></Empty>
+            </div>
+            {/* {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((d,k) => {
                 return <div key={d} className="p-6 border-b !border-primary text-blue text-[16px] space-y-2 fadein2sc opacity-0" style={{
                     animationDelay: `${k * 100}ms`
                 }}>
@@ -65,14 +74,17 @@ const items = [
                         className: "opacity-60",
                     }} text={"Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud"}></DefaultLimitText>
                 </div>
-            })}
+            })} */}
         </div>,
     },
     {
         key: '4',
         label: `SYSTEM`,
         children: <div>
-            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((d,k) => {
+             <div className="py-8 text-blue flex justify-center items-center">
+                <Empty></Empty>
+            </div>
+            {/* {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((d,k) => {
                 return <div key={d} className="p-6 border-b !border-primary text-blue text-[16px] space-y-2 fadein2sc opacity-0" style={{
                     animationDelay: `${k * 100}ms`
                 }}>
@@ -85,7 +97,7 @@ const items = [
                         className: "opacity-60",
                     }} text={"Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud"}></DefaultLimitText>
                 </div>
-            })}
+            })} */}
 
         </div>,
     },

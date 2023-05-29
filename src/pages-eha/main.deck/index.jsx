@@ -20,6 +20,7 @@ import { ErrorItems } from "../../pages/cyber.deck"
 import MapChart from "../../components/maps/simple.chart"
 import { Drawer, Empty, Tooltip } from "antd"
 import { CloseOutlined } from "@ant-design/icons"
+import { NavLink } from "react-router-dom"
 
 
 const MainDeck = () => {
@@ -50,7 +51,7 @@ const MainDeck = () => {
         active: "mainDeckStatisticsMaps"
     },
     ])
-    
+
 
 
     if (API.error || API.msg) {
@@ -106,20 +107,20 @@ const MainDeck = () => {
                     <CardAnimation>
                         {!maximize?.GLOBESHOW && <>
                             <div className="grid grid-cols-8 border-b border-primary">
-                                <div className="col-span-3">
+                                <div className="col-span-3 flex flex-col">
                                     <TitleContent date={value.DATEVALUE.uniq} className={"border-b border-b-primary"} noBorder={true} subTitle={"A-3"}>
                                         <div className="text-[24px] uppercase text-blue">REMEDIATION STATISTIC</div>
                                         <SquareFull onlyTop={true}></SquareFull>
                                     </TitleContent>
-                                    <div className="relative">
+                                    <div className="relative flex-1 flex flex-col items-center justify-center">
                                         <SquareFull />
                                         <div className="flex items-center justify-center py-4">
-                                            {API.error ? <ErrorItems></ErrorItems> : API.loading ? <Loading></Loading> : <ChartLineTooltip yField="remediation" data={API.data.mainDeckStatisticsVulStatic.result} height={200} mode={'vh'} />}
+                                            {API.error ? <ErrorItems></ErrorItems> : API.loading ? <Loading className="absolute h-full w-full"></Loading> : <ChartLineTooltip yField="remediation" data={API.data.mainDeckStatisticsVulStatic.result} height={200} mode={'vh'} />}
 
                                         </div>
                                     </div>
                                 </div>
-                                <div className="col-span-2 border-l-primary border-l relative border-r-primary border-r flex flex-col items-center justify-end">
+                                <div className="eha-chart h-[280px] col-span-2 border-l-primary border-l relative border-r-primary border-r flex flex-col items-center justify-end">
                                     {API.error ? <ErrorItems></ErrorItems> : API.loading ? <Loading></Loading> : <div className="absolute w-full h-full top-[-50px] ">
                                         <ChartRadialBar data={API.data.mainDeckStatisticsDeadline} />
                                     </div>}
@@ -206,7 +207,7 @@ const MainDeck = () => {
                                     </div>
                                     <div className="flex gap-2">
                                         <div>
-                                        mac address :
+                                            mac address :
                                         </div>
                                         <div>
                                             {d.mac_address}
@@ -248,7 +249,7 @@ const ChartFindingMonthly = ({ loading, data }) => {
         return <Loading></Loading>
     }
 
-    
+
     function getShortMonth(fullMonth) {
         const monthNames = {
             "january": "Jan",
@@ -270,11 +271,11 @@ const ChartFindingMonthly = ({ loading, data }) => {
 
     let { mainDeckStatisticsMontly } = data
 
-   if (isObject(mainDeckStatisticsMontly.result) ) {
+    if (isObject(mainDeckStatisticsMontly.result)) {
         return <div className="flex items-center justify-center w-full">
             <Empty></Empty>
         </div>
-   }
+    }
 
     let items = mainDeckStatisticsMontly
 
@@ -304,32 +305,32 @@ const OverdueFinding = ({ data, loading }) => {
 
     const items = mainDeckStatisticSoverdueFinding.pages.flatMap((page) => page.result) || [];
 
-   
+
     const rowRenderer = ({ key, index, style }) => {
         const item = items[index];
-        return (  <div key={key} style={style} className="pr-2">
-                <div className="grid  border border-primary text-[16px]">
-                    <div className="flex flex-col border-r border-primary">
-                        <div className="px-4 py-5 border-b border-primary">
+        return (<div key={key} style={style} className="pr-2">
+            <div className="grid  border border-primary text-[16px]">
+                <div className="flex flex-col border-r border-primary">
+                    <div className="px-4 py-5 border-b border-primary">
      // {item.protected_site_name}
-                            <br></br>
-                            <br></br>
-                            {item.finding_owner}
+                        <br></br>
+                        <br></br>
+                        {item.finding_owner}
+                    </div>
+                    <div className="grid grid-cols-3 text-red-400">
+                        <div className="flex py-5 gap-3 border-r border-primary items-center justify-center uppercase">
+                            <span>{item.severity}</span>
                         </div>
-                        <div className="grid grid-cols-3 text-red-400">
-                            <div className="flex py-5 gap-3 border-r border-primary items-center justify-center uppercase">
-                                <span>{item.severity}</span>
-                            </div>
-                            <div className="flex py-5 gap-3 border-r border-primary items-center justify-center">
-                                <span>{item.overdue}</span>
-                            </div>
-                            <div className="flex py-5 gap-3 border-r border-primary items-center justify-center">
-                                <span>{item.addresses}</span>
-                            </div>
+                        <div className="flex py-5 gap-3 border-r border-primary items-center justify-center">
+                            <span>{item.overdue}</span>
+                        </div>
+                        <div className="flex py-5 gap-3 border-r border-primary items-center justify-center">
+                            <span>{item.addresses}</span>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
         );
     };
 
@@ -414,14 +415,16 @@ const ProtectedSite = ({ loading, data, setvalue }) => {
                         </div>
                     </div>
                     <div className="flex items-center flex-col justify-between pt-2">
-                        <button className="w-full flex justify-center" onClick={() =>
-                            setvalue(d => ({
-                                ...d,
-                                detail: {
-                                    show: !d.detail?.show,
-                                }
-                            }))
-                        }>
+                        <NavLink to={"/eha/assets"}  state={{ title: `09 // eha // ASSET LIST`, eha: true }} className="w-full flex justify-center"
+                        // onClick={() =>
+                        //     setvalue(d => ({
+                        //         ...d,
+                        //         detail: {
+                        //             show: !d.detail?.show,
+                        //         }
+                        //     }))
+                        // }
+                        >
                             <svg width="167" height="26" viewBox="0 0 167 26" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <rect x="1" width="166" height="26" fill="#152A36" />
                                 <path d="M166.5 5L166.5 0.5L162.5 0.5" stroke="#00D8FF" />
@@ -430,7 +433,7 @@ const ProtectedSite = ({ loading, data, setvalue }) => {
                                 <path d="M5.5 0.5H1V5" stroke="#00D8FF" />
                                 <path d="M5.5 25.5H1V21" stroke="#00D8FF" />
                             </svg>
-                        </button>
+                        </NavLink>
                         <div className="w-full overflow-hidden">
                             <svg className="w-full" height="14" viewBox="0 0 179 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M5.72441 0.87854L0 13.208H7.48576L12.7698 0.87854H5.72441Z" fill="#1C3947" />
@@ -503,4 +506,4 @@ const MonitoredAssets = ({ loading, data }) => {
 
 export default MainDeck
 
-const Loading = () => <div className="p-4 text-center w-full h-full flex justify-center items-center max-h-56">LOADING</div>
+const Loading = ({ className }) => <div className={`p-4 text-center w-full h-full flex justify-center items-center max-h-56 ${className ? className : ""}`}>LOADING</div>

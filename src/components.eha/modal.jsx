@@ -58,7 +58,7 @@ export const ModalsComponent = ({ heightContent, title, children, modalName, wid
         }))
     };
 
-    return (<ModalItems footer={footer} heightContent={heightContent} styleModal={style} width={width} okText="SAVE" centered onCancel={hideModal} onOk={hideModal} title={false} closable={false} open={status[modalName]}>
+    return (<ModalItems  footer={footer} heightContent={heightContent} styleModal={style} width={width} okText="SAVE" centered onCancel={hideModal} onOk={hideModal} title={false} closable={false} open={status[modalName]}>
         <div className="text-[16px] text-blue space-y-5 flex flex-1 flex-col">
             {title ? <div className="mx-[-10px] mt-[-20px]">
                 <TitleContent subTitle={false}>

@@ -25,6 +25,9 @@ input::placeholder {
   color: #00b3d3!important;
 }
 
+div,a,span,p {
+  font-family: 'Rajdhani', sans-serif;
+}
 
 .table-scroll::-webkit-scrollbar
 {
@@ -458,6 +461,15 @@ ul.slick-dots li.slick-active button:after {
 
 :focus {
   outline: none!Important;
+}
+
+.eha-chart .g2-html-annotation {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    left: auto!important;
+    right: auto!important;
+    width: 100%;
 }
 
 @keyframes bounce {

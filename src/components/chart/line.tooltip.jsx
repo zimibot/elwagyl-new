@@ -79,12 +79,12 @@ export const ChartLineTooltip = ({ height = 115, mode = "", className = "", data
     };
 
     return <div className={`relative ${className}`}>
-        {data.length === 0 &&
-            <div className="uppercase text-[white] w-full absolute items-center justify-center flex  flex-col gap-2">
-               <Empty ></Empty>
+        {data.length === 0 ?
+            <div className="flex justify-center items-center">
+               <Empty className="w-24"></Empty>
 
-            </div>
-        }
-        <Line smooth={true} animation={false} {...config} />
+            </div> : <Line smooth={true} animation={false} {...config} />
+        } 
+        
     </div>;
 }

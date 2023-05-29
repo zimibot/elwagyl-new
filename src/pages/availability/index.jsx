@@ -18,7 +18,6 @@ import { Loading } from "../../components/loading/loadingOther"
 import { TableInline } from "../../components/table"
 import { GetAndUpdateContext } from "../../model/context.function"
 import { OBSERVATION_SEVERITY_DESC } from "../../model/information"
-import { Pagination } from "./pagination"
 import { ErrorItems } from "../cyber.deck"
 import { Loadings } from "../../components/loading"
 
@@ -27,7 +26,6 @@ import { Loadings } from "../../components/loading"
 const AvailabilityPages = () => {
     const { value, maximize } = GetAndUpdateContext()
     const root = RootAPi(['AVAILABILITY_ANOMALIES_SUMMARY', 'ALERT_SEVERITY', 'AVAILABILITY_ASSET_LIST', 'AVAILABILITY_SENSOR', 'AVAILABILITY_SERVER_LIST'])
-    console.log(root)
     return <LayoutDashboard>
         <ColumnLeft>
             <CardBox className={"flex-1 "}>
@@ -167,7 +165,7 @@ const AvailabilityPages = () => {
                             </TitleContent>
                             <div className="relative flex-1">
                                 <SquareFull />
-                                <div className="h-full items-center justify-center relative">
+                                <div className="h-full items-center justify-center relative overflow-hidden">
                                     <GlobeGl position="absolute !top-0"></GlobeGl>
                                 </div>
                             </div>

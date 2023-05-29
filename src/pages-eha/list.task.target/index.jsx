@@ -74,7 +74,7 @@ const TargetReady = () => {
 
             ]}
                 data={
-                    new Array(20).fill({
+                    new Array(0).fill({
                         protected_site: "SITE_A",
                         asset_name: "HTTP://192.168.1.1",
                         target: "HTTP://192.168.1.1",

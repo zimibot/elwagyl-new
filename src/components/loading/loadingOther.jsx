@@ -6,7 +6,6 @@ import { CardAnimation } from "../layout/card"
 export const LoadingOther = () => {
     const { status } = GetAndUpdateContext()
 
-    console.log(status)
 
     return <CardAnimation className={"w-full absolute h-full col-span-full"}>
         {

@@ -35,6 +35,66 @@ export const GET_API_UMS = {
                 isLoading, data, error, refetch
             }
         },
+        SettingsGroupAccess: () => {
+            const { isLoading, data, error, refetch } = useQuery(['SettingsGroupAccess'], () => fetch(`${path}/users/groups`, {
+                method: "GET", headers: {
+                    "Authorization": `Bearer ${localStorage.getItem("token")}`
+                }
+            }).then(res => { return res.json() }),)
+            return {
+                isLoading, data, error, refetch
+            }
+        },
+        SettingsPagesAccess: () => {
+            const { isLoading, data, error, refetch } = useQuery(['SettingsPagesAccess'], () => fetch(`${path}/users/pages-access`, {
+                method: "GET", headers: {
+                    "Authorization": `Bearer ${localStorage.getItem("token")}`
+                }
+            }).then(res => { return res.json() }),)
+            return {
+                isLoading, data, error, refetch
+            }
+        },
+        SettingsPagesPermission: () => {
+            const { isLoading, data, error, refetch } = useQuery(['SettingsPagesPermission'], () => fetch(`${path}/users/permissions`, {
+                method: "GET", headers: {
+                    "Authorization": `Bearer ${localStorage.getItem("token")}`
+                }
+            }).then(res => { return res.json() }))
+
+            return {
+                isLoading, data, error, refetch
+            }
+        },
+        SettingsPagesPermissionDetail: async (props) => {
+            let { id } = props
+            if (id) {
+                let data = await fetch(`${path}/users/permissions/${id}`, {
+                    method: "GET", headers: {
+                        "Authorization": `Bearer ${localStorage.getItem("token")}`
+                    }
+                }).then(res => { return res.json() })
+
+                return { isLoading: false, error: false, data }
+            } else {
+                return { isLoading: false, error: true }
+            }
+            // if (status) {
+            //     const { isLoading, data, error, refetch } = useQuery(['SettingsPagesPermissionDetail', status.premission_id], () => ).then(res => { return res.json() }).catch(d => {
+            //         return {
+            //             error: d
+            //         }
+            //     }))
+            //     return {
+            //         isLoading, data, error, refetch
+            //     }
+            // } else {
+            //     return {
+            //         data: []
+            //     }
+            // }
+
+        },
         // UserGetUserPersonal: (status) => {
         //     if (status) {     
         //         const { isLoading, data, error, refetch } = useQuery(['UserGetUserPersonal', status.id_user], () => fetch(`${path}/users/${status.id_user}`, {

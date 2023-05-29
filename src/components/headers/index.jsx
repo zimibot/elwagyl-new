@@ -97,20 +97,6 @@ export const HeadersTop = ({ background }) => {
                                         }}>
                                             LICENSE
                                         </div>
-                                        <NavLink onClick={() => {
-                                            window.api.invoke('routesItem', {
-                                                url: null,
-                                                status: true,
-                                                size: {
-                                                    y: 0,
-                                                    width: 0,
-                                                    height: 0
-                                                },
-                                                attribute: document.body?.getAttribute("name"),
-                                            })
-                                        }} state={{ ums: true, title: "USER MANAGEMENT", key: "dashboard" }} to={"/ums/user management"} className="border-b pb-2 border-blue hover:text-white hover:border-white block">
-                                            USER MANAGEMENT
-                                        </NavLink>
                                         <div className="border-b pb-2 border-blue hover:text-white hover:border-white cursor-pointer" onClick={() => {
                                             window.api.invoke('update')
                                         }}>
@@ -128,6 +114,7 @@ export const HeadersTop = ({ background }) => {
                                                 },
                                                 attribute: document.body?.getAttribute("name"),
                                             })
+                                            localStorage.removeItem("current_url")
                                         }}>
                                             LOG OUT
                                         </div>

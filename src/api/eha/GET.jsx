@@ -17,7 +17,7 @@ export const GET_API_EHA = {
     data: {
         scanTools: (status) => {
             if (status) {
-                const { isLoading, data, error } = useQuery(['listScanning', status.UpdateStatus], () => fetch(`${path}/api/tool-scanners`, { method: "GET" }).then(res => { return res.json() }),)
+                const { isLoading, data, error } = useQuery(['listScanning', status.UpdateStatus, status.scanning_tools], () => fetch(`${path}/api/tool-scanners?${status.scanning_tools ? `scanning_tools=${status.scanning_tools}` : ""}`, { method: "GET" }).then(res => { return res.json() }),)
                 return {
                     isLoading, data, error,
                 }
@@ -97,7 +97,6 @@ export const GET_API_EHA = {
 
         assetsList: (status) => {
             if (status) {
-                console.log(status)
                 const { isLoading, data, error, } = useQuery(['assetsList', status.UpdateStatus], () => fetch(`${path}/api/assets`, { method: "GET" }).then(res => { return res.json() }),)
                 return {
                     isLoading, data, error,
@@ -140,7 +139,6 @@ export const GET_API_EHA = {
                 }
 
             } catch (error) {
-                console.log(error)
                 return false
             }
 
@@ -175,6 +173,18 @@ export const GET_API_EHA = {
                 return false
             }
         },
+        getAssetsRiskGroupDetail: async (propsItem) => {
+            const { idAssets } = propsItem || {}
+
+            if (idAssets) {
+                let items = await fetch(`${path}/api/asset-risk-groups/${idAssets}`, { method: "GET" }).then(res => { return res.json() })
+                return {
+                    items
+                }
+            } else {
+                return false
+            }
+        },
 
         scan: (status) => {
             if (status) {
@@ -188,6 +198,12 @@ export const GET_API_EHA = {
             const { isLoading, data, error, } = useQuery(['scan'], () => fetch(`${path}/api/general/platform-category-list`, { method: "GET" }).then(res => { return res.json() }),)
             return {
                 isLoading, data, error,
+            }
+        },
+        assetRiskGroup: () => {
+            const { isLoading, data, error, refetch } = useQuery(['assetRiskGroup'], () => fetch(`${path}/api/asset-risk-groups`, { method: "GET" }).then(res => { return res.json() }),)
+            return {
+                isLoading, data, error, refetch
             }
         },
 

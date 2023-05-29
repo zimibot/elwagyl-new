@@ -12,6 +12,7 @@ import { GET_API_EHA } from "../../api/eha/GET";
 import { POST_API } from "../../api/eha/POST";
 import { UPDATE_API } from "../../api/eha/UPDATE";
 import { useState } from "react";
+import { GET_API_UMS } from "../../api/ums/GET";
 
 export const FormModal = () => {
     const API = GET_API_EHA.root([
@@ -38,9 +39,12 @@ export const FormModal = () => {
         },
     ])
 
+    const elwagyl = GET_API_UMS.root(["UserGetUser"])
+
+
     const { setStatus, status } = GetAndUpdateContext()
     const [selectPlatform, setSelectPlatform] = useState()
-    const { register, handleSubmit, reset, watch, control, setValue, resetField, setError, formState: { errors } } = useForm();
+    const { register, handleSubmit, reset, control, setValue, resetField, watch, setError, formState: { errors } } = useForm();
     const { idAssets } = status
     const {
         fields,
@@ -100,33 +104,26 @@ export const FormModal = () => {
             POST_API.addAssets(data, reset, setStatus, onSuccess, onError);
         }
     };
-    useEffect(() => {
-        if (!isEmpty(errors)) {
-            ModalSuccess({ title: "sorry there is an empty input!", type: "error", onlyShowOk: true })
-        }
-    }, [errors])
+    // useEffect(() => {
+    //     if (!isEmpty(errors)) {
+    //         ModalSuccess({ title: "sorry there is an empty input!", type: "error", onlyShowOk: true })
+    //     }
+    // }, [errors])
 
     const GetAssets = async (idAssets) => {
         try {
             if (idAssets) {
                 const assetsDetail = await API.getAssetsDetail({ idAssets });
-                const { id } = assetsDetail.items.result;
-
-
                 for (const key in assetsDetail.items.result) {
                     const value = assetsDetail.items.result[key];
                     if (key === "system_owner") {
                         setValue(key, value?.name);
                     } else {
                         setValue(key, value);
-
                     }
                 }
 
-                if (id) {
 
-                    // const platformDetail = await API.platformDetail({ platform_id: id });
-                }
             }
 
             else {
@@ -151,6 +148,7 @@ export const FormModal = () => {
 
 
 
+
     return (
         <ModalsComponent footer={false} width={null} style={`
                 width: 100%;
@@ -163,13 +161,13 @@ export const FormModal = () => {
             `} modalName={"ADDASSET"}>
             <CardBox>
                 <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
-                    <TitleContent>
+                    <TitleContent subTitle={false}>
                         <div className="text-[24px] uppercase text-blue">{!idAssets ? "add new" : "edit"} asset</div>
                     </TitleContent>
                     <div className="grid grid-cols-3 gap-7">
                         <div className="space-y-8">
                             <Form.input error={errors.name} register={register("name", { required: true })} label={"Asset NAME *"} />
-                            <SelectComponent required={false} loading={API.loading} data={API.data?.protectedSite?.result?.map(d => ({
+                            <SelectComponent required={true} loading={API.loading} data={API.data?.protectedSite?.result?.map(d => ({
                                 label: d.site_name,
                                 value: d.id
                             }))} control={control} label={"PROTECTED SITE *"} error={errors.protected_site_id} height={45} name={"protected_site_id"} width={"100%"}></SelectComponent>
@@ -227,6 +225,10 @@ export const FormModal = () => {
                             <Form.input error={errors.url_ip} placeholder="exp : 190.21.xx.xx or https://xxxx.com" register={register("url_ip", { required: true })} label={"asset ip / url *"} />
                             <SelectComponent error={errors.risk_group} data={[
                                 {
+                                    label: "low",
+                                    value: "low",
+                                },
+                                {
                                     label: "medium",
                                     value: "medium",
                                 },
@@ -234,10 +236,7 @@ export const FormModal = () => {
                                     label: "high",
                                     value: "high",
                                 },
-                                {
-                                    label: "critical",
-                                    value: "critical",
-                                },
+
                             ]} required={false} name={"risk_group"} label={"asset risk group"} control={control} width={"100%"} height={45}></SelectComponent>
                             {/* <Form.input error={errors.risk_group} register={register("risk_group", { required: true })} label={"asset risk group *"} /> */}
                             <Form.input error={errors.system_owner_name} register={register("system_owner_name")} label={"system owner"} />
@@ -298,8 +297,8 @@ export const FormModal = () => {
                                     <div className="space-y-3">
                                         <span>INTERNET FACING :</span>
                                         <div>
-                                            <Form.radio error={errors.internet_facing} value={true} register={register("internet_facing")} text={"YES"}></Form.radio>
-                                            <Form.radio error={errors.internet_facing} value={false} register={register("internet_facing")} text={"NO"}></Form.radio>
+                                            <Form.radio error={errors.internet_facing} value={true} name={"internet_facing"} control={control} text={"YES"}></Form.radio>
+                                            <Form.radio error={errors.internet_facing} value={false} name={"internet_facing"} control={control} text={"NO"}></Form.radio>
                                         </div>
                                     </div>
                                 </div>

@@ -22,6 +22,7 @@ const UserManagement = () => {
     const { setStatus } = GetAndUpdateContext()
     const api = GET_API_UMS.root(["UserGetUser"])
 
+
     return <LayoutDashboard>
         <CardBox className="col-span-full">
             <TitleContent subTitle={false}>
@@ -60,12 +61,45 @@ const UserManagement = () => {
                 },
                 {},
                 {
+                    title: 'delete',
+                    key: 'id',
+                    rowClass: "w-[100px] text-center",
+                    columnClass: "text-center",
+                    html: (id) => {
+                        return <PopConfirm onConfirm={() => {
+                            toast.promise(axios.delete(`${path}/users/${id}`, {
+                                headers: {
+                                    "Authorization": `Bearer ${localStorage.getItem("token")}`
+                                }
+                            }), {
+                                loading: "Loading",
+                                success: () => {
+                                    api.data.UserGetUser.refetch()
+                                    return "Success Delete"
+                                },
+                                error: "Error Delete"
+
+                            },
+                                {
+                                    style: {
+                                        background: '#333',
+                                        color: '#fff',
+                                        fontSize: 20,
+                                        borderRadius: 0
+                                    }
+                                })
+
+                        }} placement="left" title="YOU SURE DELETE THIS USER ?" okText="DELETE" cancelText="CANCEL">
+                            <button><DeleteOutlined></DeleteOutlined></button>
+                        </PopConfirm>
+                    }
+                },
+                {
                     title: 'edit',
                     key: 'id',
                     columnClass: "text-center",
                     rowClass: "w-[100px] text-center",
                     html: (id, full) => {
-                        console.log(full)
                         return <button onClick={() => {
                             setStatus((d) => ({
                                 ...d,
@@ -75,15 +109,7 @@ const UserManagement = () => {
                         }}><EditOutlined></EditOutlined></button>
                     }
                 },
-                {
-                    title: 'delete',
-                    key: 'id',
-                    rowClass: "w-[100px] text-center",
-                    columnClass: "text-center",
-                    html: () => {
-                        return <button><DeleteOutlined></DeleteOutlined></button>
-                    }
-                },
+
 
             ]} data={
                 api.data.UserGetUser.data.map(d => ({
@@ -108,14 +134,15 @@ const PopConfirm = styled(Popconfirm)``
 const AddUser = () => {
     const { setStatus, status } = GetAndUpdateContext()
 
-    const api = GET_API_UMS.root(["UserGetRoles"])
+    const api = GET_API_UMS.root(["UserGetRoles", "UserGetUser"])
 
-    const { register, control, handleSubmit, reset, setValue, formState: { errors } } = useForm()
+    const { register, control, handleSubmit,  reset, setValue, formState: { errors } } = useForm()
 
     const onSubmit = (data) => {
         toastItem({ api, name: "UserGetUser", type: "post", url: "/users", data, successMsg: "ADD USER SUCCESS" })
         reset()
     }
+
 
 
     useEffect(() => {
@@ -138,7 +165,7 @@ const AddUser = () => {
             <Form.input error={errors.password} register={register("password", { required: true })} type="password" label={"password"}></Form.input>
             <div className="relative">
                 <SelectComponent ClassLabel={"flex justify-between"} button={
-                    <PopConfirm okText={<span className="text-black font-bold">CANCEL</span>} showCancel={false} description={<AddRoles api={api}></AddRoles>} icon={false}>
+                    <PopConfirm okText={<span className="text-black font-bold">CANCEL</span>} showCancel={false} description={<AddRoles ></AddRoles>} icon={false}>
                         <div className="py-2 px-4 cursor-pointer bg-blue hover:bg-opacity-60 text-black text-[14px]">
                             MANAGE
                         </div>
@@ -169,41 +196,48 @@ const AddUser = () => {
 }
 
 export const toastItem = ({ data, api, url, type, name, successMsg }) => {
+    return new Promise((resolve, reject) => {
+        data = data ? data : {}
 
-    data = data ? data : {}
-
-    toast.promise(
-        axios(`${path}${url}`, {
-            method: type,
-            data,
-            headers: {
-                "Authorization": `Bearer ${localStorage.getItem("token")}`
-            }
-        }),
-        {
-            loading: 'LOADING...',
-            success: (d) => {
-                api.data[name].refetch()
-                return <b>{successMsg}</b>
+        toast.promise(
+            axios(`${path}${url}`, {
+                method: type,
+                data,
+                headers: {
+                    "Authorization": `Bearer ${localStorage.getItem("token")}`
+                }
+            }),
+            {
+                loading: 'LOADING...',
+                success: (d) => {
+                    api.data[name].refetch()
+                    resolve({
+                        success: true
+                    })
+                    return <b>{successMsg}</b>
+                },
+                error: (d) => {
+                    reject(d)
+                    return "ERROR"
+                },
+            }, {
+            style: {
+                background: '#333',
+                color: '#fff',
+                fontSize: 20,
+                borderRadius: 0
             },
-            error: (d) => {
-                return d.response.data.detail
-            },
-        }, {
-        style: {
-            background: '#333',
-            color: '#fff',
-            fontSize: 20,
-            borderRadius: 0
-        },
+        })
     })
+
 
 }
 
-const AddRoles = ({ api }) => {
+const AddRoles = () => {
     const { register, handleSubmit, reset } = useForm()
 
     const [addRoles, setAddRoles] = useState(false)
+    const api = GET_API_UMS.root(["UserGetRoles"])
 
 
     const onSubmit = (data) => {

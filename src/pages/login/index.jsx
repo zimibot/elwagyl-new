@@ -1,14 +1,13 @@
 import { ButtonComponents } from "../../components.eha/button"
 import { Form } from "../../components.eha/input"
 import LOGO from "../../assets/images/full.logo.svg";
-import iconLogo from "../../assets/logo.svg";
+import logo from "../../assets/logo.svg";
 import { useForm } from "react-hook-form";
 import { Navigate, useNavigate } from "react-router-dom";
 import { API_POST, path } from "../../api/elwagyl";
 import { toast } from "react-hot-toast";
 import axios from "axios";
 import { useEffect } from "react";
-import { Result } from "antd";
 import { useState } from "react";
 import { ShadowError } from "../../components/shadow";
 import { CardAnimation } from "../../components/layout/card";
@@ -16,9 +15,9 @@ import { LoadingOther } from "../../components/loading/loadingOther";
 import { ModalsComponent } from "../../components.eha/modal";
 import { GetAndUpdateContext } from "../../model/context.function";
 import { isDev } from "../../helper/context";
-// import logo from "../../assets/images/logo.svg"
+import { Result } from "antd";
 
-let isDevLicense = "00:15:5d:83:03:33"
+let isDevLicense = "00:15:5d:83:03:44"
 
 const LoginPages = () => {
 
@@ -39,6 +38,7 @@ const LoginPages = () => {
 
 
     const licenseData = (d) => {
+
         let data = {
             "license_id": {
                 "license_elwagyl": "AS12-DD45-EE56-AA21",
@@ -47,6 +47,7 @@ const LoginPages = () => {
             },
             "mac_address": isDev ? isDevLicense : d.macs[0]
         }
+
         axios.post(`${path}/license-v2/verify`, data, {
             headers: {
                 'Cache-Control': 'no-cache',
@@ -101,13 +102,19 @@ const LoginPages = () => {
             {
                 loading: 'LOGIN LOADING...',
                 success: (d) => {
-                    console.log(d)
-                    localStorage.setItem("id", d.data.user._id)
+                    localStorage.setItem("id", d.data.user.id)
                     localStorage.setItem("token", d.data.access_token)
                     localStorage.setItem("user", d.data.user.username)
-                    setTimeout(() => {
-                        navi("/dashboard")
-                    }, 500);
+
+                    axios.get(`${path}/users/me`, {
+                        headers: {
+                            Authorization: `Bearer ${d.data.access_token}`
+                        }
+                    }).then(d => {
+                        let item = d.data.permissions.pages.find(d => d.group === "ELWAGYL")
+                        navi(item.pages ? item.pages[0].url : "/elwagyl")
+                        localStorage.setItem("current_url", item.pages ? item.pages[0].url : "/elwagyl")
+                    })
                     return <b>LOGIN SUCCESS!</b>
                 },
                 error: "LOGIN FAILED",
@@ -127,7 +134,7 @@ const LoginPages = () => {
 
     return !auth ? <CardAnimation className="flex-col flex flex-1">
         {msg.loading ? <LoadingOther></LoadingOther> : <div className="flex flex-col flex-1">
-
+            {/* 
         <div className="flex-auto flex items-center justify-center flex-col gap-5" style={{
                 background: "rgba(16, 28, 38, 0.8)"
             }}>
@@ -141,15 +148,15 @@ const LoginPages = () => {
                         LOGIN
                     </ButtonComponents>
                 </form>
-            </div>
-            
-            {/* {msg.status ? <div className="absolute w-full h-full flex items-center justify-center">
+            </div> */}
+
+            {msg.status ? <div className="absolute w-full h-full flex items-center justify-center">
                 <Result extra={<button className="bg-primary p-4 hover:bg-blue hover:text-black" onClick={() => {
                     setStatus(d => ({
                         ...d,
                         showVerify: true
                     }))
-                }}>ENTER LICENSE !</button>} icon={<div className="flex justify-center"><img width={120} src={iconLogo}></img></div>}
+                }}>ENTER LICENSE !</button>} icon={<div className="flex justify-center"><img width={120} src={logo}></img></div>}
                     title={<span className="text-[30px] uppercase">EL WAGYL HAS BEEN SUCCESSFULLY UPDATED.</span>}
                     subTitle={<div className="text-blue text-[20px] uppercase">AS PART OF THE UPDATE, WE KINDLY REQUEST YOU TO RE-VERIFY YOUR LICENSE. <br /> PLEASE TAKE A MOMENT TO ENTER YOUR LICENSE AGAIN TO ENSURE UNINTERRUPTED ACCESS AND USAGE OF THE APPLICATION</div>}>
                 </Result>
@@ -166,13 +173,13 @@ const LoginPages = () => {
                         LOGIN
                     </ButtonComponents>
                 </form>
-            </div>} */}
+            </div>}
             <CardAnimation>
                 {msg.error && <ShadowError />}
             </CardAnimation>
         </div>}
         <LicensePages setMsg={setMsg} setStatus={setStatus}></LicensePages>
-    </CardAnimation> : <Navigate to={"/dashboard"}></Navigate>
+    </CardAnimation> : <Navigate to={localStorage.getItem("current_url") ? localStorage.getItem("current_url") : "/elwagyl"}></Navigate>
 }
 
 export default LoginPages
@@ -183,10 +190,15 @@ const LicensePages = ({ setMsg, setStatus }) => {
     const { register, handleSubmit, watch, reset, formState: { errors } } = useForm()
 
     const onSubmit = (data) => {
-      
+
         window.api.invoke('dataOS').then(d => {
+
             data = {
-                ...data,
+                "license_id": {
+                    "license_elwagyl": data.license_id.license_elwagyl?.replace(/ /g, ''),
+                    "license_eha": data.license_id.license_eha?.replace(/ /g, ''),
+                    "license_sase": data.license_id.license_sase?.replace(/ /g, '')
+                },
                 "mac_address": isDev ? isDevLicense : d.macs[0]
                 // "mac_address": "00:15:5d:83:03:11"
             }

@@ -9,10 +9,11 @@ import { GET_API_EHA } from "../../api/eha/GET";
 import { POST_API } from "../../api/eha/POST";
 import { useEffect } from "react";
 import { UPDATE_API } from "../../api/eha/UPDATE";
+import { isArray } from "radash";
 
 export const AddModal = () => {
     const { setStatus, status } = GetAndUpdateContext()
-    const { IDSCAN } = status
+    const { IDSCAN, reScan } = status
     const API = GET_API_EHA.root([
         {
             active: "assetsList"
@@ -23,8 +24,11 @@ export const AddModal = () => {
         {
             active: "toolsScanner"
         },
+        {
+            active: "scanTools"
+        },
     ])
-    const { register, handleSubmit, control, reset, setValue, formState: { errors } } = useForm();
+    const { register, handleSubmit, control, reset, setValue, watch, formState: { errors } } = useForm();
     const editData = async (id) => {
         let data = await API.scanDetails({ idscanDetail: id })
         let res = data.items.result
@@ -35,6 +39,7 @@ export const AddModal = () => {
 
     }
 
+
     useEffect(() => {
         if (IDSCAN) {
             editData(IDSCAN)
@@ -44,10 +49,17 @@ export const AddModal = () => {
     }, [IDSCAN])
 
 
+    let ds = watch("selectScanner")
+
 
     const onSubmit = data => {
+        console.log(data)
 
-        if (IDSCAN) {
+        if (reScan) {
+            delete data.id
+        }
+
+        if (IDSCAN && !reScan) {
             data = {
                 ...data,
                 updated_by: localStorage.getItem("user"),
@@ -55,6 +67,7 @@ export const AddModal = () => {
             }
             UPDATE_API.updateScanAssets(IDSCAN, data, setStatus)
         } else {
+            
             data = {
                 ...data,
                 created_by: localStorage.getItem("user"),
@@ -79,23 +92,32 @@ export const AddModal = () => {
             <CardBox>
                 <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
                     <TitleContent>
-                        <div className="text-[24px] uppercase text-blue">{IDSCAN ? "EDIT" : "add new"} scan</div>
+                        <div className="text-[24px] uppercase text-blue">{reScan ? "RE-SCANNING" : IDSCAN ? "EDIT" : "add new"} scan</div>
                     </TitleContent>
                     <div className="grid grid-cols-3 gap-7">
                         <div className="space-y-8">
-                            <SelectComponent error={errors.asset_id} required={true} loading={API.loading} data={API?.data?.assetsList?.result?.map(d => {
+                            <SelectComponent error={errors.asset_id} required={true} loading={API.loading} data={API.data.assetsList ? API.data.assetsList.result ? !isArray(API.data.assetsList.result) ? [] : API.data.assetsList.result.map(d => {
                                 return ({
                                     label: d.name,
                                     value: d.id
                                 })
-                            })} control={control} name={"asset_id"} width={"100%"} height={45} label={"TARGET TO SCAN"}></SelectComponent>
+                            }) : [] : []} control={control} name={"asset_id"} width={"100%"} height={45} label={"TARGET TO SCAN"}></SelectComponent>
                             {/* <Form.input register={register("target_scan")} label={"TARGET TO SCAN"} /> */}
                             {/* <Form.input register={register("tools_scanner")} label={"TOOLS SCANNER"} /> */}
-                            <SelectComponent error={errors.tool_scanner_id} required={true} loading={API.loading} data={API.data.toolsScanner?.result?.map(d => {
+                            <SelectComponent error={errors.selectScanner} required={true} loading={API.loading} data={API.data.toolsScanner?.result?.map(d => {
                                 return ({
-                                    label: d,
-                                    value: d                                })
-                            })} control={control} name={"tool_scanner_id"} width={"100%"} height={45} label={"TOOLS SCANNER"}></SelectComponent>
+                                    label: d === "Nessus" ? "E.H.A ENGINE" : "",
+                                    value: d
+                                })
+                            })} control={control} name={"selectScanner"} width={"100%"} height={45} label={"TOOLS SCANNER"}></SelectComponent>
+                            {ds && <SelectComponent error={errors.tool_scanner_id} required={true} loading={API.loading} data={API.data.scanTools?.result?.map(d => {
+                                let name = d.name === "Nessus Staging Vulnerability" ? "E.H.A Vulnerability" : "E.H.A Compliance"
+                                return ({
+                                    label: name,
+                                    value: d.id
+                                })
+                            })} control={control} name={"tool_scanner_id"} width={"100%"} height={45} label={"Select scanner"}></SelectComponent>}
+
 
                             <div className="grid grid-cols-2 gap-4">
                                 <Form.date error={errors.sla_date} required={true} control={control} name={"sla_date"} label={"SLA DATE"} />

@@ -12,7 +12,6 @@ const ProfilePopup = require("./profilePopup")
 
 
 module.exports = function CreateWindow({ urlCurrent, prodUrl, config = {}, webConfig = {}, maximize, load, other, hash, frame }) {
-    let side, LicensePopup, popProfile
 
     const cUrl = urlCurrent ? urlCurrent : "http://localhost:3000/"
     const win = WindowConfig({
@@ -30,18 +29,6 @@ module.exports = function CreateWindow({ urlCurrent, prodUrl, config = {}, webCo
             })
     );
 
-    win.on("close", () => {
-        if (side) {
-            side.close()
-        }
-
-        if (licensePopup) {
-            LicensePopup.close()
-        }
-        if (popProfile) {
-            popProfile.close()
-        }
-    })
 
     win.webContents.once("did-finish-load", async () => {
 
@@ -56,7 +43,7 @@ module.exports = function CreateWindow({ urlCurrent, prodUrl, config = {}, webCo
                 if (maximize) {
                     win.maximize()
                 }
-                side = Sidebar()
+                let side = Sidebar()
                 win.show()
                 win.focus()
 
@@ -79,7 +66,7 @@ module.exports = function CreateWindow({ urlCurrent, prodUrl, config = {}, webCo
                     });
                 });
 
-                LicensePopup = licensePopup()
+                let LicensePopup = licensePopup()
 
                 ipcMain.handle('license-open', async (ev, args) => {
                     return new Promise(function () {
@@ -103,7 +90,7 @@ module.exports = function CreateWindow({ urlCurrent, prodUrl, config = {}, webCo
                 });
 
 
-                popProfile = ProfilePopup()
+                let popProfile = ProfilePopup()
 
                 ipcMain.handle('profile-open', async (ev, args) => {
                     return new Promise(function () {

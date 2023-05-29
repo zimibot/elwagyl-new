@@ -4,8 +4,9 @@ const notif = require("./function/notif")
 const Connection = require("./function/check.connection")
 const DownloadFIles = require("./download")
 const OtherView = require('./function/browser.oher.window');
-
-
+const isDev = require("electron-is-dev")
+const fs = require('fs');
+const path = require("path")
 const errorMsg = ({ window, noBtn, msgBtn, msg, type }) => {
   let response = dialog.showMessageBoxSync({
     type: type ? type : "info",
@@ -16,6 +17,54 @@ const errorMsg = ({ window, noBtn, msgBtn, msg, type }) => {
   if (!noBtn) {
     if (response == 0) window();
   }
+
+}
+
+const pdfDownload = (win) => {
+
+  const pdf = (url) => {
+    var filepath1 = path.join(__dirname, url);
+
+    var options = {
+      marginsType: 0,
+      pageSize: 'A4',
+      printBackground: true,
+      printSelectionOnly: false,
+      landscape: false
+    }
+
+    win.webContents.printToPDF(options).then(data => {
+      fs.writeFile(filepath1, data, function (err) {
+        if (err) {
+          console.log(err);
+        } else {
+          console.log('PDF Generated Successfully');
+        }
+      });
+    }).catch(error => {
+      console.log(error)
+    });
+  }
+
+  ipcMain.handle('scanpdf', async (args, env) => {
+
+    return new Promise(function (resolve) {
+      if (true) {
+
+        pdf("/pdf/comparisoneha.pdf")
+
+
+      }
+    })
+  })
+  ipcMain.handle('reporteha', async (args, env) => {
+
+    return new Promise(function (resolve) {
+      if (true) {
+        pdf("/pdf/reporteha.pdf")
+      }
+    })
+  })
 
 }
 
@@ -58,16 +107,16 @@ const WindowMain = () => {
           view: OtherView()
         })
 
-        
-
         window[0].window.on("close", () => {
           app.quit()
         })
 
+        pdfDownload(window[0].window)
+
         window[0].window.webContents.on("did-finish-load", () => {
           // size()
           window[0].window.webContents.executeJavaScript(`
-          localStorage.removeItem("token")
+          ${!isDev && `localStorage.removeItem("token")`}
           localStorage.setItem("step", true)
           document.body.setAttribute("name", "elwagyl-0")
           document.body.setAttribute("current", true)
@@ -89,7 +138,6 @@ const WindowMain = () => {
 
           return new Promise(function (resolve) {
             if (true) {
-
               return resolve(system)
             }
           })
@@ -246,7 +294,7 @@ const WindowMain = () => {
                 d.window.addBrowserView(d.view);
 
                 d.view.setAutoResize({ width: true, height: true });
-
+                d.view.setBounds({ x: 0, y: 0, width: 0, height: 0 });
                 let pages = d.name.split("/").pop();
                 let content = `${pages}-${d.id}`;
 
@@ -262,6 +310,7 @@ const WindowMain = () => {
                 };
 
                 const finishLoadListener = async () => {
+
                   d.view.setBounds({ x: 0, ...arg.size });
                   status = "online"
                   resolve({
@@ -271,7 +320,9 @@ const WindowMain = () => {
 
                 if (!arg.url) {
                   if (content === arg.attribute) {
-                    d.view.setBounds({ x: 0, ...arg.size });
+                    d.view.webContents.once("did-finish-load", () => {
+                      d.view.setBounds({ x: 0, ...arg.size });
+                    });
                   }
                   return reject(JSON.stringify({
                     status: "error_url"
@@ -317,8 +368,6 @@ const WindowMain = () => {
 
 
 app.whenReady().then(async () => {
-
-
   ipcMain.handle('update', async (args, env) => {
     return new Promise(async function (resolve, reject) {
       if (true) {
@@ -337,7 +386,9 @@ app.whenReady().then(async () => {
   })
 
   DownloadFIles().then(d => {
-    WindowMain()
+    if (d === "next" || d === "update nothing") {
+      WindowMain()
+    }
   }).catch(() => {
     errorMsg({ window: WindowMain })
   })

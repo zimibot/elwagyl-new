@@ -1,9 +1,8 @@
 import { InputNumber } from 'antd';
 import styled from 'styled-components';
 import { SquareMedium } from '../components/decoration/square';
-const onChange = (value) => {
-    console.log('changed', value);
-};
+import { Controller } from 'react-hook-form';
+
 
 const InputNumb = styled(InputNumber)`
     background: #152A36;
@@ -41,8 +40,27 @@ const InputNumb = styled(InputNumber)`
     }
 `
 
-export const InputNumbers = () =>
-    <div className="relative w-20">
-        <InputNumb min={1} max={10} defaultValue={3} onChange={onChange} />
-        <SquareMedium />
-    </div>;
+export const InputNumbers = ({ control, name, error, onChangeData, ...props }) =>
+    <Controller
+        control={control}
+        name={name}
+        // defaultValue={null}
+        rules={{
+            required: true
+        }}
+        render={({
+            field: { onChange, onBlur, value, ref },
+        }) => {
+            return (
+                <div className={`relative w-20 ${error ? "border border-red-500" : ""}`}>
+                    <InputNumb value={value} ref={ref} min={1} onBlur={onBlur} max={100} onChange={(d) => {
+                        if (onChangeData) {
+                            onChangeData(d)
+                        }
+                        onChange(d)
+                    }} {...props} />
+                    <SquareMedium />
+                </div>
+            )
+        }}
+    />

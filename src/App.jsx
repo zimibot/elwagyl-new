@@ -23,7 +23,6 @@ import PrivateRoute from "./privateRoutes";
 import Settings from "./pages-ums/settings";
 import NotFoundUMS from "./pages-ums/notfound";
 import { MassagesDrawer } from "./components/headers/messages.drawer";
-import { Result } from "antd";
 import UserManagement from "./pages-ums/usermanagement";
 import WelcomeEha from "./pages-eha/welcome";
 import { LicensePoup } from "./components/licensePopup";
@@ -61,7 +60,7 @@ export default function App() {
                 <Route path="/message" element={<MassagesDrawer />} />
                 <Route path="/profile" element={<ProfilePage />} />
                 <Route path="/license" element={<LicensePoup />} />
-                <Route path="/dashboard" element={<Container></Container>}>
+                <Route path="/elwagyl" element={<Container></Container>}>
                   <Route index element={<CyberDeck />} />
                   <Route path="executive" element={<Executive />} />
                   <Route path="availability" element={<AvailabilityPages />} />

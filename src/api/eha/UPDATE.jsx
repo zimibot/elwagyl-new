@@ -9,6 +9,7 @@ export const UPDATE_API = {
     updatePlatformCategory: (id, data, setStatus, success) => ToastData({ name: data.name, url: `${path}/api/platform-categories/${id}`, setStatus, data, success }),
     updateAssets: (id, data, setStatus, success, error) => ToastData({ name: data.name, url: `${path}/api/assets/${id}`, setStatus, data, success, error }),
     updateEmail: (id, data, setStatus, refresh) => ToastData({ name: data.name, url: `${path}/api/manage-email-notification/${id}`, setStatus, data, refresh }),
+    updateRiskGroup: (id, data, refresh) => ToastData({ name: data.name, url: `${path}/api/asset-risk-groups/${id}`, data, refresh }),
 }
 
 const ToastData = ({ name, url, data, setStatus, success, error, refresh }) => {
