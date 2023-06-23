@@ -1,5 +1,4 @@
 import { ComposableMap, Geographies, Geography, ZoomableGroup, Line, Marker } from "react-simple-maps"
-import { Motion, spring } from "react-motion";
 import { useState } from "react";
 import { API_GET } from "../../api/elwagyl";
 import { GetAndUpdateContext } from "../../model/context.function";
@@ -11,15 +10,10 @@ export const MapHighcharts = ({ className = "fixed" }) => {
     const API = API_GET.THREATSMAP_GLOBE()
     const { value } = GetAndUpdateContext()
 
-    console.log(value)
-
     const [open, setOpen] = useState({
         active: false,
         content: null
     });
-
-
-
 
 
     const showDrawer = (desc, preview) => {

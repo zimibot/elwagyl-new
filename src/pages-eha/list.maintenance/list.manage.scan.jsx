@@ -16,7 +16,6 @@ import { useEffect } from "react"
 import { UPDATE_API } from "../../api/eha/UPDATE"
 import { DELETE_API } from "../../api/eha/DELETE"
 import { GET_API_UMS } from "../../api/ums/GET"
-import { useState } from "react"
 
 export const ListManageScan = () => {
     const api = GET_API_EHA.root([
@@ -37,13 +36,13 @@ export const ListManageScan = () => {
             <TitleContent className="justify-between" subTitle={false}>
                 <div className="flex justify-between w-full items-center">
                     <div className="text-[24px] uppercase text-blue">manage scan profiles</div>
-                    <ButtonComponents click={() => {
+                    {/* <ButtonComponents click={() => {
                         setStatus(d => ({
                             ...d,
                             editScanTools: true,
                             getData: null
                         }))
-                    }}>ADD SCAN TOOLS</ButtonComponents>
+                    }}>ADD SCAN TOOLS</ButtonComponents> */}
                 </div>
 
             </TitleContent>
@@ -52,11 +51,24 @@ export const ListManageScan = () => {
                     title: 'Name',
                     key: 'name',
                     rowClass: "w-[250px]",
+                    html: (d) => {
+                        var find = "Nessus Staging";
+
+                        var regex = new RegExp(find, "g");
+                        return d.replace(regex, "E.H.A")
+                    }
                 },
                 {
                     title: 'scanning tools',
                     key: 'scanning_tools',
                     rowClass: "w-[250px]",
+                    html: (d) => {
+                        var find = "Nessus";
+
+                        var regex = new RegExp(find, "g");
+
+                        return d?.replace(regex, "E.H.A Engine")
+                    }
                 },
 
                 {
@@ -73,58 +85,59 @@ export const ListManageScan = () => {
                     title: null,
                     key: null,
                 },
-                {
-                    title: 'EDIT',
-                    key: 'id',
-                    rowClass: "w-[50px]",
-                    html: (id) => {
-                        return <Tooltip title="EDIT">
-                            <button className="flex items-center justify-center w-full text-[1.2rem]" onClick={async () => {
-                                let data = await api.scanToolsDetail({ idScan: id })
-                                let { name, scanning_tools, role, status, created_by, updated_by } = data.items.result
-                                let update = {
-                                    "id": id,
-                                    "name": name,
-                                    "scanning_tools": scanning_tools,
-                                    "role": role,
-                                    "status": status,
-                                    "created_by": created_by,
-                                    "updated_by": created_by
-                                }
+                // {
+                //     title: 'EDIT',
+                //     key: 'id',
+                //     rowClass: "w-[50px]",
+                //     columnClass: "w-[50px]",
+                //     html: (id) => {
+                //         return <Tooltip title="EDIT">
+                //             <button className="flex items-center justify-center w-full text-[1.2rem]" onClick={async () => {
+                //                 let data = await api.scanToolsDetail({ idScan: id })
+                //                 let { name, scanning_tools, role, status, created_by, updated_by } = data.items.result
+                //                 let update = {
+                //                     "id": id,
+                //                     "name": name,
+                //                     "scanning_tools": scanning_tools,
+                //                     "role": role,
+                //                     "status": status,
+                //                     "created_by": created_by,
+                //                     "updated_by": created_by
+                //                 }
 
-                                console.log(id)
-                                setStatus((d) => ({
-                                    ...d,
-                                    editScanTools: true,
-                                    getData: update
-                                }))
-                            }}>
-                                <EditFilled></EditFilled>
-                            </button>
-                        </Tooltip>
-                    }
-                },
-                {
-                    title: 'DELETE',
-                    key: 'id',
-                    rowClass: "w-[100px]",
-                    columnClass: "text-center",
-                    html: (id, full) => {
-                        return <Popconfirm cancelText="CANCEL" okText="DELETE" onConfirm={async () => {
-                            DELETE_API.deleteScanManage({
-                                site_name: full.name,
-                                id: id,
-                                name: full.created_by
-                            }, setStatus)
-                        }} title="Delete the task"
-                            description="Are you sure to delete this task?"
-                        >
-                            <button className="flex items-center justify-center w-full text-[1.2rem]" >
-                                <DeleteOutlined></DeleteOutlined>
-                            </button>
-                        </Popconfirm>
-                    }
-                },
+                //                 console.log(id)
+                //                 setStatus((d) => ({
+                //                     ...d,
+                //                     editScanTools: true,
+                //                     getData: update
+                //                 }))
+                //             }}>
+                //                 <EditFilled></EditFilled>
+                //             </button>
+                //         </Tooltip>
+                //     }
+                // },
+                // {
+                //     title: 'DELETE',
+                //     key: 'id',
+                //     rowClass: "w-[100px]",
+                //     columnClass: "w-[100px] text-center",
+                //     html: (id, full) => {
+                //         return <Popconfirm cancelText="CANCEL" okText="DELETE" onConfirm={async () => {
+                //             DELETE_API.deleteScanManage({
+                //                 site_name: full.name,
+                //                 id: id,
+                //                 name: full.created_by
+                //             }, setStatus)
+                //         }} title="Delete the task"
+                //             description="Are you sure to delete this task?"
+                //         >
+                //             <button className="flex items-center justify-center w-full text-[1.2rem]" >
+                //                 <DeleteOutlined></DeleteOutlined>
+                //             </button>
+                //         </Popconfirm>
+                //     }
+                // },
 
             ]}
                 data={

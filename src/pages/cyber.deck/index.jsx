@@ -16,11 +16,12 @@ import { GlobeGl } from "../../components/globe"
 import { SliderSlick } from "../../components/slider"
 import { GlobalListSource } from "../../components/layout/global/global.list.source"
 import { GetAndUpdateContext } from "../../model/context.function"
-import RootAPi, { API_GET } from "../../api/elwagyl"
+import RootAPi  from "../../api/elwagyl"
 import { Tooltip } from "antd"
 import { Loading } from "../../components/loading/loadingOther"
 import { Formatter } from "../../helper/formater"
 import { Typography } from 'antd';
+import { sum } from "radash"
 
 const { Text } = Typography;
 
@@ -30,8 +31,62 @@ export const ErrorItems = () => {
 
 const CyberDeck = () => {
     const { value, maximize } = GetAndUpdateContext()
-    let root = RootAPi(['ALERT_SEVERITY', 'ALERT_TYPE', 'DASHBOARD_STATUS', 'AFFECTED_ENTITY'])
-    console.log(root)
+    let root = RootAPi(['ALERT_SEVERITY', 'ALERT_TYPE', 'DASHBOARD_STATUS', 'AFFECTED_ENTITY', "ALERT_GROUP_STATISTIC"])
+
+
+    const totalSeverity = () => {
+        const { isLoading, error, data } = root;
+        const { ALERT_SEVERITY, DASHBOARD_STATUS } = data;
+
+        if (error) {
+            return { result: "ERROR" };
+        }
+
+        if (isLoading) {
+            return {
+                loading: isLoading,
+                result: null,
+            };
+        }
+
+        if (value.APIURLDEFAULT.type !== "siem") {
+            return {
+                loading: isLoading,
+                result: ALERT_SEVERITY
+            };
+        }
+
+        try {
+            let totalScore = DASHBOARD_STATUS;
+            let total = sum(ALERT_SEVERITY, d => d.count);
+            let remaining = totalScore.alert - total;
+
+            ALERT_SEVERITY.push({
+                "name": "info",
+                "color": "white",
+                "count": remaining,
+                "total": Formatter(remaining),
+            });
+
+            let sas = ALERT_SEVERITY.map(d => ({
+                ...d,
+                percentage: parseFloat(((d.count / totalScore.alert) * 100).toFixed(2))
+            }));
+
+            return {
+                loading: isLoading,
+                result: sas
+            };
+        } catch (error) {
+            return {
+                result: null
+            };
+        }
+    };
+
+
+
+
     return <LayoutDashboard>
         <ColumnLeft>
             <CardAnimation>
@@ -47,7 +102,7 @@ const CyberDeck = () => {
                         </div>
                         <div className="grid grid-cols-2 gap-3">
                             {/* <ProgressVertical title="Solved" /> */}
-                            {root.error ? <ErrorItems></ErrorItems> : root.isLoading ? <Loading></Loading> : root.data.ALERT_SEVERITY.map((d, k) => {
+                            {root.error ? <ErrorItems></ErrorItems> : root.isLoading ? <Loading></Loading> : totalSeverity()?.result.map((d, k) => {
                                 return root.data.ALERT_SEVERITY.length !== 4 && k == 0 ? <div key={k} className="col-span-2">
                                     <ProgressVertical title={d.name} color={d.color} percent={d.percentage} total={d.total} />
                                 </div> : <div key={k}>
@@ -68,7 +123,8 @@ const CyberDeck = () => {
                     {STASTISTIC_ALERT_DESC}
                 </SubtitleInfo>
                 <div>
-                    <ChartLineTooltip />
+                    {root.error ? <ErrorItems></ErrorItems> : root.isLoading ? <Loading></Loading> : <ChartLineTooltip data={root.data.ALERT_GROUP_STATISTIC} seriesField={"type"} xField="timestamp" />}
+
                 </div>
                 <div className="flex-1 flex flex-col">
                     <SubtitleInfo title={'LIST threat'}>
@@ -78,17 +134,20 @@ const CyberDeck = () => {
                         <TableInline columns={[
                             {
                                 title: "no",
-                                key: "no"
+                                key: "no",
+                                rowClass: "w-[40px]",
+                                columnClass: "w-[40px]"
                             },
                             {
                                 title: "THREAT CATEGORIES",
                                 key: "name",
                                 rowClass: "w-[165px]",
+                                columnClass: "w-[165px]"
                             },
                             {
                                 title: 'STATISTIC',
                                 key: 'percents',
-                                columnClass: "",
+                                columnClass: "w-[160px]",
                                 rowClass: "w-[160px]",
                                 html: (d) => {
                                     return <Tooltip title={`${!isNaN(d) ? d.toFixed(2) : 0}%`}>
@@ -124,7 +183,7 @@ const CyberDeck = () => {
                                         <div className="text-[128px]" style={{
                                             lineHeight: 1
                                         }}>{
-                                            root.error ? 0 : root.isLoading ? 0 : Formatter(root.data.DASHBOARD_STATUS.alert)
+                                                root.error ? 0 : root.isLoading ? 0 : Formatter(root.data.DASHBOARD_STATUS.alert)
                                             }</div>
                                     </div>
                                 </div>
@@ -142,7 +201,7 @@ const CyberDeck = () => {
                                     <div className="py-8 flex items-center justify-center">
                                         <div className="text-[128px]" style={{
                                             lineHeight: 1
-                                        }}>{root.error ? 0 : root.isLoading ? 0 : Formatter(root.data.DASHBOARD_STATUS.entities_at_risk)}                                        
+                                        }}>{root.error ? 0 : root.isLoading ? 0 : Formatter(root.data.DASHBOARD_STATUS.entities_at_risk)}
                                         </div>
                                     </div>
                                 </div>
@@ -165,11 +224,11 @@ const CyberDeck = () => {
                 {value.GLOBEVALUE.value === "satelite" ?
                     // <Globe status={!maximize?.GLOBESHOW} /> 
                     <GlobeGl status={!maximize?.GLOBESHOW} />
-                    : 
-                            <div className="absolute w-full h-full top-0 left-0 flex flex-1">
-                                <MapHighcharts className="absolute" valueReset={value.GLOBEVALUE.value} />
-                            </div>
-                    }
+                    :
+                    <div className="absolute w-full h-full top-0 left-0 flex flex-1">
+                        <MapHighcharts className="absolute" valueReset={value.GLOBEVALUE.value} />
+                    </div>
+                }
 
             </div>
         </ColumnCenter>
@@ -211,13 +270,13 @@ const AttactCountry = ({ title = "top attack country source", limit }) => {
             {ERRORCOMPONENT.dataNotAvailable}
         </div> : <div className="max-h-[500px] text-blue overflow-y-auto overflow-x-hidden pb-1 pr-3">
             <CardAnimation className="grid grid-cols-3 gap-3">
-                {root.error ? <ErrorItems></ErrorItems> : root.isLoading ? "Loading" : root.data.ATTACK_GROUP.length === 0 ? "Data not found" : root.data.ATTACK_GROUP.slice(0, limit ? 3 : root.ATTACK_GROUP?.data?.length).map((d,k) => {
+                {root.error ? <ErrorItems></ErrorItems> : root.isLoading ? "Loading" : root.data.ATTACK_GROUP.length === 0 ? "Data not found" : root.data.ATTACK_GROUP.slice(0, limit ? 3 : root.ATTACK_GROUP?.data?.length).map((d, k) => {
                     return <div key={k} className="border border-primary px-2 py-1 flex justify-between items-center">
-                    <Text className="text-blue" ellipsis={true}>{k + 1} // {d.region}</Text>
-                    <div>{Formatter(d.count)}</div>
-                </div>
+                        <Text className="text-blue" ellipsis={true}>{k + 1} // {d.region}</Text>
+                        <div>{Formatter(d.count)}</div>
+                    </div>
                 })}
-                
+
             </CardAnimation>
         </div>}
 

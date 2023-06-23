@@ -2,7 +2,7 @@ import { Select, Tooltip } from "antd"
 import { SquareMedium } from "../components/decoration/square"
 import styled from "styled-components"
 import { Controller } from "react-hook-form";
-import { DeleteFilled, ExclamationCircleOutlined } from "@ant-design/icons";
+import { DeleteFilled, ExclamationCircleOutlined, ExclamationOutlined } from "@ant-design/icons";
 import { isArray } from "radash";
 
 const Selecable = styled(Select)`
@@ -143,13 +143,12 @@ export const SelectComponent = ({ onDelete, button, ClassLabel, ClassButton, req
             <div className={`${ClassButton ? "" : ""} absolute right-10`}>
                 {button}
             </div>
-            {error && <div className="text-red-400 absolute px-4 font-[20px] top-[25%]">
-                <Tooltip title={error.message ? error.message : "INPUT IS REQUIRED"}>
-                    <ExclamationCircleOutlined />
-                </Tooltip>
-            </div>}
+            
             <SquareMedium />
         </div>
+        {error && <div className="text-red-400 gap-2 flex text-[15px] items-center">
+                <ExclamationOutlined /> <span>INPUT IS REQUIRED</span>
+            </div>}
     </div>
 
 }

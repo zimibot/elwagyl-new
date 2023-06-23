@@ -32,6 +32,8 @@ module.exports = async function DownloadFIles(msgBtn) {
                     cloneFiles: false,
                     onProgress: function (percentage, chunk, remainingSize) {
                         progress.value = parseInt(percentage);
+                    },onerror: () => {
+                        console.log("error")
                     }
                 },
 
@@ -48,6 +50,7 @@ module.exports = async function DownloadFIles(msgBtn) {
                         'Expires': '0',
                     },
                 });
+                
 
                 if (get.data.newVersion !== version) {
                     let msg = await errorMsg({ msg: "The latest update is available", btnMsg: msgBtn })
@@ -84,6 +87,7 @@ module.exports = async function DownloadFIles(msgBtn) {
                                         app.quit()
                                         console.info(`aborted... ${value}`);
                                     })
+                                    
                                     .on('progress', function (value) {
                                         progressBar.detail = `Progress Download ${value}% out of ${progressBar.getOptions().maxValue}%...`;
                                     });
@@ -93,9 +97,9 @@ module.exports = async function DownloadFIles(msgBtn) {
                                     await downloader.download();
                                 }
                             } else {
-                                setTimeout(() => {
-                                    app.quit()
-                                }, 500);
+                                // setTimeout(() => {
+                                //     app.quit()
+                                // }, 500);
 
                                 const subprocess = child(path.join(tempDir, "updater", "update.bat"), {
                                     detached: true, // jalankan di background

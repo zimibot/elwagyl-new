@@ -43,6 +43,5 @@ module.exports = function Sidebar() {
     
 
     // sideWin.blur()
-    // sideWin.webContents.openDevTools({ mode: 'detach' });
     return sideWin
 }

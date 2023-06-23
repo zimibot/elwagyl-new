@@ -5,8 +5,7 @@ const Connection = require("./function/check.connection")
 const DownloadFIles = require("./download")
 const OtherView = require('./function/browser.oher.window');
 const isDev = require("electron-is-dev")
-const fs = require('fs');
-const path = require("path")
+
 const errorMsg = ({ window, noBtn, msgBtn, msg, type }) => {
   let response = dialog.showMessageBoxSync({
     type: type ? type : "info",
@@ -20,53 +19,6 @@ const errorMsg = ({ window, noBtn, msgBtn, msg, type }) => {
 
 }
 
-const pdfDownload = (win) => {
-
-  const pdf = (url) => {
-    var filepath1 = path.join(__dirname, url);
-
-    var options = {
-      marginsType: 0,
-      pageSize: 'A4',
-      printBackground: true,
-      printSelectionOnly: false,
-      landscape: false
-    }
-
-    win.webContents.printToPDF(options).then(data => {
-      fs.writeFile(filepath1, data, function (err) {
-        if (err) {
-          console.log(err);
-        } else {
-          console.log('PDF Generated Successfully');
-        }
-      });
-    }).catch(error => {
-      console.log(error)
-    });
-  }
-
-  ipcMain.handle('scanpdf', async (args, env) => {
-
-    return new Promise(function (resolve) {
-      if (true) {
-
-        pdf("/pdf/comparisoneha.pdf")
-
-
-      }
-    })
-  })
-  ipcMain.handle('reporteha', async (args, env) => {
-
-    return new Promise(function (resolve) {
-      if (true) {
-        pdf("/pdf/reporteha.pdf")
-      }
-    })
-  })
-
-}
 
 
 const Loading = () => {
@@ -110,8 +62,6 @@ const WindowMain = () => {
         window[0].window.on("close", () => {
           app.quit()
         })
-
-        pdfDownload(window[0].window)
 
         window[0].window.webContents.on("did-finish-load", () => {
           // size()
@@ -170,8 +120,6 @@ const WindowMain = () => {
                     if (d.view) {
 
                       setTimeout(() => {
-
-
                         win.setBrowserView(d.view);
                         d.view.webContents.loadURL(env.url ? env.url : 'about:blank');
                         d.view.setAutoResize({
@@ -353,7 +301,7 @@ const WindowMain = () => {
       notif({
         load: load,
         title: "ERROR NETWORK",
-        content: "CONNECTION TO SERVER FAILED. PLEASE VERIFY YOUR NETWORK CONNECTIVITY AND ENSURE THAT YOUR VPN CONNECTION, IF APPLICABLE, IS ESTABLISHED.",
+        content: "CONNECTION TO SERVER FAILED. PLEASE VERIFY YOUR NETWORK CONNECTIVITY AND ENSURE THAT YOUR VPN CONNECTION IS ESTABLISHED.",
         colorContent: "#ED6A5E",
         favicon: `icon/alert.png`,
         iconContent: `<svg width="40" height="40" viewBox="0 0 22 19" fill="none" xmlns="http://www.w3.org/2000/svg">

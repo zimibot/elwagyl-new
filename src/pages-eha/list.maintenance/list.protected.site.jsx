@@ -131,6 +131,7 @@ const Data = ({ api, setStatus }) => {
             title: 'EDIT',
             key: 'id',
             rowClass: "w-[50px]",
+            columnClass: "w-[50px]",
             html: (a) => {
                 return <button onClick={async () => {
                     let data = await protectedSiteDetail({ idProtectedSite: a })
@@ -151,7 +152,8 @@ const Data = ({ api, setStatus }) => {
         {
             title: 'DELETE',
             key: 'id',
-            rowClass: "w-[50px]",
+            rowClass: "w-[100px]",
+            columnClass: "w-[100px]",
             html: (a, ful) => {
                 return <Popconfirm
                     title="Delete the task"

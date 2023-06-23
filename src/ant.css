@@ -255,6 +255,11 @@ li.ant-menu-overflow-item.ant-menu-overflow-item-rest.ant-menu-submenu.ant-menu-
 
 .ant-switch .ant-switch-handle::before {
   border-radius: 0;
+  background: #007488;
+}
+
+.ant-switch.ant-switch-checked .ant-switch-handle::before {
+  border-radius: 0;
   background: #00D8FF;
 }
 
@@ -403,11 +408,29 @@ span.anticon.anticon-check-circle svg {
 }
 
 .g2-tooltip {
-  background: #000000c7 !important;
+  background: transparent !important;
   box-shadow: 0 0 !important;
   color: white !important;
   backdrop-filter: blur(5px);
 }
+
+.ant-dropdown .ant-dropdown-menu {
+  background: rgb(11, 85, 103);
+  border-radius: 0;
+}
+
+.ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-item {
+  color: white;
+}
+
+.ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-item-selected {
+  background: #00d8ff;
+  color: #222222;
+  font-weight: bold;
+  border-radius: 0;
+}
+
+
 
 .ant-tooltip .ant-tooltip-inner {
   background: #000000;
@@ -703,8 +726,19 @@ span.ant-menu-title-content {
   color: #00d8ff!important;
 }
 
+.ant-typography .ant-typography-expand {
+  background: #0b5567;
+  padding: 2px 10px;
+  color: white;
+  font-size: 12px;
+}
+
 .ant-descriptions.ant-descriptions-bordered .ant-descriptions-item-label {
   background: #152a3680;
+}
+
+.ant-descriptions.ant-descriptions-bordered .ant-descriptions-row {
+  border-bottom: 1px solid #152a36;
 }
 
 .ant-slider-mark-text {

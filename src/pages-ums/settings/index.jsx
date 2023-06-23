@@ -1,4 +1,4 @@
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons"
+import { CheckOutlined, CloseOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons"
 import { CardBox } from "../../components/layout/card"
 import { LayoutDashboard } from "../../components/layout/dashboard.layout"
 import { TitleContent } from "../../components/layout/title"
@@ -11,7 +11,6 @@ import { SelectComponent } from "../../components.eha/select"
 import { useForm } from "react-hook-form"
 import { GET_API_UMS } from "../../api/ums/GET"
 import { useState } from "react"
-import { isArray } from "radash"
 import { toastItem } from "../usermanagement"
 import { Loading } from "../../pages-eha/list.maintenance"
 import { isDev } from "../../helper/context"
@@ -40,57 +39,75 @@ const Settings = () => {
                     }}>[ + ] ADD</ButtonComponents>
                 </div>
             </TitleContent>
-            {api.error ? "" : api.loading ? <Loading></Loading> : <TableInline classTable={"text-[16px]"} border hoverDisable columns={[
+            {api.error ? "" : api.loading ? <Loading></Loading> : <TableInline ischeck={true} Loading={api.isFetching} classTable={"text-[16px]"} border hoverDisable columns={[
                 {
                     title: 'Username',
                     key: 'username',
-                    rowClass: "w-[150px]"
+                    rowClass: "w-[150px]",
+                    columnClass: "w-[150px]",
+
                 },
                 {
                     title: 'email',
                     key: 'email',
-                    columnClass: "text-center",
-                    rowClass: "w-[100px] text-center"
+                    columnClass: "w-[300px]",
+                    rowClass: "w-[300px]",
                 },
                 {
                     title: 'ALLOWED ACCESS PAGE',
                     key: 'pages',
-                    rowClass: "w-[600px]",
-                    html: (data) => {
-                        let items = []
+                    htmlDropdown: (data) => {
+                        let { current, subDropdown } = data
+                        // let items = []
 
-                        if (data.length > 0) {
-                            data.map((d) => ({
-                                ...d,
-                                pages: d.pages.map(d => {
-                                    items.push(d)
+                        // console.log(data)
+
+                        // if (data.length > 0) {
+                        //     data.map((d) => ({
+                        //         ...d,
+                        //         pages: d.pages.map(d => {
+                        //             items.push(d)
+                        //         })
+                        //     }))
+                        // }
+
+                        // return <div className=" flex flex-wrap">
+                        //     {items.map((d, k) => (<div key={k} className="flex">
+                        //         <div className="px-2">{d.name}</div>
+                        //         |
+                        //     </div>
+                        //     ))}
+                        // </div>
+
+                        return <div className="flex gap-4">
+                            {
+                                current?.map((d, k) => {
+                                    return <button onClick={subDropdown} className="border border-border_second flex hover:bg-blue hover:text-black" key={k}>
+                                        <div className="px-2">
+                                            {d.group}
+                                        </div>
+                                        <div className="border-l border-border_second px-4 bg-border_second text-blue">
+                                            {d.pages.length}
+                                        </div>
+                                    </button>
                                 })
-                            }))
-                        }
-
-                        return <div className=" flex flex-wrap">
-                            {items.map((d, k) => (<div key={k} className="flex">
-                                <div className="px-2">{d.name}</div>
-                                |
-                            </div>
-                            ))}
+                            }
                         </div>
                     }
                 },
                 {
                     title: 'DATE CREATED',
                     key: 'date',
-                    columnClass: "text-center",
+                    columnClass: "w-[150px] text-center",
                     rowClass: "w-[150px] text-center"
                 },
                 {
                     title: 'edit',
                     key: 'id',
-                    columnClass: "text-center",
-                    rowClass: "w-[100px] text-center",
+                    columnClass: "w-[80px]  text-center",
+                    rowClass: "w-[80px] text-center",
                     html: (id) => {
                         return <button onClick={() => {
-                            console.log(id)
                             setStatus((d) => ({
                                 ...d,
                                 premission_data: id,
@@ -104,8 +121,8 @@ const Settings = () => {
                 {
                     title: 'delete',
                     key: 'id',
-                    rowClass: "w-[100px] text-center",
-                    columnClass: "text-center",
+                    rowClass: "w-[80px] text-center",
+                    columnClass: "w-[80px]  text-center",
                     html: (id) => {
                         return <Popconfirm placement="left" title="Are you sure you want to delete this data?" onConfirm={() => {
                             axios.delete(`${path}/users/permissions/${id}`, {
@@ -124,17 +141,60 @@ const Settings = () => {
                     }
                 },
 
-            ]} data={api.data.SettingsPagesPermission.data.map(d => ({
-                ...d,
-                ...d.user = {
-                    id_user: d.user.id,
-                    username: d.user.username,
-                    email: d.user.email
-                },
-            }))} />}
+            ]}
+                htmlDropdown={({ data }) => {
+                    let { pages } = data
+
+
+                    return <div className="p-4 grid grid-cols-2 gap-4">
+                        {!pages ? "NO DATA" : pages.map((d, k) => {
+                            return <div key={k} className="w-full h-full bg-primary p-4 flex-col flex">
+                                <div className="w-full grid grid-cols-2">
+                                    <div className="font-bold">{d.group}</div>
+                                    <div className="grid grid-cols-4 text-center">
+                                        <div>SHOW</div>
+                                        <div>ADD</div>
+                                        <div>EDIT</div>
+                                        <div>DELETE</div>
+                                    </div>
+                                </div>
+                                <div className="flex-1">
+                                    {d.pages.length === 0 ? <div className="flex justify-center items-center h-full">NO DATA</div> : d.pages.map((d, k) => {
+                                        let add = d.add ? <CheckOutlined></CheckOutlined> : <CloseOutlined className="text-red-500" />
+                                        let edit = d.edit ? <CheckOutlined></CheckOutlined> : <CloseOutlined className="text-red-500" />
+                                        let show = d.show ? <CheckOutlined></CheckOutlined> : <CloseOutlined className="text-red-500" />
+                                        let Delete = d.delete ? <CheckOutlined></CheckOutlined> : <CloseOutlined className="text-red-500" />
+
+                                        return <div key={k} className="grid grid-cols-2">
+                                            <div className="font-thin">{d.name}</div>
+                                            <div className="grid grid-cols-4 text-center">
+                                                <div>
+                                                    {show}
+                                                </div>
+                                                <div>
+                                                    {add}
+                                                </div>
+                                                <div>{edit}</div>
+                                                <div>{Delete}</div>
+                                            </div>
+                                        </div>
+                                    })}
+                                </div>
+                            </div>
+                        })}
+                    </div>
+                }}
+                data={api.data.SettingsPagesPermission?.data.map(d => ({
+                    ...d,
+                    ...d.user = {
+                        id_user: d.user.id,
+                        username: d.user.username,
+                        email: d.user.email
+                    },
+                }))} />}
 
         </CardBox>
-        <AddUser />
+        <AddSettings />
         <ModalEditPages></ModalEditPages>
     </LayoutDashboard>
 }
@@ -169,19 +229,19 @@ const ModalEditPages = () => {
     </ModalsComponent>
 }
 
-const AddUser = () => {
+const AddSettings = () => {
     const { setStatus, status } = GetAndUpdateContext()
 
     const api = GET_API_UMS.root(["SettingsGroupAccess", "UserGetUser", "SettingsPagesAccess", "SettingsPagesPermission", "SettingsPagesPermissionDetail"])
     const [group, setGroup] = useState([])
 
-    const { register, control, handleSubmit, setValue, watch, reset, formState: { errors } } = useForm()
+    const { register, control, handleSubmit, setValue, watch, reset, resetField, formState: { errors } } = useForm()
 
     useEffect(() => {
         const item = async () => {
-            let data = await api.SettingsPagesPermissionDetail({ id: status.premission_data })
 
             if (status.premission_data) {
+                let data = await api.SettingsPagesPermissionDetail({ id: status.premission_data })
                 let item = data.data
                 setValue("group_ids", item.groups.map(d => d.id))
                 setValue("user_id", item.user.id)
@@ -205,7 +265,10 @@ const AddUser = () => {
 
                 setValue("pages", convertedData2)
                 setGroup(item.groups.map(d => d.name))
-            } 
+            } else {
+                reset()
+                setGroup([])
+            }
 
         }
 
@@ -219,7 +282,6 @@ const AddUser = () => {
 
     }, [status.premission_data])
 
-    console.log(watch())
 
 
     const onSubmit = (d) => {
@@ -227,7 +289,7 @@ const AddUser = () => {
         let item = d.pages.filter(d => d.group !== undefined)
         let pages = item.length > 0 ? item.map(se => ({
             ...se,
-            pages: Object.values(se.pages).map(page => {
+            pages: Object.values(se.pages).map((page, k) => {
                 return {
                     ...page
                 };
@@ -236,15 +298,13 @@ const AddUser = () => {
                 edit: d.edit === undefined ? false : d.edit,
                 delete: d.delete === undefined ? false : d.delete,
                 add: d.add === undefined ? false : d.add,
-            } : { ...d }))
+            } : { ...d })).sort((a, b) => a.key - b.key)
         })) : []
-
 
         d = {
             ...d,
             pages
         }
-
 
         if (status.premission_data) {
             toastItem({ data: d, api, name: "SettingsPagesPermission", url: `/users/permissions/${status.premission_data}`, successMsg: "UPDATE SETTINGS SUCCESS", type: "put" })
@@ -261,9 +321,6 @@ const AddUser = () => {
             })
 
         }
-
-
-
 
     }
 
@@ -296,7 +353,7 @@ const AddUser = () => {
                         value: d.id
                     })) : []} mode="multiple" width={"100%"} height={45} control={control} name={"group_ids"} label={"GROUP ACCESS"}></SelectComponent>
                 </div>
-                {group.length > 0 ? <div className="grid grid-cols-2 gap-4 col-span-2 px-4"><TableAccess setStatus={setStatus} watch={watch} setValue={setValue} current={group} data={api.data.SettingsPagesAccess.data} control={control} ></TableAccess> </div> : <div className="col-span-2 flex items-center justify-center">
+                {group.length > 0 ? <div className="grid grid-cols-2 gap-4 col-span-2 px-4"><TableAccess resetField={resetField} api={api} setStatus={setStatus} watch={watch} setValue={setValue} current={group} data={api.data.SettingsPagesAccess.data} control={control} ></TableAccess> </div> : <div className="col-span-2 flex items-center justify-center">
                     <div className="border border-blue p-4">
                         PLEASE SELECT GROUP ACCESS
                     </div>
@@ -317,17 +374,23 @@ const AddUser = () => {
 
 }
 
-const TableAccess = ({ control, data, current, setValue, watch, setStatus }) => {
+const TableAccess = ({ control, data, current, setValue, watch, setStatus, api, resetField }) => {
     let filteredData = data.filter(item => current.includes(item.group));
     let watchs = watch()
 
-    const checkShow = (k, key) => {
+    const checkShow = (gp, id) => {
         try {
-            let data = watchs.pages && isArray(watchs.pages) ? isArray(watchs.pages[k].pages) ? watchs.pages[k].pages[key] : null : null
-
-            return data
+            // let data = watchs.pages && isArray(watchs.pages) ? isArray(watchs.pages[k].pages) ? watchs.pages[k].pages[key] : null : null
+            let findGp = watchs.pages.find(d => d.group === gp)
+            let show = findGp?.pages[id]?.show
+            return {
+                show
+            }
         } catch (error) {
-            return []
+
+            return {
+                show: true
+            }
         }
     }
 
@@ -335,24 +398,71 @@ const TableAccess = ({ control, data, current, setValue, watch, setStatus }) => 
     return filteredData.map((d, k) => {
 
 
-        let eha = d.group === "E.H.A" ? [
-            {
-                title: 'add',
-                key: 'id',
-                rowClass: "w-[110px]",
-                html: (id, isi, key) => {
-                    // let pages = watchs && watchs.pages[k] && watchs.pages[k].pages[key] && watchs.pages[k].pages[key].show
+        let data = [
 
-                    return <Form.switch disabled={!checkShow(k, key)?.show} checkedChildren="ON" unCheckedChildren="OFF" name={`pages.[${k}].pages.[${id}].add`} control={control}></Form.switch>
+            {
+                title: 'Page name',
+                key: 'name',
+                html: (name, full) => {
+
+                    return <div className="flex gap-2 items-center">
+                        {isDev && <div className="cursor-pointer" onClick={() => {
+                            setStatus((w) => ({
+                                ...w,
+                                modalEdit: true,
+                                pageEdit: {
+                                    ...full, group: {
+                                        name: d.group
+                                    }
+                                }
+                            }))
+                        }}><EditOutlined></EditOutlined></div>}
+                        <span>{name}</span>
+                    </div>
                 }
             },
+            {
+                title: 'show',
+                key: 'id',
+                rowClass: "w-[110px]",
+                columnClass: "w-[110px]",
+                html: (id, isi, key) => {
+                    let group = d.group
+                    return <Form.switch onchangeData={(d) => {
+                        setValue(`pages.[${k}].group`, group)
+                        setValue(`pages.[${k}].pages.${id}.key`, key)
+                        setValue(`pages.[${k}].pages.${id}.id`, id)
+                        setValue(`pages.[${k}].pages.${id}.name`, isi.name)
+                        setValue(`pages.[${k}].pages.${id}.url`, isi.url)
+                        if (!d) {
+                            resetField(`pages.[${k}].pages.[${id}].add`)
+                            resetField(`pages.[${k}].pages.[${id}].edit`)
+                            resetField(`pages.[${k}].pages.[${id}].delete`)
+                        }
+                    }} checkedChildren="ON" unCheckedChildren="OFF" name={`pages.[${k}].pages.${id}.show`} control={control}></Form.switch>
+                }
+            },
+        ]
+
+        d.group === "E.H.A" ? data.push({
+            title: 'add',
+            key: 'id',
+            rowClass: "w-[110px]",
+            columnClass: "w-[110px]",
+            html: (id, isi, key) => {
+                // let pages = watchs && watchs.pages[k] && watchs.pages[k].pages[key] && watchs.pages[k].pages[key].show
+
+                return <Form.switch disabled={!checkShow(d.group, id).show} checkedChildren="ON" unCheckedChildren="OFF" name={`pages.[${k}].pages.[${id}].add`} control={control}></Form.switch>
+            }
+        },
             {
                 title: 'edit',
                 key: 'id',
                 rowClass: "w-[110px]",
+                columnClass: "w-[110px]",
                 html: (id, isi, key) => {
 
-                    return <Form.switch disabled={!checkShow(k, key)?.show} checkedChildren="ON" unCheckedChildren="OFF" name={`pages.[${k}].pages.[${id}].edit`} control={control}></Form.switch>
+                    return <Form.switch disabled={!checkShow(d.group, id).show} checkedChildren="ON" unCheckedChildren="OFF" name={`pages.[${k}].pages.[${id}].edit`} control={control}></Form.switch>
                 }
             },
 
@@ -360,57 +470,17 @@ const TableAccess = ({ control, data, current, setValue, watch, setStatus }) => 
                 title: 'delete',
                 key: 'id',
                 rowClass: "w-[110px]",
+                columnClass: "w-[110px]",
                 html: (id, isi, key) => {
 
-                    return <Form.switch disabled={!checkShow(k, key)?.show} checkedChildren="ON" unCheckedChildren="OFF" name={`pages.[${k}].pages.[${id}].delete`} control={control}></Form.switch>
+                    return <Form.switch disabled={!checkShow(d.group, id).show} checkedChildren="ON" unCheckedChildren="OFF" name={`pages.[${k}].pages.[${id}].delete`} control={control}></Form.switch>
                 }
-            },
-        ] : []
+            },) : []
 
 
         return <div key={k} className={`flex flex-col space-y-4 ${filteredData.length === 1 ? "col-span-2" : ""}`}>
             <span> {d.group}</span>
-            <TableInline border hoverDisable columns={[
-
-                {
-                    title: 'Page name',
-                    key: 'name',
-                    html: (name, full) => {
-
-                        return <div className="flex gap-2 items-center">
-                            {isDev && <div className="cursor-pointer" onClick={() => {
-                                setStatus((w) => ({
-                                    ...w,
-                                    modalEdit: true,
-                                    pageEdit: {
-                                        ...full, group: {
-                                            name: d.group
-                                        }
-                                    }
-                                }))
-                            }}><EditOutlined></EditOutlined></div>}
-                            <span>{name}</span>
-                        </div>
-                    }
-                },
-                {
-                    title: 'show',
-                    key: 'id',
-                    rowClass: "w-[110px]",
-                    html: (id, isi, key) => {
-                        let group = d.group
-                        return <Form.switch onchangeData={() => {
-                            setValue(`pages.[${k}].group`, group)
-                            setValue(`pages.[${k}].pages.${id}.id`, id)
-                            setValue(`pages.[${k}].pages.${id}.name`, isi.name)
-                            setValue(`pages.[${k}].pages.${id}.url`, isi.url)
-                        }} checkedChildren="ON" unCheckedChildren="OFF" name={`pages.[${k}].pages.${id}.show`} control={control}></Form.switch>
-                    }
-                },
-                ...eha,
-
-                ,
-            ]} data={d.pages} classTable={"text-[15px]"} />
+            <TableInline Loading={api.isFetching} border hoverDisable columns={data} data={d.pages} classTable={"text-[15px]"} />
         </div>
     })
 

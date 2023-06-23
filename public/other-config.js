@@ -72,6 +72,18 @@ window.addEventListener('DOMContentLoaded', () => {
 
   style.innerHTML =
     `
+
+      #fawkes-root.loading.prisma:after, #fawkes-root.prisma .sparky-logo {
+        display: none!important;
+      }
+      
+      .spk-load-container {
+          display: none!important;
+      }
+      
+      #fawkes-root.loading:before {
+          display: none!important;
+      }
   
       body,a,div,button,span,p {
         font-family: 'Rajdhani', sans-serif!important;

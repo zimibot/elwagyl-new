@@ -10,7 +10,6 @@ import { GetAndUpdateContext } from "../../model/context.function"
 import { GET_API_EHA } from "../../api/eha/GET"
 import { useForm } from "react-hook-form"
 import { useEffect, useState } from "react"
-import { isEmpty } from "radash"
 import { Form } from "../../components.eha/input"
 import { ButtonComponents } from "../../components.eha/button"
 import { POST_API } from "../../api/eha/POST"
@@ -18,6 +17,7 @@ import { Loading } from "../list.maintenance"
 import { TitleContent } from "../../components/layout/title"
 import { UPDATE_API } from "../../api/eha/UPDATE"
 import { DELETE_API } from "../../api/eha/DELETE"
+import { switchColor } from "../../helper/switch-color"
 
 const ProfileIndicator = () => {
     const { setStatus, status } = GetAndUpdateContext()
@@ -33,25 +33,27 @@ const ProfileIndicator = () => {
     const [riskLevel, setRiskLevel] = useState([
         {
             label: "low",
-            value: 20
+            value: null
         },
         {
             label: "medium",
-            value: 40
+            value: null
         },
         {
             label: "high",
-            value: 60
+            value: null
         },
     ])
     const [show, setshow] = useState(false)
-    const { reset, handleSubmit, control, setValue, resetField, formState: { errors } } = useForm()
+    const { reset, handleSubmit, control, watch, setValue, formState: { errors } } = useForm()
 
-    useEffect(() => {
-        if (!isEmpty(errors)) {
-            ModalSuccess({ type: "error", onlyShowOk: true, title: "Please  completing all the inputs ." })
-        }
-    }, [errors])
+    let item = watch()
+
+    // useEffect(() => {
+    //     if (!isEmpty(errors)) {
+    //         ModalSuccess({ type: "error", onlyShowOk: true, title: "Please  completing all the inputs ." })
+    //     }
+    // }, [errors])
 
 
     const onSubmit = (a) => {
@@ -62,6 +64,7 @@ const ProfileIndicator = () => {
             SAVEMODAL: !d["SAVEMODAL"]
         }))
     }
+
 
     return <LayoutDashboard>
         <CardAnimation className="grid grid-cols-5 col-span-full text-[16px] bg-[#101C26] gap-6">
@@ -88,6 +91,7 @@ const ProfileIndicator = () => {
                     {api.error ? "" : api.loading ? <Loading></Loading> : <TableInline
                         border
                         hoverDisable
+                        Loading={api.isFetching}
                         columns={
                             [
                                 {
@@ -96,10 +100,30 @@ const ProfileIndicator = () => {
                                     rowClass: 'w-[50px] text-center',
                                     columnClass: "w-[50px] text-center",
                                     html: (id) => {
+
+                                        // Iterate over the keys in data2
+
                                         return <button onClick={async () => {
                                             setshow(true)
+                                            let data1 = [];
+
                                             let data = await api.getAssetsRiskGroupDetail({ idAssets: id })
                                             let result = data.items.result
+                                            let data2 = result.remediation_deadline_adjustment_configs
+
+                                            for (let key in data2) {
+                                                // Create a new object with label and value properties
+                                                let obj = {
+                                                    label: key,
+                                                    value: data2[key]
+                                                };
+
+                                                // Push the object into the data1 array
+                                                data1.push(obj);
+                                            }
+
+                                            setRiskLevel(data1)
+
                                             setStatus(d => ({
                                                 ...d,
                                                 dataSave: result
@@ -116,8 +140,8 @@ const ProfileIndicator = () => {
                                 {
                                     title: 'DELETE',
                                     key: 'id',
-                                    rowClass: 'w-[50px] text-center',
-                                    columnClass: "w-[50px] text-center",
+                                    rowClass: 'w-[80px] text-center',
+                                    columnClass: "w-[80px] text-center",
                                     html: (id, full) => {
                                         return <Popconfirm onConfirm={() => {
                                             let data = {
@@ -150,17 +174,18 @@ const ProfileIndicator = () => {
                                     key: 'risk_level',
                                     rowClass: 'w-[100px] text-center',
                                     columnClass: "w-[100px] text-center",
+                                    html : (data) => {
+                                        
+
+                                        return switchColor(data)
+                                    }
                                 },
 
                             ]
                         }
                         data={
                             api.data.assetRiskGroup.result
-                            // new Array(20).fill({
-                            //     name: "DEFAULT RISK PROFILE",
-                            //     description: "Default risk profile (no DEADLINE ADJUSTMENT)",
-                            //     risk_level: "medium"
-                            // })
+                        
                         }
                         style={{
                             row: {
@@ -179,7 +204,7 @@ const ProfileIndicator = () => {
                     <div>
 
                         <div className="space-y-6 px-4 py-4 border-b border-primary">
-                            <div>{!status.dataSave ? "ADD RISK PROFILE" : "EDIT RISK PROFILE"}</div>
+                            <div className="font-bold text-lg">{!status.dataSave ? "ADD RISK PROFILE" : `EDIT RISK PROFILE - ${item.name}`}</div>
                             <div >
                                 <b>REMEDIATION DEADLINE ADJUSTMENT</b>
                             </div>
@@ -200,12 +225,11 @@ const ProfileIndicator = () => {
                                                 <InputNumbers error={errors.remediation_deadline_adjustment_configs && errors.remediation_deadline_adjustment_configs[d.label]} control={control} name={`remediation_deadline_adjustment_configs.${d.label}`} onChangeData={(c) => {
 
                                                     const index = riskLevel.findIndex((item) => item.label === d.label);
-                                                    resetField(`low_vulnerability_risk_level_configs.${d.label}`)
-                                                    resetField(`medium_vulnerability_risk_level_configs.${d.label}`)
-                                                    resetField(`high_vulnerability_risk_level_configs.${d.label}`)
-                                                    resetField(`critical_vulnerability_risk_level_configs.${d.label}`)
+                                                    // resetField(`low_vulnerability_risk_level_configs.${d.label}`)
+                                                    // resetField(`medium_vulnerability_risk_level_configs.${d.label}`)
+                                                    // resetField(`high_vulnerability_risk_level_configs.${d.label}`)
+                                                    // resetField(`critical_vulnerability_risk_level_configs.${d.label}`)
                                                     if (index !== -1) {
-
                                                         const updatedRiskLevel = [...riskLevel];
                                                         updatedRiskLevel[index] = { ...updatedRiskLevel[index], value: c };
                                                         setRiskLevel(updatedRiskLevel);
@@ -219,6 +243,8 @@ const ProfileIndicator = () => {
 
                             </div>
                         </div>
+
+                        
                         <div className="px-4 py-6 border-b border-primary">
                             <b>LOW VULNERABILITY RISK LEVEL</b>
                         </div>

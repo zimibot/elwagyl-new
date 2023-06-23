@@ -4,6 +4,7 @@ import { Alert, Descriptions, notification } from 'antd';
 import { ButtonComponents } from "../../components.eha/button";
 import { useForm } from "react-hook-form";
 import axios from "axios";
+const path = import.meta.env.VITE_CURRENT_IP;
 
 const ProfilePage = () => {
 
@@ -15,7 +16,7 @@ const ProfilePage = () => {
             user_id: localStorage.getItem("id")
         }
 
-        axios.post("http://165.22.50.184:8000/users/reset-password", data, {
+        axios.post(`http://${path}:8000/users/reset-password`, data, {
             headers: {
                 "Authorization": `Bearer ${localStorage.getItem("token")}`,
                 "Content-Type": "application/json"

@@ -230,7 +230,7 @@ const API_GET = {
 
         return { data: item, error: data?.detail, isLoading, props }
     },
-   
+
     DASHBOARD_STATUS: () => {
         const { value } = GetAndUpdateContext()
         const { isLoading, error, data, ...props } = useQuery(['dashboardStatus', value.APIURLDEFAULT, value.DATEVALUE.value], () =>
@@ -446,6 +446,20 @@ const API_GET = {
 
         return { data, error: data?.detail, isLoading, props }
     },
+    ALERT_GROUP_STATISTIC: () => {
+        const { value } = GetAndUpdateContext()
+        const { isLoading, error, data, ...props } = useQuery(['alert-group-statistic', value.APIURLDEFAULT, value.DATEVALUE.value, value.APIURLDEFAULT.ip], () =>
+            fetch(`${value.APIURLDEFAULT.ip}/main/alert-group-statistic?${value.APIURLDEFAULT.timeType}=${value.DATEVALUE.value}`, {
+                ...Options()
+            }).then(res => {
+                return res.json()
+            })
+        )
+
+
+
+        return { data, error: data?.detail, isLoading, props }
+    },
     AVAILABILITY_ANOMALIES_SUMMARY: () => {
         const { value } = GetAndUpdateContext()
         // let item = []
@@ -485,14 +499,8 @@ const API_GET = {
             }).then(res => {
                 return res.json()
             }
-            ),
-            {
-                refetchOnWindowFocus: false,
-                refetchInterval: false
-            }
+            )
         )
-
-
 
 
         return { data, error: data?.detail, isLoading, props }
@@ -547,11 +555,7 @@ const API_GET = {
             }).then(res => {
                 return res.json()
             }
-            ),
-            {
-                refetchOnWindowFocus: false,
-                refetchInterval: false
-            }
+            )
         )
 
 
@@ -721,48 +725,40 @@ const API_GET = {
 
 
 const RootAPi = (ita) => {
-
-
-    if (isArray(ita)) {
-        let data = {
-            error: [],
-            data: {},
-            isLoading: [],
-            props: {}
-        }
-        ita.map(d => {
-            let items = API_GET[d]()
-            //THREATSMAP_CYBER_ATTACK_THREATS
-            if (items.isLoading !== undefined) {
-                data.error.push(items.error ? true : false)
-
-                if (!items.isLoading) {
-                    if (!items.data) {
-                        data.error = [true]
-                    }
-                }
-
-                data.data[d] = items.data
-                data.props[d] = { ...items }
-                data.isLoading.push(items.isLoading)
-            }
-        })
-
-
-
-        return {
-            ...data,
-            error: checkStatement(data.error),
-            isLoading: checkStatement(data.isLoading)
-        }
-
-    } else {
-        return {
-            error: true
-        }
+    if (!Array.isArray(ita)) {
+        return { error: true };
     }
 
+    let data = {
+        error: [],
+        data: {},
+        isLoading: [],
+        props: {}
+    };
+
+    ita.forEach(d => {
+        let items = API_GET[d]();
+
+        if (items.isLoading !== undefined) {
+            data.error.push(!!items.error);
+
+            if (!items.isLoading && !items.data) {
+                data.error = [true];
+            }
+
+            data.data[d] = items.data;
+            data.props[d] = { ...items };
+            data.isLoading.push(items.isLoading);
+        }
+    });
+
+    return {
+        ...data,
+        error: checkStatement(data.error),
+        isLoading: checkStatement(data.isLoading)
+    };
 }
+
 
 
 export {

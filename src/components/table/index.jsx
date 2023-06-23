@@ -2,9 +2,12 @@ import styled from 'styled-components';
 import { Data } from './data';
 import { Pagination, Tooltip } from 'antd';
 import { ERRORCOMPONENT } from '../../model/information';
-import { useVirtualizer } from '@tanstack/react-virtual';
-import { useRef } from 'react';
-import { ErrorItems } from '../../pages/cyber.deck';
+import { useEffect, useRef, useState } from 'react';
+import { useMemo } from 'react';
+import { DownOutlined, LoadingOutlined, UpOutlined } from '@ant-design/icons';
+import { CardAnimation } from '../layout/card';
+import { Form } from '../../components.eha/input';
+import { toast } from 'react-hot-toast';
 
 const Tables = styled.table`
     border-collapse: inherit;
@@ -78,14 +81,6 @@ export const TableInline = ({
     Loading,
     columns = [
         {
-            title: 'No',
-            key: 'no',
-        },
-        {
-            title: 'THREAT CATEGORIES',
-            key: 'threat',
-        },
-        {
             title: 'STATISTIC',
             key: 'statistics',
             columnClass: "",
@@ -95,10 +90,11 @@ export const TableInline = ({
                     <div className="h-full bg-blue" style={{ width: `${d}%` }}></div>
                 </div>
             },
-        },
-        {
-            title: 'TOTAL',
-            key: 'total',
+            htmlDropdown: "",
+            function: "",
+            htmlTitle: () => {
+
+            }
         },
     ], data = [
         {
@@ -107,124 +103,177 @@ export const TableInline = ({
             statistics: 32,
             total: 1240,
         },
-        {
-            no: '01',
-            threat: 'BRUTE FORCE ATTACK',
-            statistics: 32,
-            total: 1240,
-        },
-        {
-            no: '01',
-            threat: 'BRUTE FORCE ATTACK',
-            statistics: 32,
-            total: 1240,
-        },
-        {
-            no: '01',
-            threat: 'BRUTE FORCE ATTACK',
-            statistics: 32,
-            total: 1240,
-        },
-    ], height = "auto", error, name, currentPage = 1, onChange, custom, pageSize = 1, infiniteScroll, hoverDisable, paggination, borderLast, tooltip, style = { columns: {}, row: {} }, onLoad = () => { }, className = "flex-auto flex flex-col", classTable, onClick = () => { }, border, active = null, totalPages = 30 }) => {
+    ], height = "auto", isload, name, ischeck, checkFunction, currentPage = 1, onChange, custom, pageSize = 1, hoverDisable, paggination, borderLast, tooltip, style = { columns: {}, row: {} }, htmlDropdown, className = "flex-auto flex flex-col", classTable, onClick = () => { }, border, active = null, totalPages = 30, classSubHtml }) => {
 
 
-    const parentRef = useRef()
+    const [item, setItem] = useState(null)
+    const [dcolumns, setColumns] = useState([])
+    const [check, setcheck] = useState([])
+    const [checkAll, setcheckAll] = useState(false)
+    const [checkCache, setCheckCache] = useState({}); // Menyimpan status checked untuk setiap item
+    const [subActiveCache, setSubActiveCache] = useState({}); // Menyimpan status subActive untuk setiap item
 
-    // The virtualizer
-    const rowVirtualizer = useVirtualizer({
-        count: !data ? 0 : data.length,
-        getScrollElement: () => parentRef.current,
-        estimateSize: () => 50,
-    })
+    useEffect(() => {
+        if (checkFunction) {
+            checkFunction(check)
+        }
+    }, [check])
+
+    useEffect(() => {
+        if (item && item.length > 0) {
+            if (check.length === item.length) {
+                setcheckAll(true)
+            }
+        }
+
+    }, [item, check])
+
+    useEffect(() => {
+        if (item) {
+            const newSubActiveCache = {};
+            item.forEach(item => {
+                newSubActiveCache[item.id] = item.subActive;
+            });
+            setSubActiveCache(newSubActiveCache);
+        }
+    }, [item, Loading]);
+
+    useEffect(() => {
+        if (checkAll) {
+            const newCheckCache = {};
+            item.forEach(item => newCheckCache[item.id] = true);
+            setCheckCache(newCheckCache);
+        } else {
+            setCheckCache({});
+        }
+    }, [checkAll, Loading]);
+
+
+    useEffect(() => {
+
+        setItem(null)
+        if (data) {
+            const newCheck = [];
+            const newItem = data.map(d => {
+                const checked = checkCache.hasOwnProperty(d.id) ? checkCache[d.id] : false;
+                const subActive = subActiveCache.hasOwnProperty(d.id) ? subActiveCache[d.id] : false;
+                if (checked) newCheck.push(d);
+                return { ...d, checked, subActive };
+            });
+            setItem(newItem);
+            setcheck(newCheck);
+        }
+
+        return () => {
+            setItem(null)
+            setcheck([])
+        }
+
+
+
+    }, [Loading, isload]);
+
+
+    let sate = htmlDropdown || checkFunction ? {
+        key: "dropdown",
+        rowClass: "w-[50px]",
+        columnClass: "w-[50px]",
+        htmlTitle: () => {
+            return <Form.check checked={checkAll} onChange={(a) => {
+                var targetCheck = a.target.checked;
+
+                if (targetCheck) {
+                    setcheck(item);
+
+                } else {
+                    setcheck([]);
+                }
+                setcheckAll(targetCheck)
+                setItem(prevState => prevState.map(item =>
+                    ({ ...item, checked: targetCheck })
+                ))
+            }}></Form.check>
+        },
+        htmlDropdown: ({ subDropdown, fullData }) => {
+            return <button className="items-center flex">
+                <CardAnimation>
+                    {fullData.subActive ? <UpOutlined onClick={subDropdown}></UpOutlined> : !ischeck ? <Form.check checked={fullData.checked ? fullData.checked : false} value={fullData.id} onChange={(a) => {
+
+                        const targetCheck = a.target.checked;
+                        const targetValue = a.target.value;
+
+                        setItem(prevState => prevState.map(item =>
+                            item.id === parseInt(targetValue)
+                                ? { ...item, checked: targetCheck }
+                                : item
+                        ));
+
+                        if (targetCheck) {
+                            // menambahkan nilai ke array jika checkbox dicentang
+                            setcheck(d => ([...d, fullData]));
+                            setCheckCache(prevState => ({ ...prevState, [fullData.id]: true }));
+                        } else {
+                            // menghapus nilai dari array jika checkbox tidak dicentang
+                            setcheck(d => d.filter(item => item.id !== parseInt(targetValue)));
+                            setCheckCache(prevState => {
+                                const newState = { ...prevState };
+                                delete newState[fullData.id];
+                                return newState;
+                            });
+                            setcheckAll(false);
+                        }
+                    }} /> : <DownOutlined onClick={subDropdown}></DownOutlined>}
+                </CardAnimation>
+            </button>
+        }
+    } : {
+        rowClass: "w-[0] !p-0 text-transparent",
+        columnClass: "w-[2px] !p-0",
+    }
+
+
+    useMemo(() => {
+        setColumns(([sate, ...columns]))
+
+        return () => {
+            setColumns([])
+        }
+    }, [columns, checkAll, Loading])
+
 
 
     return (
         <div className={`${className} relative flex-col`} style={{
             height: height
         }}>
-            <div className={`flex flex-col flex-1 relative text-blue ${classTable ? classTable : ""}`} >
-                {infiniteScroll ? <div className="flex flex-1 flex-col absolute w-full h-full gap-2 overflow-auto table-scroll">
-                    <div className="grid bg-primary px-5 py-4 gap-4 uppercase border-primary " style={{
-                        gridTemplateColumns: `repeat(${columns.length}, minmax(0, 2fr))`,
-                    }}>
-                        {columns.map((d, k) => {
-                            return <div key={k} className={`${d.columnClass}`} style={{
-                                ...style.columns
-                            }}>{d.title}</div>
-                        })}
-                    </div>
-                    <div className=" overflow-y-auto overflow-x-hidden space-y-2 " ref={parentRef}>
-                        <div
-                            style={{
-                                height: `${rowVirtualizer.getTotalSize()}px`,
-                                width: '100%',
-                                position: 'relative',
-                            }}
-                        >
-                            {rowVirtualizer.getVirtualItems().map((virtualItem) => (
-                                <div
-                                    key={virtualItem.key}
-                                    style={{
-                                        position: 'absolute',
-                                        top: 0,
-                                        left: 0,
-                                        width: '100%',
-                                        height: `${virtualItem.size}px`,
-                                        transform: `translateY(${virtualItem.start}px)`,
-                                    }}
-                                >
-                                    <div className="grid gap-4 p-4 border border-primary" style={{
-                                        gridTemplateColumns: `repeat(${columns.length}, minmax(0, 1fr))`
-                                    }}>
-                                        {columns.map(s => {
-                                            return s["html"] ? <div key={s.key} className='overflow-hidden text-ellipsis  whitespace-nowrap'>
-                                                <Tooltip placement="left" title={data[virtualItem.index][s.key]}>
-                                                    {s['html'](data[virtualItem.index][s.key], d)}
-                                                </Tooltip>
-                                            </div> : <div key={s.key} className='overflow-hidden text-ellipsis whitespace-nowrap'>
-                                                <Tooltip placement="left" title={data[virtualItem.index][s.key]}>
-                                                    {data[virtualItem.index][s.key]}
-                                                </Tooltip>
-                                            </div>
-                                        })}
-                                    </div>
-                                </div>
-                            ))}
-                            {/* {data.map((d, k) => {
-                                return 
-                            })} */}
-                        </div>
-
-                    </div>
-                </div> : error ? <ErrorItems></ErrorItems> : <div className="absolute w-full h-full overflow-auto  table-scroll">
-                    <Tables hoverDisable={hoverDisable} border={border} borderLast={borderLast} className="text-left w-full" active={active}>
-                        <thead className="sticky top-0 z-10">
+            <div className={`flex flex-col flex-1 relative text-blue  ${classTable ? classTable : ""}`} >
+                {<div className="absolute w-full h-full overflow-auto  table-scroll">
+                    <Tables hoverDisable={hoverDisable} border={border} borderLast={borderLast} className="text-left w-full table-fixed break-words" active={active}>
+                        <thead className="sticky top-0 z-50">
                             <tr>
-                                {columns.map((column, index) => {
+                                {dcolumns.map((column, index) => {
                                     return (
-                                        <th className={column.columnClass} key={index} style={{
+                                        <th className={column?.columnClass} key={index} style={{
                                             ...style.columns
-                                        }}>{column.title}</th>
+                                        }}>{column.htmlTitle ? column.htmlTitle(item) : column.title}</th>
                                     )
                                 })}
                             </tr>
                         </thead>
                         <tbody>
-                            {Loading ? <tr className="!border-primary" >
-                                <td colSpan={columns.length}>
+                            {!item ? <tr className="!border-primary" >
+                                <td colSpan={dcolumns.length}>
                                     <div className="text-center py-4">
                                         <div className="py-2">LOADING</div>
                                     </div>
                                 </td>
-                            </tr> : !data || data.length === 0 ? <tr>
-                                <td colSpan={columns.length}>
+                            </tr> : item && item.length === 0 ? <tr>
+                                <td colSpan={dcolumns.length}>
                                     <div className="text-center py-4 text-[#fff]">
                                         <div className="py-2">{ERRORCOMPONENT.dataNotAvailable}</div>
                                     </div>
                                 </td>
-                            </tr> : <Data onLoad={onLoad} style={style.row} tooltip={tooltip} border={border} items={data} onClick={onClick} column={columns}></Data>}
-
-
+                            </tr> : <Data Loading={Loading} setSubActiveCache={setSubActiveCache} setcheck={setcheck} setItem={setItem} classSubHtml={classSubHtml} htmlDropdown={htmlDropdown} style={style.row} tooltip={tooltip} border={border} items={item} onClick={onClick} column={dcolumns}></Data>}
                         </tbody>
                     </Tables>
                 </div>}
@@ -233,7 +282,7 @@ export const TableInline = ({
 
             {paggination &&
                 <div className="bg-primary px-2 py-1 flex text-[16px] justify-center ">
-                    {error ? "" : !Loading ? <Pagination onChange={(d => {
+                    <Pagination onChange={(d => {
                         if (custom) {
                             let data = {
                                 [name]: d
@@ -243,7 +292,7 @@ export const TableInline = ({
 
                             onChange(d)
                         }
-                    })} simple defaultCurrent={currentPage} pageSize={pageSize} total={totalPages} /> : "LOADING"}
+                    })} simple defaultCurrent={currentPage} pageSize={pageSize} total={totalPages} />
                 </div>
             }
         </div>

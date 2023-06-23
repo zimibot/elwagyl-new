@@ -3,7 +3,6 @@ import { TitleContent } from "../../components/layout/title"
 import { TableInline } from "../../components/table"
 import { DeleteOutlined, EditFilled } from "@ant-design/icons";
 import { GET_API_EHA } from "../../api/eha/GET";
-import { Loading } from "../../components/loading/loadingOther";
 import { ErrorItems } from "../../pages/cyber.deck";
 import { ButtonComponents } from "../../components.eha/button";
 import { useState } from "react";
@@ -17,6 +16,7 @@ import { useForm } from "react-hook-form";
 import { POST_API } from "../../api/eha/POST";
 import { UPDATE_API } from "../../api/eha/UPDATE";
 import { useEffect } from "react";
+import { Loading } from ".";
 
 const AddCategory = ({ data }) => {
     const { setStatus, status } = GetAndUpdateContext()
@@ -61,7 +61,7 @@ const AddCategory = ({ data }) => {
     return <ModalsComponent modalName={"modalCategory"}>
         <TitleContent className="justify-between" subTitle={false}>
             <div className="flex justify-between w-full items-center">
-                <div className="text-[24px] uppercase text-blue">ADD platform</div>
+                <div className="text-[24px] uppercase text-blue">{status.categoryEdit ? "EDIT" : "ADD"} platform</div>
             </div>
         </TitleContent>
         <form onSubmit={handleSubmit(submit)} className="space-y-4">
@@ -132,8 +132,8 @@ const DataCategory = ({ name, api, page = 1 }) => {
                 {
                     title: "EDIT",
                     key: "id",
-                    columnClass: "text-center",
-                    rowClass: "w-[100px]",
+                    columnClass: "text-center w-[100px]",
+                    rowClass: "text-center w-[100px]",
                     html: (d, item) => {
                         return (
                             <div className="flex w-full items-center justify-center cursor-pointer" onClick={() => {
@@ -152,8 +152,8 @@ const DataCategory = ({ name, api, page = 1 }) => {
                 {
                     title: "delete",
                     key: "id",
-                    columnClass: "text-center",
-                    rowClass: "w-[100px]",
+                    columnClass: "text-center w-[100px]",
+                    rowClass: "text-center w-[100px]",
                     html: (id, full) => {
                         return <Popconfirm cancelText="CANCEL" okText="DELETE" onConfirm={async () => {
                             DELETE_API.deleteManagePlatform({
@@ -171,6 +171,7 @@ const DataCategory = ({ name, api, page = 1 }) => {
                     }
                 },
             ]}
+            Loading={getAssetsPlatformName.isFetching}
             data={getAssetsPlatformName.data.result}
         />
     );

@@ -18,12 +18,14 @@ export const Loading = () => {
     </div>
 }
 
-export const ErrorHtml = ({error = ""}) => {
-    
+export const ErrorHtml = ({ error = "" }) => {
+
     return <div className="absolute items-center justify-center flex w-full h-full">
         <Result
-            status={"500"}
-            title={<span className="uppercase">{ error ? error : <div className="uppercase">There was an error fetching the data. <br></br>Please try again later or contact our support team if the problem persists.</div>}</span>}
+            icon={<div className="w-full h-full items-center flex justify-center">
+                <img className="w-40" src="/assets/error.svg"></img>
+            </div>}
+            title={<span className="uppercase">{error ? error : <div className="uppercase">There was an error fetching the data. <br></br>Please try again later or contact our support team if the problem persists.</div>}</span>}
         />
     </div>
 }
@@ -47,7 +49,7 @@ const ListMaintenance = () => {
         {
             key: 1,
             title: "protected site",
-            content: <ListProtectedSite ErrorHtml={ErrorHtml} HtmlLoading={Loading}  />
+            content: <ListProtectedSite ErrorHtml={ErrorHtml} HtmlLoading={Loading} />
         },
         // {
         //     key: 2,

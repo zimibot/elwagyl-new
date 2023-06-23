@@ -131,127 +131,97 @@ const ThreatsMaps = ({ titlePath }) => {
 export default ThreatsMaps
 
 const ThreatsAttackList = ({ props, data }) => {
+    if (!props || !data) {
+        return "Data or props are not provided"
+    }
 
-    const { status,
-        error,
-        isFetchingNextPage,
-        fetchNextPage,
-        hasNextPage } = props
+    const { status, error, isFetchingNextPage, fetchNextPage, hasNextPage } = props;
+    const allRows = data ? data.pages.flatMap((d) => d.data) : [];
 
-    const allRows = data ? data.pages.flatMap((d) => d.data) : []
-    // const allPage = data ? data.pages.flatMap((d) => d.pagination) : []
-    const parentRef = useRef()
+    if (allRows.length === 0) {
+        return "DATA EMPTY"
+    }
+
+    const parentRef = useRef();
+
     const rowVirtualizer = useVirtualizer({
         count: hasNextPage ? allRows.length + 1 : allRows.length,
         getScrollElement: () => parentRef.current,
         estimateSize: () => 90,
         overscan: 5,
-    })
+    });
 
     useEffect(() => {
-        if (allRows.length !== 0) {
-            const [lastItem] = [...rowVirtualizer.getVirtualItems()].reverse()
+        const [lastItem] = [...rowVirtualizer.getVirtualItems()].reverse();
+        if (!lastItem || lastItem.index < allRows.length - 1 || !hasNextPage || isFetchingNextPage) return;
+        fetchNextPage();
+    }, [rowVirtualizer.getVirtualItems(), hasNextPage, fetchNextPage, allRows.length, isFetchingNextPage]);
 
-            if (!lastItem) {
-                return
-            }
+    if (status === 'loading') return <Loading></Loading>;
 
-            if (
-                lastItem.index >= allRows.length - 1 &&
-                hasNextPage &&
-                !isFetchingNextPage
-            ) {
-                fetchNextPage()
-            }
-        }
+    if (status === 'error') return <span>Error: {error.message}</span>;
 
-    }, [rowVirtualizer.getVirtualItems(), hasNextPage, fetchNextPage, allRows.length, isFetchingNextPage])
-
-    return status === 'loading' ? <Loading></Loading> : status === 'error' ? (
-        <span>Error: {error.message}</span>
-    ) : <div ref={parentRef} className="absolute w-full h-full overflow-auto text-blue border-l border-primary">
-        <div
-            style={{
-                height: `${rowVirtualizer.getTotalSize()}px`,
-                width: '100%',
-                position: 'relative',
-            }}
-        >
-
-            {rowVirtualizer.getVirtualItems().map((virtualItem) => {
-                const isLoaderRow = virtualItem.index > allRows.length - 1
-                const post = allRows[virtualItem.index]
-                // const pages = allPage[virtualItem.index]
-                // let kelipatan = virtualItem.index % 10 === 0
-                // let calc = kelipatan && virtualItem.index / 10
-                let color
-                switch (post?.status) {
-                    case "low":
-                        color = "#00D8FF"
-                        break;
-                    case "medium":
-                        color = "#FFBA08"
-                        break;
-                    case "high":
-                        color = "#ED6A5E"
-                        break;
-                    default:
-                        color = "white"
-                        break;
-                }
-
-                let date = post ? moment(post.date).format("LLLL") : ""
-
-                return (<div className={`flex flex-col relative py-2 index-${virtualItem.index}`}
-                    key={virtualItem.key}
-                    style={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        width: '100%',
-                        // height: `${virtualItem.size}px`,
-                        transform: `translateY(${virtualItem.start}px)`,
-                    }}>
-                    {allRows.length === 0 ? <div className="flex items-center p-4 w-full  justify-center text-white">NO DATA AVAILABLE</div> : isLoaderRow
-                        ? hasNextPage
-                            ? <div className="p-4 flex justify-center w-full items-center">Loading more...</div>
-                            : <div className="p-4 flex justify-center w-full items-center">Nothing more to load</div>
-                        : <>
-                            <div className="flex items-center">
-                                <div className="flex justify-center p-4">
-                                    <svg width="25" height="22" viewBox="0 0 22 19" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M12 12H10V7H12M12 16H10V14H12M0 19H22L11 0L0 19Z" fill={color} />
-                                    </svg>
-                                </div>
-                                <div className="px-2 flex flex-col justify-center gap-2">
-                                    <div>
-                                        {post.description}
-                                    </div>
-                                    <div className="flex items-center gap-4">
-                                        <span>{post.src_ip}</span>
-                                        <div>
-                                            <svg width="11" height="14" viewBox="0 0 11 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M11 7L0.5 13.0622L0.500001 0.937822L11 7Z" fill="#00D8FF" />
-                                            </svg>
-                                        </div>
-                                        <span>{post.dest_ip}</span>
-                                    </div>
-                                    <div>{date}</div>
-                                </div>
-                            </div>
-
-                            {/* {virtualItem.index !== 0 && kelipatan && <div className=" flex mt-1 py-1 justify-center w-full items-center border-b border-t bg-primary border-primary">
-                                PAGES {allPage[calc]?.current_page}
-                            </div>} */}
-
-                        </>}
-
-                </div>
-
-                )
-            }
-            )}
-
+    return (
+        <div ref={parentRef} className="absolute w-full h-full overflow-auto text-blue border-l border-primary">
+            <div style={{ height: `${rowVirtualizer.getTotalSize()}px`, width: '100%', position: 'relative' }}>
+                {rowVirtualizer.getVirtualItems().map((virtualItem) => {
+                    const isLoaderRow = virtualItem.index > allRows.length - 1;
+                    const post = allRows[virtualItem.index];
+                    let color = getStatusColor(post?.status);
+                    let date = post ? moment(post.date).format("LLLL") : "";
+                    return (
+                        <RowComponent key={virtualItem.key} virtualItem={virtualItem} post={post} color={color} date={date} hasNextPage={hasNextPage} />
+                    )
+                })}
+            </div>
         </div>
-    </div>
+    );
 }
+
+// ... the rest of your code
+
+const RowComponent = ({ virtualItem, post, color, date, hasNextPage }) => (
+    <div className={`flex flex-col relative py-2 index-${virtualItem.index}`}
+        style={{ position: 'absolute', top: 0, left: 0, width: '100%', transform: `translateY(${virtualItem.start}px)` }}>
+        {post === undefined ? <LoaderComponent hasNextPage={hasNextPage} /> : <PostComponent post={post} color={color} date={date} />}
+    </div>
+);
+
+const LoaderComponent = ({ hasNextPage }) => (
+    hasNextPage ? <div className="p-4 flex justify-center w-full items-center">Loading more...</div>
+        : <div className="p-4 flex justify-center w-full items-center">Nothing more to load</div>
+);
+
+const PostComponent = ({ post, color, date }) => (
+    <>
+        <div className="flex items-center">
+            <div className="flex justify-center p-4">
+                <svg width="25" height="22" viewBox="0 0 22 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 12H10V7H12M12 16H10V14H12M0 19H22L11 0L0 19Z" fill={color} />
+                </svg>
+            </div>
+            <div className="px-2 flex flex-col justify-center gap-2">
+                <div>{post.description}</div>
+                <div className="flex items-center gap-4">
+                    <span>{post.src_ip}</span>
+                    <div>
+                        <svg width="11" height="14" viewBox="0 0 11 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M11 7L0.5 13.0622L0.500001 0.937822L11 7Z" fill="#00D8FF" />
+                        </svg>
+                    </div>
+                    <span>{post.dest_ip}</span>
+                </div>
+                <div>{date}</div>
+            </div>
+        </div>
+    </>
+);
+
+const getStatusColor = (status) => {
+    switch (status) {
+        case "low": return "#00D8FF";
+        case "medium": return "#FFBA08";
+        case "high": return "#ED6A5E";
+        default: return "white";
+    }
+};

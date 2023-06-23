@@ -10,6 +10,7 @@ export const ChartRadialBar = ({ data = [] }) => {
 
     let items = []
 
+
     const color = (name) => {
         switch (name) {
             case "attention":
@@ -22,8 +23,9 @@ export const ChartRadialBar = ({ data = [] }) => {
     }
 
     for (const key in data) {
+        console.log(data)
 
-        if (key !== "refetch") {
+        if (key !== "refetch" && key !== "status") {
             items.push({
                 name: key.toUpperCase(),
                 count: data[key],

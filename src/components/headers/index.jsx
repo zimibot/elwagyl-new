@@ -112,7 +112,7 @@ export const HeadersTop = ({ background }) => {
                                                     width: 0,
                                                     height: 0
                                                 },
-                                                attribute: document.body?.getAttribute("name"),
+                                                attribute: document.body.getAttribute("name"),
                                             })
                                             localStorage.removeItem("current_url")
                                         }}>

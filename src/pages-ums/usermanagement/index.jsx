@@ -37,7 +37,7 @@ const UserManagement = () => {
                     }}>ADD USER</ButtonComponents>
                 </div>
             </TitleContent>
-            {api.error ? "" : api.loading ? "" : <TableInline classTable={"text-[16px]"} border hoverDisable columns={[
+            {api.error ? "" : api.loading ? "" : <TableInline Loading={api.isFetching} classTable={"text-[16px]"} border hoverDisable columns={[
                 {
                     title: 'Full name',
                     key: 'fullname',
@@ -136,7 +136,7 @@ const AddUser = () => {
 
     const api = GET_API_UMS.root(["UserGetRoles", "UserGetUser"])
 
-    const { register, control, handleSubmit,  reset, setValue, formState: { errors } } = useForm()
+    const { register, control, handleSubmit, reset, setValue, formState: { errors } } = useForm()
 
     const onSubmit = (data) => {
         toastItem({ api, name: "UserGetUser", type: "post", url: "/users", data, successMsg: "ADD USER SUCCESS" })
@@ -145,15 +145,18 @@ const AddUser = () => {
 
 
 
+
     useEffect(() => {
         if (status.id_user) {
-            fetch(`${path}/users/${status.id_user}`, {
-                method: "GET", headers: {
-                    "Authorization": `Bearer ${localStorage.getItem("token")}`
-                }
-            }).then(res => res.json()).then(d => {
-                console.log(d)
-            })
+            // fetch(`${path}/users/${status.id_user}`, {
+            //     method: "GET", headers: {
+            //         "Authorization": `Bearer ${localStorage.getItem("token")}`
+            //     }
+            // }).then(res => res.json()).then(d => {
+            //     console.log(d)
+            // })
+        } else {
+            reset()
         }
     }, [status.id_user])
 
@@ -185,7 +188,8 @@ const AddUser = () => {
                 <ButtonComponents nonSubmit className="py-4 w-48 text-red-500" click={() => {
                     setStatus((d) => ({
                         ...d,
-                        user_modal: false
+                        user_modal: false,
+                        id_user: null
                     }))
                 }}>CANCEL</ButtonComponents>
                 <ButtonComponents className="py-4 w-48">SUBMIT</ButtonComponents>

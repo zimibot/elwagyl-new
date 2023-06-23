@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Heatmap } from '@ant-design/plots';
 import { Empty } from 'antd';
 
-export const HeatmapComponent = ({data = []}) => {
+export const HeatmapComponent = ({ data = [] }) => {
 
     // useEffect(() => {
     //     let day = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"].map(s => {
@@ -29,7 +29,7 @@ export const HeatmapComponent = ({data = []}) => {
     console.log(data)
 
     if (data.length === 0) {
-        return <div className="p-4"><Empty></Empty></div>
+        return <div className="p-4"><Empty className="justify-center flex flex-col items-center" ></Empty></div>
     }
 
 
@@ -48,7 +48,7 @@ export const HeatmapComponent = ({data = []}) => {
                 return "#FFBA08"
             } else if (TOTAL < 1600) {
                 return "#FF7A00"
-            } 
+            }
             return "#ED6A5E";
         },
         // sizeField: 'TOTAL',

@@ -16,54 +16,54 @@ export function checkStatement(statement) {
 export const GET_API_UMS = {
     data: {
         UserGetRoles: () => {
-            const { isLoading, data, error, refetch } = useQuery(['UserGetRoles'], () => fetch(`${path}/users/roles`, {
+            const { isLoading, data, error, refetch, isFetching } = useQuery(['UserGetRoles'], () => fetch(`${path}/users/roles`, {
                 method: "GET", headers: {
                     "Authorization": `Bearer ${localStorage.getItem("token")}`
                 }
             }).then(res => { return res.json() }),)
             return {
-                isLoading, data, error, refetch
+                isLoading, data, error, refetch, isFetching
             }
         },
         UserGetUser: () => {
-            const { isLoading, data, error, refetch } = useQuery(['UserGetUser'], () => fetch(`${path}/users`, {
+            const { isLoading, data, error, refetch, isFetching } = useQuery(['UserGetUser'], () => fetch(`${path}/users`, {
                 method: "GET", headers: {
                     "Authorization": `Bearer ${localStorage.getItem("token")}`
                 }
             }).then(res => { return res.json() }),)
             return {
-                isLoading, data, error, refetch
+                isLoading, data, error, refetch, isFetching
             }
         },
         SettingsGroupAccess: () => {
-            const { isLoading, data, error, refetch } = useQuery(['SettingsGroupAccess'], () => fetch(`${path}/users/groups`, {
+            const { isLoading, data, error, refetch, isFetching } = useQuery(['SettingsGroupAccess'], () => fetch(`${path}/users/groups`, {
                 method: "GET", headers: {
                     "Authorization": `Bearer ${localStorage.getItem("token")}`
                 }
             }).then(res => { return res.json() }),)
             return {
-                isLoading, data, error, refetch
+                isLoading, data, error, refetch, isFetching
             }
         },
         SettingsPagesAccess: () => {
-            const { isLoading, data, error, refetch } = useQuery(['SettingsPagesAccess'], () => fetch(`${path}/users/pages-access`, {
+            const { isLoading, data, error, refetch, isFetching } = useQuery(['SettingsPagesAccess'], () => fetch(`${path}/users/pages-access`, {
                 method: "GET", headers: {
                     "Authorization": `Bearer ${localStorage.getItem("token")}`
                 }
             }).then(res => { return res.json() }),)
             return {
-                isLoading, data, error, refetch
+                isLoading, data, error, refetch, isFetching
             }
         },
         SettingsPagesPermission: () => {
-            const { isLoading, data, error, refetch } = useQuery(['SettingsPagesPermission'], () => fetch(`${path}/users/permissions`, {
+            const { isLoading, data, error, refetch, isFetching } = useQuery(['SettingsPagesPermission'], () => fetch(`${path}/users/permissions`, {
                 method: "GET", headers: {
                     "Authorization": `Bearer ${localStorage.getItem("token")}`
                 }
             }).then(res => { return res.json() }))
 
             return {
-                isLoading, data, error, refetch
+                isLoading, data, error, refetch, isFetching
             }
         },
         SettingsPagesPermissionDetail: async (props) => {
@@ -79,20 +79,6 @@ export const GET_API_UMS = {
             } else {
                 return { isLoading: false, error: true }
             }
-            // if (status) {
-            //     const { isLoading, data, error, refetch } = useQuery(['SettingsPagesPermissionDetail', status.premission_id], () => ).then(res => { return res.json() }).catch(d => {
-            //         return {
-            //             error: d
-            //         }
-            //     }))
-            //     return {
-            //         isLoading, data, error, refetch
-            //     }
-            // } else {
-            //     return {
-            //         data: []
-            //     }
-            // }
 
         },
         // UserGetUserPersonal: (status) => {
@@ -111,46 +97,44 @@ export const GET_API_UMS = {
     },
 
     root: (typeName) => {
-        const { status } = GetAndUpdateContext()
+        const { status } = GetAndUpdateContext();
+        let data = typeName || [];
 
-
-        let data = typeName || []
-
-        if (data.length > 0) {
-            let p = {
-                data: {},
-                loading: [],
-                error: [],
-            };
-
-            let parse = GET_API_UMS.data
-
-            data.map(async d => {
-                let item = parse[d](status)
-                if (item) {
-                    p["loading"].push(item?.isLoading)
-                    p["error"].push(item.error ? true : false)
-                    p["data"][d] = { data: item.data, refetch: item?.refetch }
-                    if (item.data?.code !== 200) {
-                        p["msg"] = item.data?.message
-                    }
-                }
-                p[d] = parse[d]
-            })
-
-            return {
-                ...p,
-                error: checkStatement(p.error),
-                loading: checkStatement(p.loading),
-            }
-
-        } else {
+        if (data.length === 0) {
             return {
                 error: true,
                 msg: "ERROR DATA"
-            }
+            };
         }
 
+        const result = {
+            data: {},
+            loading: [],
+            error: [],
+            isFetching: []
+        };
 
+        let parse = GET_API_UMS.data;
+
+        data.forEach((d) => {
+            let item = parse[d](status);
+            if (item) {
+                result.loading.push(item?.isLoading);
+                result.isFetching.push(item?.isFetching);
+                result.error.push(item.error ? true : false);
+                result.data[d] = { data: item.data, refetch: item?.refetch };
+                if (item.data?.code !== 200) {
+                    result.msg = item.data?.message;
+                }
+            }
+            result[d] = parse[d];
+        });
+
+        result.error = checkStatement(result.error);
+        result.loading = checkStatement(result.loading);
+        result.isFetching = checkStatement(result.isFetching);
+
+        return result;
     }
+
 }

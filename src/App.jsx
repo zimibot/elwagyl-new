@@ -12,7 +12,7 @@ import ProfileIndicator from "./pages-eha/profile.indicator";
 import AssetsList from "./pages-eha/list.asset";
 import ListTask from "./pages-eha/list.task.scan";
 import ListMaintenance from "./pages-eha/list.maintenance";
-import TargetReady from "./pages-eha/list.task.target";
+import TargetReady from "./pages-eha/list.task.qa.target";
 import TaskQA from "./pages-eha/list.task.qa";
 import ListTaskVulnerability from "./pages-eha/list.vulnerability";
 import { API_GET } from "./api/elwagyl";
@@ -28,8 +28,7 @@ import WelcomeEha from "./pages-eha/welcome";
 import { LicensePoup } from "./components/licensePopup";
 import ProfilePage from "./pages/profile";
 import { useEffect } from "react";
-import { CardAnimation } from "./components/layout/card";
-import { ShadowError } from "./components/shadow";
+
 import { NetDiscovery } from "./pages-eha/list.netdiscovery";
 const CyberDeck = lazy(() => import('./pages/cyber.deck/index.jsx'));
 const Executive = lazy(() => import('./pages/executive/index.jsx'));
@@ -70,7 +69,7 @@ export default function App() {
                   </LayoutDashboard>} />
                 </Route>
                 <Route path="ums" element={<ContainerNoHead ums />}>
-                  <Route index element={<Navigate state={{ title: ` USER MANAGEMENT SYSTEM // DASHBOARD`, ums: true }} to={`/ums/dashboard`} />} />
+                  <Route index element={<Navigate state={{ title: ` USER MANAGEMENT SYSTEM // DASHBOARD`, ums: true }} to={`/ums/settings`} />} />
                   <Route path="user management" element={<UserManagement></UserManagement>} />
                   <Route path="settings" element={<Settings />} />
                   <Route path="*" element={<NotFoundUMS />} />
@@ -158,9 +157,9 @@ export const Container = () => {
     }}>
       <HeadersTop />
       <Outlet></Outlet>
-      <CardAnimation className="z-50">
+      {/* <CardAnimation className="z-50">
         {!alive && <ShadowError></ShadowError>}
-      </CardAnimation>
+      </CardAnimation> */}
     </Main>
   </PrivateRoute>
 
@@ -214,9 +213,9 @@ const ContainerNoHead = ({ eha = false, ums = false }) => {
     }} />
 
     <Outlet></Outlet>
-    <CardAnimation className="z-50">
+    {/* <CardAnimation className="z-50">
       {!alive && <ShadowError></ShadowError>}
-    </CardAnimation>
+    </CardAnimation> */}
   </PrivateRoute>
 
   // return ping.isLoading ? "" : ping.data.alive ? <PrivateRoute>

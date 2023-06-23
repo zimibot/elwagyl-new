@@ -45,14 +45,13 @@ export const POST_API = {
             refresh
         }),
 
-    addscanAssets: (data, reset, setStatus, refresh) =>
+    addscanAssets: (data, reset, success) =>
         ToastData({
             name: "SCAN",
             url: `${path}/api/scans`,
             data,
             reset,
-            setStatus,
-            refresh
+            success
         }),
     addPlatformsCategory: (data, reset, setStatus, refresh) =>
         ToastData({
@@ -76,50 +75,48 @@ export const POST_API = {
 
 
 const ToastData = ({ name, url, data, reset, setStatus, success, error, refresh }) => {
-    if (!name || !url || !data || !reset) {
-        toast.error(`required ${!name ? "name" : ""} ${!url ? "url" : ""} ${!data && "data"} ${!reset && "reset"}`)
-    } else {
-        toast.promise(
-            axios.post(url, { ...data }),
-            {
-                loading: 'LOADING...',
-                success: (items) => {
-                    if (refresh) {
-                        refresh()
-                    }
+    toast.promise(
+        axios.post(url, { ...data }),
+        {
+            loading: 'LOADING...',
+            success: (items) => {
+                if (refresh) {
+                    refresh()
+                }
+                if (reset) {
                     reset();
-                    if (success) {
-                        success(items);
-                    }
-                    if (setStatus) {
-                        setStatus((d) => ({
-                            ...d,
-                            UpdateStatus: !d?.UpdateStatus
-                        }));
-                    }
-                    return <b>ADD {name} SUCCESS!</b>;
-                },
-                error: (d) => {
-                    if (error) {
-                        error(d.response.data);
-                    }
-                    return (
-                        <div className="text-red-500 font-bold">
-                            SAVE ERROR
-                        </div>
-                    );
                 }
+                if (success) {
+                    success(items);
+                }
+                if (setStatus) {
+                    setStatus((d) => ({
+                        ...d,
+                        UpdateStatus: !d?.UpdateStatus
+                    }));
+                }
+                return <b>ADD {name} SUCCESS!</b>;
             },
-            {
-                style: {
-                    background: '#333',
-                    color: '#fff',
-                    fontSize: 20,
-                    borderRadius: 0
+            error: (d) => {
+                if (error) {
+                    error(d.response.data);
                 }
+                return (
+                    <div className="text-red-500 font-bold">
+                        SAVE ERROR
+                    </div>
+                );
             }
-        );
-    }
+        },
+        {
+            style: {
+                background: '#333',
+                color: '#fff',
+                fontSize: 20,
+                borderRadius: 0
+            }
+        }
+    );
 
 
 }

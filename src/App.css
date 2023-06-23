@@ -35,9 +35,10 @@ div,a,span,p {
   height: 8px; /* for horizontal scrollbars */
 }
 
-div {
+/* div {
   line-height: 1;
-}
+} */
+
 
 html {
   overflow: hidden;

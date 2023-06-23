@@ -15,15 +15,10 @@ export const ListView = () => {
                 <div className="p-8 flex items-center gap-10 border-b border-primary">
                     <div>ASSET LIST</div>
                     <div className="space-x-4 flex">
-                        {/* <ButtonComponents>
-                            IMPORT
-                        </ButtonComponents>
-                        <ButtonComponents>
-                            EXPORT
-                        </ButtonComponents> */}
+{/*                         
                          <ButtonComponents>
                             EXPORT
-                        </ButtonComponents> 
+                        </ButtonComponents>  */}
                         <ButtonComponents click={() => {
                             setStatus(d => ({
                                 ...d,

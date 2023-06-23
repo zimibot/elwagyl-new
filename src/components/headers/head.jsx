@@ -40,7 +40,7 @@ export const HeadFunction = (menu, setStatus, VALUEMENU) => {
     let height
 
     height = VALUEMENU.data + 20
-    setStatus(d => ({ ...d, headHidden: false, loading: false }))
+    setStatus(d => ({ ...d, headHidden: false, loading: false, otherPages: "online" }))
 
     window.api.invoke('routesItem', {
         url: menu?.url,
@@ -50,13 +50,13 @@ export const HeadFunction = (menu, setStatus, VALUEMENU) => {
             width: window.outerWidth,
             height: window.outerHeight - height
         },
-        attribute: document.body?.getAttribute("name"),
+        attribute: document.body.getAttribute("name"),
     }).then(d => {
-        setStatus(w => ({ ...w, headHidden: false, loading: true, otherPages: d.status }))
-        console.log(d)
+        if (d.status  === "online") {
+            setStatus(w => ({ ...w, headHidden: false, loading: true, otherPages: d.status }))
+        }
 
     }).catch(d => {
-        console.log(d)
         setStatus(w => ({ ...w, headHidden: false, loading: true }))
         window.api.invoke('routesItem', {
             size: {
@@ -64,7 +64,7 @@ export const HeadFunction = (menu, setStatus, VALUEMENU) => {
                 width: 0,
                 height: 0
             },
-            attribute: document.body?.getAttribute("name"),
+            attribute: document.body.getAttribute("name"),
         })
         // alert("We apologize for the inconvenience, but the connection to the server could not be established. We suggest trying again, and checking your internet or VPN connection to ensure it is stable. If the issue persists, please contact our technical support team for further assistance. Thank you.")
     })
@@ -296,7 +296,8 @@ const HeadBottom = () => {
                 DATEVALUE: DATEVALUE,
                 APIURLDEFAULT: {
                     ip: path,
-                    timeType: "time_range"
+                    timeType: "time_range",
+                    type: "siem"
                 }
             }))
         } else {
@@ -311,7 +312,8 @@ const HeadBottom = () => {
                 DATEVALUE: DATEVALUE,
                 APIURLDEFAULT: {
                     ip: `${path}/xsoar`,
-                    timeType: "timerange"
+                    timeType: "timerange",
+                    type: "soar"
                 }
             }))
         }

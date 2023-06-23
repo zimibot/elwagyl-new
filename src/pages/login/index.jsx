@@ -111,7 +111,7 @@ const LoginPages = () => {
                             Authorization: `Bearer ${d.data.access_token}`
                         }
                     }).then(d => {
-                        let item = d.data.permissions.pages.find(d => d.group === "ELWAGYL")
+                        let item = d.find(d => d.group === "ELWAGYL")
                         navi(item.pages ? item.pages[0].url : "/elwagyl")
                         localStorage.setItem("current_url", item.pages ? item.pages[0].url : "/elwagyl")
                     })
@@ -174,9 +174,9 @@ const LoginPages = () => {
                     </ButtonComponents>
                 </form>
             </div>}
-            <CardAnimation>
+            {/* <CardAnimation>
                 {msg.error && <ShadowError />}
-            </CardAnimation>
+            </CardAnimation> */}
         </div>}
         <LicensePages setMsg={setMsg} setStatus={setStatus}></LicensePages>
     </CardAnimation> : <Navigate to={localStorage.getItem("current_url") ? localStorage.getItem("current_url") : "/elwagyl"}></Navigate>
@@ -221,7 +221,6 @@ const LicensePages = ({ setMsg, setStatus }) => {
 
     }
 
-    console.log(watch())
 
     return <ModalsComponent title={"LICENSE VERIFICATION"} modalName={"showVerify"}>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">

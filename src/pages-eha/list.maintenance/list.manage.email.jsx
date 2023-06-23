@@ -1,3 +1,4 @@
+import { Loading } from "."
 import { GET_API_EHA } from "../../api/eha/GET"
 import { UPDATE_API } from "../../api/eha/UPDATE"
 import { Form } from "../../components.eha/input"
@@ -11,7 +12,6 @@ export const ListEmailManage = () => {
         }
     ])
 
-    console.log(api)
 
     const refresh = () => {
         api.data.emailSettings.refetch()
@@ -37,8 +37,8 @@ export const ListEmailManage = () => {
             <div className="text-[16px]">
                 <div className="p-5">SCAN NOTIFICATION (SENT TO SYSTEM  OWNER AND TASK CREATOR)</div>
                 <div className="grid grid-cols-4 gap-4">
-                    {api.error ? "ERROR" : api.loading ? "Loading" : api.data.emailSettings.result.map(d => {
-                        return <div key={d.id} className="border border-primary p-4">
+                    {api.error ? "ERROR" : api.loading ? <Loading /> : api.data.emailSettings.result.map(d => {
+                        return d.is_hide ? "" : <div key={d.id} className="border border-primary p-4">
                             <Form.check checked={d.config_is_running} onChange={evt => onChange({
                                 ...evt,
                                 ...d,
@@ -57,36 +57,6 @@ export const ListEmailManage = () => {
                     </div> */}
                 </div>
             </div>
-            {/* <div className="text-[16px]">
-                <div className="p-5">SCAN NOTIFICATION (SENT TO SYSTEM  OWNER AND TASK CREATOR)</div>
-                <div className="grid grid-cols-5 gap-4">
-                    <div className="border border-primary p-4">
-                        <Form.check text={<span>
-                            FINDING CREATED <br></br>(SENT TO QC TEAM): ON
-                        </span>}></Form.check>
-                    </div>
-                    <div className="border border-primary p-4">
-                        <Form.check text={<span>
-                            FINDING PASSED QC <br></br>(SENT TO QC TEAM): ON
-                        </span>}></Form.check>
-                    </div>
-                    <div className="border border-primary p-4">
-                        <Form.check text={<span>
-                            FINDING PASSED QA (SENT TO BUSINESS<br></br> OWNER AND FINDING OWNER): OFF
-                        </span>}></Form.check>
-                    </div>
-                    <div className="border border-primary p-4">
-                        <Form.check text={<span>
-                            FINDING RESCANNING <br></br> (SENT TO SYSTEM OWNER): OFF
-                        </span>}></Form.check>
-                    </div>
-                    <div className="border border-primary p-4">
-                        <Form.check text={<span>
-                            FINDING REACHED DEADLINE <br></br> (SENT TO SYSTEM OWNER): ON
-                        </span>}></Form.check>
-                    </div>
-                </div>
-            </div> */}
         </div>
     </CardBox>
 }
