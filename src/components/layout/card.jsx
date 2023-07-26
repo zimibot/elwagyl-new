@@ -7,7 +7,7 @@ export const CardBox = ({ borderBottom, children, className }) => {
     </div>
 }
 
-export const CardAnimation = ({ children, className, duration= 400 }) => {
+export const CardAnimation = ({ children, className, duration= 100, ...props }) => {
     const parent = useRef(null)
 
     useEffect(() => {
@@ -15,7 +15,7 @@ export const CardAnimation = ({ children, className, duration= 400 }) => {
     }, [parent])
 
 
-    return <div className={`${className ? className : ""} z-10`} ref={parent}>
+    return <div {...props} className={`${className ? className : ""} z-10`} ref={parent}>
         {children}
     </div>
 }

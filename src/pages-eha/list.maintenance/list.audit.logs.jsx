@@ -4,7 +4,7 @@ import { TitleContent } from "../../components/layout/title"
 import { TableInline } from "../../components/table"
 import { GET_API_EHA } from "../../api/eha/GET"
 import { GetAndUpdateContext } from "../../model/context.function"
-import { Loading } from "."
+import { ErrorHtml, Loading } from "."
 
 export const AuditLogs = () => {
     const { setStatus, status } = GetAndUpdateContext()
@@ -15,7 +15,7 @@ export const AuditLogs = () => {
         <TitleContent>
             <div className="text-[24px] uppercase text-blue">Audit logs</div>
         </TitleContent>
-        {api.error ? "" : api.loading ? <Loading/> : <TableInline onChange={(count) => {
+        {api.error ? <ErrorHtml></ErrorHtml> : api.loading ? <Loading/> : <TableInline onChange={(count) => {
             setStatus(d => ({
                 ...d,
                 pages_logs: count

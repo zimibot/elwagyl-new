@@ -10,7 +10,7 @@ export function checkStatement(statement) {
       return true;
     }
   }
-  return false;
+  return false
 }
 
 export const GET_API_EHA = {
@@ -30,6 +30,8 @@ export const GET_API_EHA = {
               return res.json();
             })
         );
+
+
         return {
           isLoading,
           data,
@@ -121,7 +123,9 @@ export const GET_API_EHA = {
           items,
         };
       } else {
-        return false;
+        return {
+          error: true
+        }
       }
     },
     protectedSite: (status) => {
@@ -158,7 +162,9 @@ export const GET_API_EHA = {
           items,
         };
       } else {
-        return false;
+        return {
+          error: true
+        }
       }
     },
     vulnerabilitiesDetail: async (propsItem) => {
@@ -174,7 +180,9 @@ export const GET_API_EHA = {
           items,
         };
       } else {
-        return false;
+        return {
+          error: true
+        }
       }
     },
     scanDetails: async (propsItem) => {
@@ -190,13 +198,15 @@ export const GET_API_EHA = {
           items,
         };
       } else {
-        return false;
+        return {
+          error: true
+        }
       }
     },
 
     assetsList: (status, query) => {
       if (status) {
-        const { isLoading, data, error } = useQuery(
+        const { isLoading, data, error, refetch, isFetching } = useQuery(
           ["assetsList", status.UpdateStatus, query],
           () =>
             fetch(`${path}/api/assets?${query ? query : ""}`, { method: "GET" }).then((res) => {
@@ -207,6 +217,8 @@ export const GET_API_EHA = {
           isLoading,
           data,
           error,
+          refetch, 
+          isFetching
         };
       }
     },
@@ -242,7 +254,9 @@ export const GET_API_EHA = {
           items,
         };
       } else {
-        return false;
+        return {
+          error: true
+        }
       }
     },
     platformDetail: async (propsItem) => {
@@ -259,10 +273,14 @@ export const GET_API_EHA = {
             items,
           };
         } else {
-          return false;
+          return {
+            error: true
+          }
         }
       } catch (error) {
-        return false;
+        return {
+          error: true
+        }
       }
     },
     getAssetsPlatformName: (propsItem) => {
@@ -306,7 +324,9 @@ export const GET_API_EHA = {
           items,
         };
       } else {
-        return false;
+        return {
+          error: true
+        }
       }
     },
     getAssetsPDF: async (propsItem) => {
@@ -322,7 +342,9 @@ export const GET_API_EHA = {
           items,
         };
       } else {
-        return false;
+        return {
+          error: true
+        }
       }
     },
     getAssetsRiskGroupDetail: async (propsItem) => {
@@ -338,7 +360,9 @@ export const GET_API_EHA = {
           items,
         };
       } else {
-        return false;
+        return {
+          error: true
+        };
       }
     },
 
@@ -362,7 +386,7 @@ export const GET_API_EHA = {
               let items = [];
 
               if (data) {
-                data = data.result;
+                data = data.result || [];
                 data.map((d) => {
                   items.push(d.status === "completed" ? false : true);
 
@@ -601,10 +625,13 @@ export const GET_API_EHA = {
         let item;
         if (!d.query) {
           item = parse[d.active](status);
+
         } else {
           item = parse[d.active](status, d.query, d.pages);
         }
+
         if (item) {
+         
           p["loading"].push(item?.isLoading);
           p["isFetching"].push(item?.isFetching);
           p["error"].push(item.error ? true : false);
@@ -623,9 +650,13 @@ export const GET_API_EHA = {
           if (item.data?.code !== 200) {
             p["msg"] = item.data?.message;
           }
+
+
         }
         p[d.active] = parse[d.active];
       });
+
+
 
       return {
         ...p,

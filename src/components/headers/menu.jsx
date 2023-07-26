@@ -16,9 +16,6 @@ const MenuItems = () => {
 
     let MenuItems = MenuData ? MenuData : []
 
-
-
-
     const navi = useNavigate()
     const onClick = (e) => {
         let data = MenuItems
@@ -59,6 +56,7 @@ export const getMenu = () => {
     }
 
     if (!isLoading) {
+        let ehaMenu =  data.permissions.pages.find(d => d.group === "E.H.A")
         let item = data.permissions.pages.find(d => d.group === "ELWAGYL")
         let pages = item.pages.map((d, k) => ({
             label: d.name,
@@ -80,6 +78,7 @@ export const getMenu = () => {
         let mergs = merge(pages, MENUDATA, d => d.key)
         return {
             data: mergs,
+            ehaMenu:ehaMenu.pages,
             isFetching: isFetching,
             refetch,
             error,

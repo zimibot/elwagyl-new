@@ -29,61 +29,60 @@ export const ErrorItems = () => {
     return <div className="flex justify-center items-center p-4 col-span-full text-red-500 h-20 text-1xl">ERROR CONNECTION SERVER</div>
 }
 
+export const totalSeverity = (root, value) => {
+
+    const { isLoading, error, data } = root;
+    const { ALERT_SEVERITY, DASHBOARD_STATUS } = data;
+
+    if (error) {
+        return { result: "ERROR" };
+    }
+
+    if (isLoading) {
+        return {
+            loading: isLoading,
+            result: null,
+        };
+    }
+
+    if (value.APIURLDEFAULT.type !== "siem") {
+        return {
+            loading: isLoading,
+            result: ALERT_SEVERITY
+        };
+    }
+
+    try {
+        let totalScore = DASHBOARD_STATUS;
+        let total = sum(ALERT_SEVERITY, d => d.count);
+        let remaining = totalScore.alert - total;
+
+        ALERT_SEVERITY.push({
+            "name": "info",
+            "color": "white",
+            "count": remaining,
+            "total": Formatter(remaining),
+        });
+
+        let sas = ALERT_SEVERITY.map(d => ({
+            ...d,
+            percentage: parseFloat(((d.count / totalScore.alert) * 100).toFixed(2))
+        }));
+
+        return {
+            loading: isLoading,
+            result: sas
+        };
+    } catch (error) {
+        return {
+            result: null
+        };
+    }
+};
+
 const CyberDeck = () => {
     const { value, maximize } = GetAndUpdateContext()
     let root = RootAPi(['ALERT_SEVERITY', 'ALERT_TYPE', 'DASHBOARD_STATUS', 'AFFECTED_ENTITY', "ALERT_GROUP_STATISTIC"])
-
-
-    const totalSeverity = () => {
-        const { isLoading, error, data } = root;
-        const { ALERT_SEVERITY, DASHBOARD_STATUS } = data;
-
-        if (error) {
-            return { result: "ERROR" };
-        }
-
-        if (isLoading) {
-            return {
-                loading: isLoading,
-                result: null,
-            };
-        }
-
-        if (value.APIURLDEFAULT.type !== "siem") {
-            return {
-                loading: isLoading,
-                result: ALERT_SEVERITY
-            };
-        }
-
-        try {
-            let totalScore = DASHBOARD_STATUS;
-            let total = sum(ALERT_SEVERITY, d => d.count);
-            let remaining = totalScore.alert - total;
-
-            ALERT_SEVERITY.push({
-                "name": "info",
-                "color": "white",
-                "count": remaining,
-                "total": Formatter(remaining),
-            });
-
-            let sas = ALERT_SEVERITY.map(d => ({
-                ...d,
-                percentage: parseFloat(((d.count / totalScore.alert) * 100).toFixed(2))
-            }));
-
-            return {
-                loading: isLoading,
-                result: sas
-            };
-        } catch (error) {
-            return {
-                result: null
-            };
-        }
-    };
-
 
 
 
@@ -102,7 +101,7 @@ const CyberDeck = () => {
                         </div>
                         <div className="grid grid-cols-2 gap-3">
                             {/* <ProgressVertical title="Solved" /> */}
-                            {root.error ? <ErrorItems></ErrorItems> : root.isLoading ? <Loading></Loading> : totalSeverity()?.result.map((d, k) => {
+                            {root.error ? <ErrorItems></ErrorItems> : root.isLoading ? <Loading></Loading> : totalSeverity(root, value)?.result.map((d, k) => {
                                 return root.data.ALERT_SEVERITY.length !== 4 && k == 0 ? <div key={k} className="col-span-2">
                                     <ProgressVertical title={d.name} color={d.color} percent={d.percentage} total={d.total} />
                                 </div> : <div key={k}>

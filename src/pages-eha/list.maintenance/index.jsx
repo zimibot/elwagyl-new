@@ -48,7 +48,7 @@ const ListMaintenance = () => {
     let Item = [
         {
             key: 1,
-            title: "protected site",
+            title: "DATA CENTER",
             content: <ListProtectedSite ErrorHtml={ErrorHtml} HtmlLoading={Loading} />
         },
         // {

@@ -5,7 +5,7 @@ import { toast } from "react-hot-toast";
 export const POST_API = {
     addProtectedSite: (data, reset, setStatus, refresh) =>
         ToastData({
-            name: "Protected Site",
+            name: "DATA CENTER",
             url: `${path}/api/protected-sites`,
             data,
             reset,
@@ -45,13 +45,15 @@ export const POST_API = {
             refresh
         }),
 
-    addscanAssets: (data, reset, success) =>
+    addscanAssets: (data, reset, refresh, success, error) =>
         ToastData({
             name: "SCAN",
             url: `${path}/api/scans`,
             data,
             reset,
-            success
+            refresh,
+            success,
+            error
         }),
     addPlatformsCategory: (data, reset, setStatus, refresh) =>
         ToastData({
@@ -71,12 +73,24 @@ export const POST_API = {
             refresh,
             success
         }),
+    addScanImage: (data, success, error) =>
+        ToastData({
+            name: "UPLOAD FILES",
+            url: `${path}/api/general/upload`,
+            data,
+            success,
+            error
+        }),
 };
 
 
 const ToastData = ({ name, url, data, reset, setStatus, success, error, refresh }) => {
     toast.promise(
-        axios.post(url, { ...data }),
+        axios.post(url, name === "UPLOAD FILES" ? data : { ...data }, name === "UPLOAD FILES" ? {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        } : {}),
         {
             loading: 'LOADING...',
             success: (items) => {
@@ -101,9 +115,14 @@ const ToastData = ({ name, url, data, reset, setStatus, success, error, refresh 
                 if (error) {
                     error(d.response.data);
                 }
+
+                console.log(d.response.data )
+
+                const errorMessage = d.response?.data?.result[0]?.msg || "SAVE ERROR";
+
                 return (
                     <div className="text-red-500 font-bold">
-                        SAVE ERROR
+                        {errorMessage}
                     </div>
                 );
             }

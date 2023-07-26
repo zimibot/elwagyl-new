@@ -249,10 +249,11 @@ const API_GET = {
 
         return { data, error: data?.detail, isLoading, props }
     },
-    LISTATTACK: () => {
+    LISTATTACK: (param) => {
+
         const { value } = GetAndUpdateContext()
-        const { isLoading, error, data, ...props } = useQuery(['listAttack', value.APIURLDEFAULT, value.DATEVALUE.value, value.PAGECOUNT], () =>
-            fetch(`${value.APIURLDEFAULT.ip}/main/attacker-ip-address?${value.APIURLDEFAULT.timeType}=${value.DATEVALUE.value}&limit=100&page=${value.PAGECOUNT}`, {
+        const { isLoading, error, data, ...props } = useQuery(['listAttack', value.APIURLDEFAULT, value.DATEVALUE.value, param], () =>
+            fetch(`${value.APIURLDEFAULT.ip}/main/attacker-ip-address?${value.APIURLDEFAULT.timeType}=${value.DATEVALUE.value}&limit=100&page=${param.page}`, {
                 ...Options()
             }).then(res => {
                 return res.json()
@@ -598,7 +599,7 @@ const API_GET = {
                         "desc": {
                             "attack": {
                                 "briefs": k,
-                                "briefs_text": `${d.jumlahDuplikasi !== 0 ? d.jumlahDuplikasi : 1} THREATS TO KEJAKSAAN`,
+                                "briefs_text": `ATTACKER`,
                                 "works": true,
                                 "typeAttack": d.status,
                                 "brief_id": "artworks\/smart-flat-2030",
@@ -624,7 +625,7 @@ const API_GET = {
                     desc: {
                         attack: {
                             briefs: 2,
-                            briefs_text: `TOTAL ${t} THREATS`,
+                            briefs_text: ``,
                             typeAttack: "low",
                             attack_list: [],
                         }
@@ -725,9 +726,8 @@ const API_GET = {
 
 
 const RootAPi = (ita) => {
-    if (!Array.isArray(ita)) {
-        return { error: true };
-    }
+
+
 
     let data = {
         error: [],
@@ -735,22 +735,33 @@ const RootAPi = (ita) => {
         isLoading: [],
         props: {}
     };
-
+    
+    
     ita.forEach(d => {
-        let items = API_GET[d]();
+        let items
+
+        if (isObject(d)) {
+            items = API_GET[d.param](d.query);
+        } else {
+            items = API_GET[d]();
+        }
+
+        
 
         if (items.isLoading !== undefined) {
+            
             data.error.push(!!items.error);
 
-            if (!items.isLoading && !items.data) {
-                data.error = [true];
-            }
+            // if (!items.isLoading && !items.data) {
+            //     data.error = [true];
+            // }
 
-            data.data[d] = items.data;
-            data.props[d] = { ...items };
+            data.data[isObject(d) ? d.param : d] = items.data;
+            data.props[isObject(d) ? d.param : d] = { ...items };
             data.isLoading.push(items.isLoading);
         }
     });
+    
 
     return {
         ...data,

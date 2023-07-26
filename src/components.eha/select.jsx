@@ -79,76 +79,79 @@ export const SelectComponent = ({ onDelete, button, ClassLabel, ClassButton, req
         {label && <div className={ClassLabel ? ClassLabel : ""}>
             <label className="uppercase">{label}</label>
         </div>}
-        <div className="relative flex items-center justify-end">
+        <div className="space-y-2">
 
-            <Controller
-                control={control}
-                name={name}
-                rules={{
-                    required: required
-                }}
-                // defaultValue={null}
-                render={({
-                    field: { onChange, onBlur, value, ref },
-                }) => {
-                    return (
-                        <Selecable
-                            ref={ref}
-                            maxTagCount="responsive"
-                            height={height}
-                            // value={value ? value : false}
-                            value={isArray(value) ? value : value ? value : props.mode === "multiple" || props.mode === "tag" ? [] : value}
-                            status={error ? 'error' : ''}
-                            onBlur={d => onBlur(d)}
-                            className={className ? className : ""}
-                            showSearch={false}
-                            placeholder="please Select"
+            <div className="relative flex items-center justify-end">
 
-                            allowClear
-                            clearIcon={<DeleteFilled></DeleteFilled>}
-                            style={{
-                                width: width,
-                            }}
-                            loading={loading}
-                            // defaultActiveFirstOption
-                            removeIcon={() => {
-                                return <DeleteFilled></DeleteFilled>
-                            }}
+                <Controller
+                    control={control}
+                    name={name}
+                    rules={{
+                        required: required
+                    }}
+                    // defaultValue={null}
+                    render={({
+                        field: { onChange, onBlur, value, ref },
+                    }) => {
+                        return (
+                            <Selecable
+                                ref={ref}
+                                maxTagCount="responsive"
+                                height={height}
+                                // value={value ? value : false}
+                                value={isArray(value) ? value : value ? value : props.mode === "multiple" || props.mode === "tag" ? [] : value}
+                                status={error ? 'error' : ''}
+                                onBlur={d => onBlur(d)}
+                                className={className ? className : ""}
+                                showSearch={false}
+                                placeholder="please Select"
+                                allowClear
+                                clearIcon={<DeleteFilled></DeleteFilled>}
+                                style={{
+                                    width: width,
+                                }}
+                                loading={loading}
+                                // defaultActiveFirstOption
+                                removeIcon={() => {
+                                    return <DeleteFilled></DeleteFilled>
+                                }}
 
-                            showArrow={error ? false : true}
-                            onChange={(d, w) => {
-                                if (onChangeData) {
-                                    onChangeData(d, w)
-                                }
+                                showArrow={error ? false : true}
+                                onChange={(d, w) => {
+                                    if (onChangeData) {
+                                        onChangeData(d, w)
+                                    }
 
-                                if (isArray(d)) {
-                                    if (d.length === 0) {
-                                        onChange(null)
+                                    if (isArray(d)) {
+                                        if (d.length === 0) {
+                                            onChange(null)
+                                        } else {
+                                            onChange(d)
+                                        }
                                     } else {
                                         onChange(d)
                                     }
-                                } else {
-                                    onChange(d)
-                                }
 
 
-                            }}
+                                }}
 
-                            options={items}
-                            {...props}
-                        />
-                    )
-                }}
-            />
-            <div className={`${ClassButton ? "" : ""} absolute right-10`}>
-                {button}
+                                options={items}
+                                {...props}
+                            />
+                        )
+                    }}
+                />
+                <div className={`${ClassButton ? "" : ""} absolute right-10`}>
+                    {button}
+                </div>
+
+                <SquareMedium />
             </div>
-            
-            <SquareMedium />
-        </div>
-        {error && <div className="text-red-400 gap-2 flex text-[15px] items-center">
+            {error && <div className="text-red-400 gap-2 flex text-[15px] items-center">
                 <ExclamationOutlined /> <span>INPUT IS REQUIRED</span>
             </div>}
+        </div>
+
     </div>
 
 }

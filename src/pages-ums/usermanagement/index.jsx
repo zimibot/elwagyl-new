@@ -64,7 +64,7 @@ const UserManagement = () => {
                     title: 'delete',
                     key: 'id',
                     rowClass: "w-[100px] text-center",
-                    columnClass: "text-center",
+                    columnClass: "text-center w-[100px]",
                     html: (id) => {
                         return <PopConfirm onConfirm={() => {
                             toast.promise(axios.delete(`${path}/users/${id}`, {
@@ -97,9 +97,9 @@ const UserManagement = () => {
                 {
                     title: 'edit',
                     key: 'id',
-                    columnClass: "text-center",
+                    columnClass: " w-[100px] text-center",
                     rowClass: "w-[100px] text-center",
-                    html: (id, full) => {
+                    html: (id) => {
                         return <button onClick={() => {
                             setStatus((d) => ({
                                 ...d,
@@ -139,33 +139,83 @@ const AddUser = () => {
     const { register, control, handleSubmit, reset, setValue, formState: { errors } } = useForm()
 
     const onSubmit = (data) => {
-        toastItem({ api, name: "UserGetUser", type: "post", url: "/users", data, successMsg: "ADD USER SUCCESS" })
-        reset()
+        if (!status.id_user) {
+            reset()
+        }
+        toastItem({ api, name: "UserGetUser", type: status.id_user ? "put" : "post", url: status.id_user ? `/users/${status.id_user}` : "/users", data, successMsg: status.id_user ? "UPDATE USER SUCCESS" : "ADD USER SUCCESS", })
+
     }
 
 
-
-
     useEffect(() => {
+        reset()
         if (status.id_user) {
-            // fetch(`${path}/users/${status.id_user}`, {
-            //     method: "GET", headers: {
-            //         "Authorization": `Bearer ${localStorage.getItem("token")}`
-            //     }
-            // }).then(res => res.json()).then(d => {
-            //     console.log(d)
-            // })
-        } else {
-            reset()
+            fetch(`${path}/users/${status.id_user}`, {
+                method: "GET", headers: {
+                    "Authorization": `Bearer ${localStorage.getItem("token")}`
+                }
+            }).then(res => res.json()).then(d => {
+                console.log(d)
+                for (const key in d) {
+                    setValue(key, d[key])
+
+                    if (key === "role") {
+                        let role_id = d[key].id
+
+                        setValue("role_id", role_id)
+                    }
+                }
+
+            })
         }
     }, [status.id_user])
 
+    const validatePassword = (value) => {
+        if (!value) {
+            return 'Please enter a password.';
+        }
+        if (!/(?=.*\d)/.test(value)) {
+            return 'Password must contain at least one digit.';
+        }
+        if (!/(?=.*[a-z])/.test(value)) {
+            return 'Password must contain at least one lowercase letter.';
+        }
+        if (!/(?=.*[A-Z])/.test(value)) {
+            return 'Password must contain at least one uppercase letter.';
+        }
+        if (!/[!@#$%^&*()\-_=+{}[\]|;:'",.<>/?`~]/.test(value)) {
+            return 'Password must contain at least one special character.';
+        }
+        // Perform additional unique check logic here
+        // Example: if (isPasswordAlreadyUsed(value)) {
+        //   return 'Password must be unique.';
+        // }
+        return true;
+    };
+
     return <ModalsComponent modalName={"user_modal"} title={status.id_user ? "edit user" : "add new user"}>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <Form.input error={errors.fullname} register={register("fullname", { required: true })} label={"full name"}></Form.input>
-            <Form.input error={errors.email} register={register("email", { required: true })} label={"email"}></Form.input>
-            <Form.input error={errors.username} register={register("username", { required: true })} label={"username"}></Form.input>
-            <Form.input error={errors.password} register={register("password", { required: true })} type="password" label={"password"}></Form.input>
+            <Form.input error={errors.fullname} register={register("fullname", {
+                required: true,  minLength: {
+                    value: 4,
+                    message: 'Minimum 4 Characters'
+                }, pattern: { value: /^[A-Za-z\s]+$/, message: 'Please enter only letters and spaces.' }
+            })} label={"full name*"}></Form.input>
+            <Form.input error={errors.email} register={register("email", { required: true, pattern: { value: /^\S+@\S+$/i, message: "Please enter a valid email address." } })} label={"email*"}></Form.input>
+            <Form.input error={errors.username} register={register("username", {
+                required: true, minLength: {
+                    value: 6,
+                    message: 'Minimum 6 Characters'
+                }
+            })} label={"username*"}></Form.input>
+            <Form.input error={errors.password} register={register("password", {
+                required: true,
+                minLength: {
+                    value: 6,
+                    message: 'Minimum 6 Characters'
+                },
+                validate: validatePassword
+            })} type="password" label={"password*"}></Form.input>
             <div className="relative">
                 <SelectComponent ClassLabel={"flex justify-between"} button={
                     <PopConfirm okText={<span className="text-black font-bold">CANCEL</span>} showCancel={false} description={<AddRoles ></AddRoles>} icon={false}>
@@ -177,7 +227,7 @@ const AddUser = () => {
                 } data={api.error ? [] : api.loading ? [] : api.data.UserGetRoles.data.map(d => ({
                     label: d.name,
                     value: d.id
-                }))} width={"100%"} error={errors.role_id} height={45} control={control} name={"role_id"} label={"roles"} />
+                }))} width={"100%"} error={errors.role_id} height={45} control={control} name={"role_id"} label={"roles*"} />
                 {/* <CardAnimation>
                     {addRoles && <div className="absolute bottom-[55px] w-full flex items-center justify-end space-y-4">
                         <AddRoles></AddRoles>
@@ -238,7 +288,7 @@ export const toastItem = ({ data, api, url, type, name, successMsg }) => {
 }
 
 const AddRoles = () => {
-    const { register, handleSubmit, reset } = useForm()
+    const { register, handleSubmit, reset, formState: { errors } } = useForm()
 
     const [addRoles, setAddRoles] = useState(false)
     const api = GET_API_UMS.root(["UserGetRoles"])
@@ -261,7 +311,17 @@ const AddRoles = () => {
             </div>
         </div>
         {addRoles ? <div className="flex flex-col gap-4 w-80">
-            <Form.input register={register("name", { required: true })} ></Form.input>
+            <Form.input error={errors.name} register={register("name", {
+                required: true,
+                minLength: {
+                    value: 4,
+                    message: 'Minimum 3 Characters'
+                },
+                pattern: {
+                    value: /^[A-Za-z]+$/i,
+                    message: 'Please enter letters only.',
+                },
+            })} ></Form.input>
             <ButtonComponents>SUBMIT</ButtonComponents>
         </div> : <CardAnimation className="w-[500px] max-h-96 overflow-auto pr-2 space-y-4">
             {api.error ? "ERROR" : api.loading ? <div>LOADING</div> : api.data.UserGetRoles.data.map(d => {

@@ -23,7 +23,6 @@ export const ChartRadialBar = ({ data = [] }) => {
     }
 
     for (const key in data) {
-        console.log(data)
 
         if (key !== "refetch" && key !== "status") {
             items.push({
@@ -108,7 +107,6 @@ export const ChartRadialBar = ({ data = [] }) => {
 
             let data = chart.options.data
 
-            console.log(data)
 
             setvalue(d => ({
                 ...d,

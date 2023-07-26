@@ -15,12 +15,17 @@ import { Loading } from "../../components/loading/loadingOther"
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { useEffect, useRef } from "react"
 import moment from "moment"
+import { totalSeverity } from "../cyber.deck"
+import { Tooltip } from "antd"
 
 
 const ThreatsMaps = ({ titlePath }) => {
     const { value } = GetAndUpdateContext()
-    const root = RootAPi(["ALERT_SEVERITY", "THREATSMAP_CYBER_ATTACK_STATISTIC", "THREATSMAP_CYBER_ATTACK_THREATS"])
+    const root = RootAPi(["ALERT_SEVERITY", "THREATSMAP_CYBER_ATTACK_STATISTIC", "THREATSMAP_CYBER_ATTACK_THREATS", "DASHBOARD_STATUS"])
     // const API_GLOBE = API_GET.THREATSMAP_GLOBE()
+
+    let severity = totalSeverity(root, value)
+
     return <LayoutDashboard titlePath={titlePath}>
         <ColumnLeft>
             <CardAnimation>
@@ -31,9 +36,9 @@ const ThreatsMaps = ({ titlePath }) => {
                     <SubtitleInfo title={'OBSERVATION SEVERITY'}>
                         {STASTISTIC_ALERT_DESC}
                     </SubtitleInfo>
-                    {root.error ? "error" : root.isLoading ? "LOADING" : <div className="space-y-2">
-                        <div className="grid grid-cols-3 border border-primary">
-                            {root.data.ALERT_SEVERITY.map((d, k) => {
+                    {root.error ? "error" : root.isLoading ? <div className="p-4 flex items-center justify-center">Loading</div> : <div className="space-y-2">
+                        <div className="grid grid-cols-4 border border-primary">
+                            {severity.result.map((d, k) => {
                                 return <div key={k} className="border-r border-primary p-3">
                                     <div className="font-bold uppercase" style={{ color: d.color }}>{d.name}</div>
                                     <div className="text-[24px] flex items-center gap-2" style={{
@@ -50,11 +55,13 @@ const ThreatsMaps = ({ titlePath }) => {
 
                         </div>
                         <div className="p-2 border border-primary flex ">
-                            {root.data.ALERT_SEVERITY.map((d, k) => {
-                                return <div key={k} className="h-3" style={{
+                            {severity.result.map((d, k) => {
+                                return  <Tooltip  key={k} title={`Total : ${d.percentage}%`}>
+                                    <div className="h-3" style={{
                                     background: d.color,
                                     width: `${d.percentage}%`
                                 }}></div>
+                                </Tooltip>
                             })}
 
                         </div>

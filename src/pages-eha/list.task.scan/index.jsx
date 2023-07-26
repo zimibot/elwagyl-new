@@ -105,7 +105,7 @@ const ListTask = () => {
                   },
                 },
                 {
-                  title: "PROTECTED SITE",
+                  title: "Data Center",
                   rowClass: "w-[200px]",
                   key: "name",
                 },
@@ -213,7 +213,7 @@ const ListTask = () => {
                     let { asset_id, sla_date, sla_time, recipient_email, remarks, attachment, is_draft, tool_scanner_id, created_by } = fullData
                     data = {
                       asset_id,
-                      sla_date: sla_date.split(" ")[0],
+                      sla_date: sla_date?.split(" ")[0],
                       sla_time,
                       recipient_email,
                       remarks,

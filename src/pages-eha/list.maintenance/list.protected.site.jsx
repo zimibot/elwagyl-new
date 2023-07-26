@@ -32,7 +32,7 @@ export const ListProtectedSite = () => {
     return (
         <CardBox className="flex-1">
             <TitleContent className="justify-between" subTitle={null} hide>
-                <div className="text-[24px] uppercase text-blue">protected site</div>
+                <div className="text-[24px] uppercase text-blue">DATA CENTER</div>
                 <div className="flex justify-end">
                     <ButtonComponents click={() => {
                         setStatus(d => ({
@@ -40,7 +40,7 @@ export const ListProtectedSite = () => {
                             getData: null,
                             addProtected: true
                         }))
-                    }}>ADD PROTECTED SITE</ButtonComponents>
+                    }}>ADD DATA CENTER</ButtonComponents>
                 </div>
             </TitleContent>
             {api.msg || api.error ? <ErrorHtml error={api.msg}></ErrorHtml> : api.loading ? <Loading /> : <Data api={api} setStatus={setStatus} />}
@@ -77,7 +77,7 @@ const EditAndAdd = ({ name }) => {
 
     return <ModalsComponent modalName={name}>
         <TitleContent className="justify-between" subTitle={null} hide>
-            <div className="text-[24px] uppercase text-blue">{status.getData ? "Edit" : "Add"} protected site</div>
+            <div className="text-[24px] uppercase text-blue">{status.getData ? "Edit" : "Add"} DATA CENTER</div>
         </TitleContent>
         <form className="flex gap-4 flex-col" onSubmit={handleSubmit(submit)}>
             <Form.input register={register("site_name", { required: true })} label={"site name"} placeholder="Fill in this input..." />
@@ -108,7 +108,7 @@ const Data = ({ api, setStatus }) => {
 
     return <TableInline border hoverDisable columns={[
         {
-            title: 'protected site name',
+            title: 'Site name',
             key: 'site_name',
         },
         {

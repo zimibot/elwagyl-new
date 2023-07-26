@@ -39,7 +39,7 @@ export const ListRegisterUser = () => {
                             <Form.input register={register("role", { required: true })} error={errors.role} label={"role*"} />
                         </div>
                         <div className="space-y-6">
-                            <Form.input register={register("protected_site", { required: true })} error={errors.protected_site} label={"protected site*"} />
+                            <Form.input register={register("protected_site", { required: true })} error={errors.protected_site} label={"Site*"} />
                             <Form.input register={register("user_details")} label={"user details"} />
                             <Form.input register={register("password", { required: true })} error={errors.password} customError={alert} type="password" label={"new password*"} />
                             <Form.input register={register("verify_password", { required: true })} error={errors.verify_password} customError={alert} type="password" label={"verify password*"} />

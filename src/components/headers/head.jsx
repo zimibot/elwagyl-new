@@ -52,7 +52,7 @@ export const HeadFunction = (menu, setStatus, VALUEMENU) => {
         },
         attribute: document.body.getAttribute("name"),
     }).then(d => {
-        if (d.status  === "online") {
+        if (d.status === "online") {
             setStatus(w => ({ ...w, headHidden: false, loading: true, otherPages: d.status }))
         }
 
@@ -103,7 +103,7 @@ const HeadTop = () => {
     let param = API_SEVERITY.error ? "ERROR" : API_SEVERITY.isLoading ? "" : API_SEVERITY.system.name
     let color = API_SEVERITY.error ? "ERROR" : API_SEVERITY.isLoading ? "" : API_SEVERITY.system.color
 
- 
+
     useEffect(() => {
         if (document.body?.getAttribute("name") !== "elwagyl-0") {
             setStatus(w => ({ ...w, headHidden: false, loading: true }))
@@ -207,6 +207,7 @@ const HeadBottom = () => {
     const indicator = param === "high" ? "RED-CODE" : param === "medium" ? "ATTENTION" : param === "low" ? "SECURE" : "NORMAL"
     const [ping, setping] = useState([]);
     const [pingCount, setpingCount] = useState(0);
+    const [countTime, setcountTime] = useState(0);
     const [timeOut, settimeOut] = useState(0);
     const [isTime, setisTime] = useState(true);
     const [isSwitch, setisSwitch] = useState({
@@ -225,6 +226,7 @@ const HeadBottom = () => {
 
     // console.log(browserId)
 
+
     useEffect(() => {
         let pmnd = setInterval(() => {
             if (pingCount === "error" || pingCount > 600) {
@@ -238,6 +240,10 @@ const HeadBottom = () => {
                     incomeTicker = 10
                     setisTime(false)
                 }
+
+                if (incomeTicker > 9) {
+                    setcountTime(d => d + 1)
+                }
             } else {
                 clearInterval(pmnd)
                 setisTime(true)
@@ -248,12 +254,17 @@ const HeadBottom = () => {
             settimeOut(0)
             clearInterval(pmnd)
             setisTime(true)
-
+            setcountTime(0)
         };
     }, [pingCount]);
 
+    useEffect(() => {
+        if (countTime > 3) {
+            localStorage.removeItem("token")
+        }
+    }, [countTime])
 
-
+    
     useEffect(() => {
         let ip = import.meta.env.VITE_CURRENT_IP;
         let pingArray = new Array(20).fill(0); // add default data of 20 zeros
@@ -266,6 +277,7 @@ const HeadBottom = () => {
                         pingArray = pingArray.slice(-20); // limit setping to 20 values
                         setpingCount(data);
                         setping(pingArray);
+                        setcountTime(0)
                     } else {
                         setping([]);
                         setpingCount("error");
@@ -321,7 +333,6 @@ const HeadBottom = () => {
 
     useEffect(() => {
         if (document.body.getAttribute("key")) {
-
             setStatus(w => ({ ...w, headHidden: false, loading: true }))
         }
     }, [])

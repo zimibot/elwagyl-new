@@ -26,10 +26,9 @@ export const HeatmapComponent = ({ data = [] }) => {
     // }, []);
 
 
-    console.log(data)
 
     if (data.length === 0) {
-        return <div className="p-4"><Empty className="justify-center flex flex-col items-center" ></Empty></div>
+        return <div className="p-4"><Empty image={<img src='/assets/no-data.png' ></img>} className="justify-center flex flex-col items-center" ></Empty></div>
     }
 
 

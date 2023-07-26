@@ -12,7 +12,7 @@ export const DetailDeck = () => {
     return <> <DrawerMenu name={"detail"}>
         <div className="flex flex-col gap-4 text-[16px] flex-1">
             <TitleContent className={"pt-0"}>
-                <div className="text-[24px] uppercase text-blue">PROTECTED SITE A</div>
+                <div className="text-[24px] uppercase text-blue">Site A</div>
             </TitleContent>
             <div className="grid grid-cols-7 gap-6 flex-1">
                 <div className="col-span-4">
@@ -216,7 +216,7 @@ const SubDetail = () => {
             rowClass: "w-[300px]"
         },
         {
-            title: "PROTECTED SITE",
+            title: "Data Center",
             key: "protectedsite",
             rowClass: "w-[250px]"
         },
@@ -270,7 +270,7 @@ const SubDetail = () => {
     return (
         <DrawerMenu placement="right" name={"subdetail"}>
             <TitleContent className={"pt-0"}>
-                <div className="text-[24px] uppercase text-blue">DETAIL PROTECTED SITE A</div>
+                <div className="text-[24px] uppercase text-blue">DETAIL Site A</div>
             </TitleContent>
             <TitleContent className={"pt-0"}>
                 <div className="text-[24px] uppercase text-blue">192.24.22.561</div>

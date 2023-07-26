@@ -16,7 +16,7 @@ import { useForm } from "react-hook-form";
 import { POST_API } from "../../api/eha/POST";
 import { UPDATE_API } from "../../api/eha/UPDATE";
 import { useEffect } from "react";
-import { Loading } from ".";
+import { ErrorHtml, Loading } from ".";
 
 const AddCategory = ({ data }) => {
     const { setStatus, status } = GetAndUpdateContext()
@@ -207,7 +207,7 @@ const ListManagePlatform = () => {
             </TitleContent>
             <div className="grid grid-cols-4 flex-1 pb-10">
                 {api.error ? (
-                    <ErrorItems />
+                    <ErrorHtml />
                 ) : api.loading ? (
                     <Loading />
                 ) : (

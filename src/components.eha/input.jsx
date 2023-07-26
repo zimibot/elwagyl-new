@@ -41,15 +41,13 @@ export const Form = {
 
 
         const [showPw, setshowPw] = useState();
-        const [file, setfile] = useState(false);
 
 
 
-        let type = props?.type === "password" ? showPw ? "text" : props.type : props.type
-
+        let pwd = props?.type === "password" ? !showPw ? "password" : "text" : props?.type
         return <div className={rowColumn ? "flex gap-4 whitespace-nowrap items-center" : `flex flex-col gap-4 text-[16px] ${className} `}>
             {label && <label className="uppercase flex justify-between items-center">{label}
-                {type === "file" &&
+                {/* {type === "file" &&
                     <div className="flex gap-2">
                         <div className="cursor-pointer" onClick={() => { setfile(true) }}>
                             <Tag className="rounded-none" color={file ? "cyan" : "grey"}>UPLOAD FILE</Tag>
@@ -58,38 +56,41 @@ export const Form = {
                             <Tag className="rounded-none" color={file ? "grey" : "cyan"}>URL</Tag>
                         </div>
                     </div>
-                }
+                } */}
             </label>}
             <div className="relative w-full flex gap-2 flex-col">
-                <Input placeholder="please fill in this input" {...props} type={type === "file" ? file ? type : "text" : type} className={`bg-primary w-full p-3 ${classNameInput} ${error && "border !border-red-400"}`} {...register} ></Input>
+                <div className="relative">
+                    <Input placeholder="please fill in this input"  {...props} type={pwd} className={`bg-primary w-full p-3 ${classNameInput} ${error && "border !border-red-400"}`} {...register} ></Input>
 
-                {!error && props?.type === "password" &&
-                    <Dropdown
-                        open={customError}
-                        rootClassName="is-error"
-                        menu={{
-                            items,
-                        }}
-                        placement="left"
-                    >
-                        <div className="absolute right-0 px-4 text-[20px]" onClick={() => setshowPw(d => !d)}>
-                            {showPw ?
-                                <Tooltip title="HIDE PASSWORD">
-                                    <EyeInvisibleFilled />
-                                </Tooltip>
-                                :
-                                <Tooltip title="SHOW PASSWORD">
-                                    <EyeFilled />
-                                </Tooltip>
-                            }
-                        </div>
-                    </Dropdown>
+                    {props?.type === "password" &&
+                        <Dropdown
+                            open={customError}
+                            rootClassName="is-error"
+                            menu={{
+                                items,
+                            }}
+                            placement="left"
+                        >
+                            <div className="absolute right-0 px-4 top-0 text-[20px] h-full flex items-center justify-center" onClick={() => setshowPw(d => !d)}>
+                                {showPw ?
+                                    <Tooltip title="HIDE PASSWORD">
+                                        <EyeInvisibleFilled />
+                                    </Tooltip>
+                                    :
+                                    <Tooltip title="SHOW PASSWORD">
+                                        <EyeFilled />
+                                    </Tooltip>
+                                }
+                            </div>
+                        </Dropdown>
 
-
-                }
-                {error && <div className="text-red-400 flex items-center gap-1  text-[15px]">
-                    <ExclamationOutlined /><span>INPUT IS REQUIRED</span>
-                </div>}
+                    }
+                </div>
+                {error ? error.type === "required" ? <div className="text-red-400 flex items-center gap-1  text-[15px] uppercase">
+                    <ExclamationOutlined />{error.message === "" ? <span>INPUT IS REQUIRED</span> : <span>{error.message}</span>}
+                </div> : <div className="text-red-400 flex items-center gap-1  text-[15px] uppercase">
+                    <ExclamationOutlined /><span>{error?.message}</span>
+                </div> : ""}
             </div>
 
         </div>
@@ -197,10 +198,11 @@ export const Form = {
 
         </div>
     },
-    slider: ({ error, required = false, control, name, label, nonControl, type, marks = {
-        0: 'Low',
-        50: 'Medium',
-        100: "High",
+    slider: ({ onChangeCustom, error, required = false, colorRail = "#152A36", control, name, label, nonControl, type, marks = {
+        0: 'none',
+        50: 'low',
+        75: 'medium',
+        100: "high",
     }, ...props }) => {
         if (nonControl) {
             return <Switch className="w-full" {...props}  ></Switch>
@@ -209,23 +211,37 @@ export const Form = {
             return <div className="w-full p-4 h-12 bg-red-500 text-white uppercase">control/name is required </div>
         }
         return <div className="relative">
-            <Controller
-                control={control}
-                name={name}
-                rules={{
-                    required: required
-                }}
-                render={({
-                    field: { onChange, value, ref },
-                }) => {
-                    return (<Slider onChange={onChange} tooltip={(d) => {
-                        console.log(d)
-                        return ""
-                    }} marks={marks} step={null} value={value} ref={ref} />)
+            <div className="uppercase">SELECT RISK LEVEL*</div>
+            <div className="px-5">
+                <Controller
+                    control={control}
+                    name={name}
+                    rules={{
+                        required: required
+                    }}
+                    render={({
+                        field: { onChange, value, ref },
+                    }) => {
 
-                }}
-            />
+                        return (<Slider onChange={onChange} tooltip={{
+                            open: false
+                        }}
+                            trackStyle={{
+                                background: colorRail
+                            }}
+                            railStyle={{
+                                background: "#152A36",
+                                height: 5
+                            }} marks={marks} step={null} value={value} ref={ref} />)
 
+                    }}
+                />
+            </div>
+            {error && <div className="text-red-400 absolute px-4 font-[20px]">
+                <Tooltip title="INPUT IS REQUIRED">
+                    <ExclamationCircleOutlined />
+                </Tooltip>
+            </div>}
         </div>
     },
     date: ({ error, required = true, control, name, label, type, ...props }) => {

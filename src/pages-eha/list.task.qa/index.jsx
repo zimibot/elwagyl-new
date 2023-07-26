@@ -5,18 +5,17 @@ import { TableInline } from "../../components/table";
 import { Form } from "../../components.eha/input";
 import { ButtonComponents } from "../../components.eha/button";
 import { GET_API_EHA } from "../../api/eha/GET";
-import { DeleteFilled, EditFilled, LoadingOutlined } from "@ant-design/icons";
+import { EditFilled } from "@ant-design/icons";
 import { ErrorHtml, Loading } from "../list.maintenance";
 import { GetAndUpdateContext } from "../../model/context.function";
 import { useState } from "react";
 import { ModalsComponent } from "../../components.eha/modal";
 import { useForm } from "react-hook-form";
-import { BulkEdit } from "./bulk_edit";
 import { UPDATE_API } from "../../api/eha/UPDATE";
-import { Popconfirm } from "antd";
-import { DELETE_API } from "../../api/eha/DELETE";
+import { BulkEdit } from "./bulk_edit"
+import { Badge } from "antd";
 
-const EditTask = ({ idChecked, api, setisload }) => {
+const EditTask = ({ idChecked, api, setIsLoad }) => {
   const { setStatus, status } = GetAndUpdateContext();
 
   const {
@@ -26,7 +25,7 @@ const EditTask = ({ idChecked, api, setisload }) => {
     formState: { errors },
   } = useForm();
 
-  const Onsubmit = (data) => {
+  const onSubmit = (data) => {
     const items = {
       is_complete_qc: false,
       is_false_positive: false,
@@ -39,68 +38,53 @@ const EditTask = ({ idChecked, api, setisload }) => {
     switch (data.is_data) {
       case "complete":
         items.is_complete_qc = true;
-        items.is_false_positive = false;
-        items.bulk_edit = false;
         break;
       case "mark_false":
         items.is_false_positive = true;
-        items.is_complete_qc = false;
-        items.bulk_edit = false;
-
         break;
       case "bulk_edit":
-        items.is_false_positive = false;
-        items.is_complete_qc = false;
         items.bulk_edit = true;
-
         break;
-
       default:
-        items.is_complete_qc = false;
-        items.is_false_positive = false;
-        items.bulk_edit = false;
         break;
     }
 
     if (items.bulk_edit) {
-      setStatus((d) => ({ ...d, bulk_edit: !d.bulk_edit }));
+      setStatus((prevStatus) => ({ ...prevStatus, bulk_edit: !prevStatus.bulk_edit }));
     } else {
       UPDATE_API.updateBulkCheck(items, api.data.vulnerability.refetch);
-      setisload((d) => !d);
+      setIsLoad((prevIsLoad) => !prevIsLoad);
     }
   };
 
   return (
-    <ModalsComponent modalName={"edit_task"}>
-      <form className="space-y-4" onSubmit={handleSubmit(Onsubmit)}>
-        {/* {idChecked.length === 1 && <Form.radio register={register("is_data")} value="bulk_edit" text={"bulk edit finding"}></Form.radio>} */}
-        <div
-          className={`${idChecked.length === 1 || status.id ? "" : "hidden"}`}
-        >
+    <ModalsComponent modalName="edit_task">
+      <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
+        {/* <div className={`${idChecked.length === 1 || status.id ? "" : "hidden"}`}>
           <Form.radio
             error={errors.is_data}
             disabled={idChecked.length === 1 || status.id ? false : true}
             register={register("is_data", { required: true })}
             value="bulk_edit"
-            text={"edit finding"}
+            text="edit finding"
           ></Form.radio>
-        </div>
+        </div> */}
         <Form.radio
           error={errors.is_data}
           register={register("is_data", { required: true })}
           value="mark_false"
-          text={"mark false positive"}
+          text="mark false positive"
         ></Form.radio>
         <Form.radio
           error={errors.is_data}
           register={register("is_data", { required: true })}
           value="complete"
-          text={"complete qc"}
+          text="complete qc"
         ></Form.radio>
         <div className="flex justify-end gap-4">
           <ButtonComponents
             click={() => {
-              setStatus((d) => ({ ...d, edit_task: !d.edit_task, id: null }));
+              setStatus((prevStatus) => ({ ...prevStatus, edit_task: !prevStatus.edit_task, id: null }));
               reset();
             }}
             nonSubmit
@@ -119,13 +103,13 @@ const EditTask = ({ idChecked, api, setisload }) => {
 const ListQa = ({
   setChecked,
   queryFalse,
-  setpages,
+  setPages,
   pages,
   checked,
   name,
   Delete,
-  setisload,
-  isload,
+  setIsLoad,
+  isLoad,
   columns = [],
   ...props
 }) => {
@@ -139,8 +123,8 @@ const ListQa = ({
     },
   ]);
 
-  var find = "Nessus";
-  var regex = new RegExp(find, "g");
+  const find = "Nessus";
+  const regex = new RegExp(find, "g");
 
   return (
     <>
@@ -151,12 +135,13 @@ const ListQa = ({
       ) : (
         <TableInline
           onChange={(s) => {
-            setpages(s);
+            setPages(s);
           }}
-          paggination
-          Loading={API.isFetching || isload}
+          pagination
+          Loading={API.isFetching || isLoad}
           totalPages={API.data.vulnerability.pagination.total_results}
           pageSize={15}
+          paggination
           currentPage={pages}
           border
           hoverDisable
@@ -170,10 +155,10 @@ const ListQa = ({
                 return !data.checked ? (
                   <button
                     onClick={() =>
-                      setStatus((d) => ({
-                        ...d,
-                        edit_task: !d.edit_task,
-                        id: id,
+                      setStatus((prevStatus) => ({
+                        ...prevStatus,
+                        edit_task: !prevStatus.edit_task,
+                        id,
                       }))
                     }
                   >
@@ -188,8 +173,8 @@ const ListQa = ({
               title: "FINDING NAME",
               key: "finding_name",
               html: (data) => {
-                return data?.replace(regex, "E.H.A Engine")
-              }
+                return data?.replace(regex, "E.H.A Engine");
+              },
             },
             {
               title: "TARGET",
@@ -208,8 +193,8 @@ const ListQa = ({
               key: "is_false_positive",
               rowClass: "w-[150px]",
               columnClass: "w-[150px]",
-              html: (d, full) => {
-                return d ? (
+              html: (isFalsePositive, full) => {
+                return isFalsePositive ? (
                   <div className="text-red-400">False Positive</div>
                 ) : full.is_complete_qc ? (
                   "COMPLETE"
@@ -225,7 +210,7 @@ const ListQa = ({
       )}
       {checked && (
         <EditTask
-          setisload={setisload}
+          setIsLoad={setIsLoad}
           idChecked={checked.map((d) => d.id)}
           api={API}
         ></EditTask>
@@ -234,21 +219,10 @@ const ListQa = ({
   );
 };
 
-const onDelete = (id, data, API) => {
-  data = {
-    id,
-    site_name: data.finding_name,
-  };
-
-  DELETE_API.deleteVulnerabilities(data, API.data.vulnerability.refetch);
-};
-
 const TaskQA = () => {
   const { setStatus } = GetAndUpdateContext();
   const [checked, setChecked] = useState([]);
-  const [pages, setpages] = useState(1);
-  const [pages2, setpages2] = useState(1);
-  const [isload, setisload] = useState(1);
+  const [pages2, setPages2] = useState(1);
 
   return (
     <LayoutDashboard className="bg-[#101C26] text-[16px]">
@@ -265,40 +239,41 @@ const TaskQA = () => {
                     </ButtonComponents>
                 </div> */}
         </div>
-        <div className="grid grid-cols-2 flex-1 pb-10">
+        <div className="grid grid-cols-1 flex-1 pb-10">
           <div className="space-y-5 h-full relative flex-1 flex flex-col border-r pr-4 border-primary">
             <TitleContent subTitle={false}>
               <div className="flex justify-between items-center w-full">
                 <div className="text-[24px] uppercase text-blue">
                   Finding risk level
                 </div>
-                {checked.length > 0 && (
-                  <div>
+                <div className="py-2">
+                  <Badge className="text-blue" color="#222"  count={checked.length}>
                     <ButtonComponents
+                      disabled={checked.length > 0 ? false : true}
                       click={() => {
-                        setStatus((d) => ({
-                          ...d,
-                          edit_task: !d.edit_task,
+                        setStatus((prevStatus) => ({
+                          ...prevStatus,
+                          edit_task: !prevStatus.edit_task,
                           id: null,
                         }));
                       }}
                     >
-                      EDIT
+                      EDIT CHECKED
                     </ButtonComponents>
-                  </div>
-                )}
+                  </Badge>
+                </div>
               </div>
             </TitleContent>
             <ListQa
               name="vul1"
               pages={pages2}
               checked={checked}
-              setpages={setpages2}
+              setPages={setPages2}
               setChecked={setChecked}
               checkFunction={setChecked}
             ></ListQa>
           </div>
-          <div className="space-y-5 h-full relative flex-1 flex flex-col border-r pr-4 border-primary">
+          {/* <div className="space-y-5 h-full relative flex-1 flex flex-col border-r pr-4 border-primary">
             <TitleContent subTitle={false}>
               <div className="flex justify-between items-center w-full">
                 <div className="text-[24px] uppercase text-blue">
@@ -310,12 +285,12 @@ const TaskQA = () => {
               name="vul2"
               Delete
               pages={pages}
-              setpages={setpages}
+              setPages={setPages}
               queryFalse={true}
-              isload={isload}
-              setisload={setisload}
+              isLoad={isLoad}
+              setIsLoad={setIsLoad}
             ></ListQa>
-          </div>
+          </div> */}
         </div>
       </CardBox>
     </LayoutDashboard>

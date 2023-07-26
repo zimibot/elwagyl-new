@@ -25,7 +25,6 @@ export const ChartLineTooltip = ({ height = 115, mode = "", className = "", data
         stepType: mode,
         tooltip: {
             customContent: (title, data) => {
-                console.log(data)
                 let date = moment(title).format("lll")
                 let items = data.map((d, k) => {
                     return (`<div key="${k}"><span>${d.name}</span> : <span>${d.value}</span></div>`)

@@ -52,6 +52,7 @@ const MainDeck = () => {
     },
     ])
 
+    console.log(API)
 
 
     if (API.error || API.msg) {
@@ -224,7 +225,7 @@ const MainDeck = () => {
             <ColumnRight>
                 <CardBox className={"flex-1"}>
                     <TitleContent>
-                        <div className="text-[24px] uppercase text-blue">PROTECTED SITE</div>
+                        <div className="text-[24px] uppercase text-blue">DATA CENTER</div>
                     </TitleContent>
                     <ProtectedSite loading={API.loading} data={API.data} setvalue={setvalue}></ProtectedSite>
                     <TitleContent>

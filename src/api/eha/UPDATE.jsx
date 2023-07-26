@@ -4,8 +4,8 @@ import { toast } from "react-hot-toast";
 
 export const UPDATE_API = {
     updateProtectedSite: (id, data, setStatus) => ToastData({ name: data.site_name, url: `${path}/api/protected-sites/${id}`, setStatus, data: { ...data, updated_by: data.created_by } }),
-    updateScanManage: (id, data, setStatus) => ToastData({ name: data.name, url: `${path}/api/tool-scanners/${id}`, setStatus, data }),
-    updateScanAssets: (id, data, refresh) => ToastData({ name: data.asset.name, url: `${path}/api/scans/${id}`, refresh, data }),
+    updateScanManage: (id, data, setStatus, ) => ToastData({ name: data.name, url: `${path}/api/tool-scanners/${id}`, setStatus, data }),
+    updateScanAssets: (id, data, refresh, success, error) => ToastData({ name: data.asset.name, url: `${path}/api/scans/${id}`, refresh, data, success, error }),
     updatePlatformCategory: (id, data, setStatus, success) => ToastData({ name: data.name, url: `${path}/api/platform-categories/${id}`, setStatus, data, success }),
     updateAssets: (id, data, setStatus, success, error) => ToastData({ name: data.name, url: `${path}/api/assets/${id}`, setStatus, data, success, error }),
     updateEmail: (id, data, setStatus, refresh) => ToastData({ name: data.name, url: `${path}/api/manage-email-notification/${id}`, setStatus, data, refresh }),

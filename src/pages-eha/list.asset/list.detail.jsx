@@ -30,6 +30,7 @@ export const ListDetail = () => {
   const API = GET_API_EHA.root([
     {
       active: "assetsList",
+      query: "is_unconfirmed_asset=false"
     },
     {
       active: "getAssetsPDF",
@@ -82,6 +83,7 @@ export const ListDetail = () => {
               EXPORT PDF
             </ButtonComponents>
             <ButtonComponents
+              disabled={loading.assset}
               className="flex gap-3"
               nonSubmit
               click={() => {
@@ -147,7 +149,7 @@ export const ListDetail = () => {
                 key: "name",
               },
               {
-                title: "PROTECTED SITE",
+                title: "Data Center",
                 key: "site_name",
               },
               {
@@ -195,7 +197,7 @@ export const ListDetail = () => {
                 columnClass: "text-center w-[80px]",
                 key: "high",
                 html: (d) => {
-                  return  <span className="text-red-400">{d ? d : 0}</span>
+                  return <span className="text-red-400">{d ? d : 0}</span>
                 },
               },
               {
@@ -204,7 +206,7 @@ export const ListDetail = () => {
                 columnClass: "text-center w-[80px]",
                 key: "critical",
                 html: (d) => {
-                  return  <span className="text-red-600">{d ? d : 0}</span>
+                  return <span className="text-red-600">{d ? d : 0}</span>
                 },
               },
 

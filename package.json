@@ -1,10 +1,10 @@
 {
   "name": "elwagyl",
   "private": true,
-  "version": "4.2.3",
+  "version": "4.2.4",
   "main": "public/electron.js",
   "description": "This is the base project for the CIC.Bas.Web project also called CIC One - New Technologies",
-  "author": "OnePgr, Inc <amsystango@gmail.com>",
+  "author": "Maxima Integra",
   "scripts": {
     "start": "vite",
     "electron": "wait-on tcp:3000 && electron . ",

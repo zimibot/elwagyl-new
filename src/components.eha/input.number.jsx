@@ -40,7 +40,7 @@ const InputNumb = styled(InputNumber)`
     }
 `
 
-export const InputNumbers = ({ control, name, error, onChangeData, ...props }) =>
+export const InputNumbers = ({ control, name, error, onChangeData, min, ...props }) =>
     <Controller
         control={control}
         name={name}
@@ -53,7 +53,7 @@ export const InputNumbers = ({ control, name, error, onChangeData, ...props }) =
         }) => {
             return (
                 <div className={`relative w-20 ${error ? "border border-red-500" : ""}`}>
-                    <InputNumb value={value} ref={ref} min={1} onBlur={onBlur} max={100} onChange={(d) => {
+                    <InputNumb defaultValue={min} min={min} value={value} ref={ref}  onBlur={onBlur}  onChange={(d) => {
                         if (onChangeData) {
                             onChangeData(d)
                         }

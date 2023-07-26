@@ -144,7 +144,7 @@ export const ListManageScan = () => {
                     api.data.scanTools.result
                 } />}
 
-            <EditAndAdd data={api.data.toolsScanner.result}></EditAndAdd>
+            <EditAndAdd data={api.data?.toolsScanner?.result || []}></EditAndAdd>
         </CardBox>
     )
 }

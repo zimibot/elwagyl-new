@@ -1,4 +1,4 @@
-import { ArrowLeftOutlined } from "@ant-design/icons"
+import { ArrowLeftOutlined, CheckOutlined, DeleteOutlined, LoadingOutlined } from "@ant-design/icons"
 import { ButtonComponents } from "../../components.eha/button"
 import { CardBox } from "../../components/layout/card"
 import { LayoutDashboard } from "../../components/layout/dashboard.layout"
@@ -14,84 +14,154 @@ import { GET_API_EHA } from "../../api/eha/GET"
 import { useEffect } from "react"
 import { POST_API } from "../../api/eha/POST"
 import { ErrorHtml } from "../list.maintenance"
+import { Popconfirm, Spin } from "antd"
+import { useState } from "react"
+import { SelectScanner } from "../list.task.scan/add.modal"
+import { DELETE_API } from "../../api/eha/DELETE"
+
 
 const ModalDiscovery = () => {
-    const { setStatus } = GetAndUpdateContext()
+    const antIcon = <LoadingOutlined spin />;
+    const [loading, setLoading] = useState(false);
+
+    const { setStatus } = GetAndUpdateContext();
     const API = GET_API_EHA.root([
         {
-            active: "protectedSite"
+            active: "protectedSite",
         },
         {
-            active: "scanDetails"
+            active: "scanDetails",
         },
         {
-            active: "toolsScanner"
+            active: "toolsScanner",
         },
         {
-            active: "scanTools"
+            active: "scanTools",
         },
         {
             active: "scan",
-            query: "type=host-discovery"
+            query: "type=host-discovery",
         },
-    ])
+    ]);
 
+    const { register, reset, handleSubmit, control, setValue, formState: { errors } } = useForm();
 
-    const { register, reset, setValue, control, handleSubmit, formState: { errors } } = useForm()
+    const ipRangeRegex = /^(?:(?:^|, ?)(?:(?:\d{1,3}\.){3}\d{1,3}(?:\/\d{1,2})?|(?:\d{1,3}\.){3}\d{1,3}(?: - (?:\d{1,3}\.){3}\d{1,3}))(?:$|, ?))+$/;
+    const ipRangeValidation = {
+        required: "IP range is required",
+        pattern: {
+            value: ipRangeRegex,
+            message: "Invalid IP range format",
+        },
+    };
+
+    const alphanumericValidation = {
+        required: "Field is required",
+        minLength: {
+            value: 6,
+            message: "Minimum Character 6"
+        },
+        pattern: {
+            value: /^[A-Za-z0-9\s]+$/i,
+            message: "Only letters, numbers, and spaces are allowed",
+        },
+    };
+
+    const emailValidation = {
+        required: "Email is required",
+        pattern: {
+            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+            message: "Invalid email format",
+        },
+    };
+
     const onSubmit = (data) => {
+        setLoading(true)
         data = {
             ...data,
             created_by: localStorage.getItem("user"),
             attachment: "",
-            is_draft: false
+            is_draft: false,
+        };
+
+        const succesLoad = () => {
+            setLoading(false)
+        }
+        const errorLoad = () => {
+            setLoading(false)
         }
 
-        POST_API.addscanAssets(data, reset, API.data.scan.refetch)
-
-        // console.log(data)
-
-    }
+        POST_API.addscanAssets(data, reset, API.data.scan.refetch, succesLoad, errorLoad);
+    };
 
     useEffect(() => {
-        reset()
-    }, [])
-    return <ModalsComponent title={"new discovery scan"} modalName={"modalDiscovery"}>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <Form.input error={errors.target} label={"target IP RANGE"} register={register("target", { required: true })} placeholder="192.0.0.0/24 or 192.0.0.0 - 192.0.0.255"></Form.input>
-            <Form.input error={errors.recipient_email} label={"Email"} register={register("recipient_email", { required: true })} placeholder="Email"></Form.input>
-            <Form.input error={errors.remarks} label={"remarks"} register={register("remarks", { required: true })}></Form.input>
+        reset();
 
-            <SelectComponent data={API.data.protectedSite?.result?.map(d => ({
-                label: d.site_name,
-                value: d.id
-            })) || []} error={errors.protected} required width={"100%"} height={45} control={control} name={"protected"} label={"PROTECTED SITE"}></SelectComponent>
+        setValue("tool_scanner_id", 4)
+    }, []);
 
-            <div className="grid grid-cols-2 gap-4">
-                <SelectComponent error={errors.scanning_tools} required width={"100%"} height={45} control={control} name={"scanning_tools"} label={"SCANNING TOOL"} data={API.data.toolsScanner?.result?.map(d => ({
-                    label: d === "Nessus" ? "E.H.A ENGINE" : "",
-                    value: d
-                })) || []}></SelectComponent>
-                <SelectComponent error={errors.tool_scanner_id} required loading={API.loading} data={API.data.scanTools?.result?.map(d => {
-                    return ({
-                        label: d.name,
-                        value: d.id
-                    })
-                })} control={control} name={"tool_scanner_id"} width={"100%"} height={45} label={"Select scanner"}></SelectComponent>
-            </div>
 
-            {/* <Form.check text={"START SCAN NOW"}></Form.check> */}
-            <div className="flex justify-end gap-4">
-                <ButtonComponents nonSubmit click={() => {
-                    setStatus(d => ({
-                        ...d,
-                        modalDiscovery: false,
-                    }))
-                }} className="py-4 text-red-500">cancel</ButtonComponents>
-                <ButtonComponents className="py-4">SUBMIT</ButtonComponents>
-            </div>
-        </form>
-    </ModalsComponent>
-}
+    return (
+        <ModalsComponent title={"new discovery scan"} modalName={"modalDiscovery"}>
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                <Form.input
+                    error={errors.target}
+                    label={"target IP RANGE"}
+                    register={register("target", ipRangeValidation)}
+                    placeholder="Enter IP range (e.g., 192.0.0.0/24 or 192.0.0.0 - 192.0.0.255)"
+                ></Form.input>
+                <Form.input
+                    error={errors.recipient_email}
+                    label={"Email"}
+                    register={register("recipient_email", emailValidation)}
+                    placeholder="Email"
+                ></Form.input>
+                <Form.input
+                    error={errors.remarks}
+                    label={"remarks"}
+                    register={register("remarks", alphanumericValidation)}
+                ></Form.input>
+
+
+                <SelectComponent
+                    data={API.data.protectedSite?.result?.map((d) => ({
+                        label: d.site_name,
+                        value: d.id,
+                    })) || []}
+                    error={errors.protected_site_id}
+                    required
+                    width={"100%"}
+                    height={45}
+                    control={control}
+                    name={"protected_site_id"}
+                    label={"Data Center"}
+                ></SelectComponent>
+
+
+                <div className="grid grid-cols-1 gap-4">
+                    <SelectScanner fillterID={4} API={API} control={control} errors={errors}></SelectScanner>
+
+                </div>
+
+                <div className="flex justify-end gap-4">
+                    <ButtonComponents
+                        nonSubmit
+                        click={() => {
+                            setStatus((d) => ({
+                                ...d,
+                                modalDiscovery: false,
+                            }));
+                        }}
+                        className="py-4 text-red-500"
+                    >
+                        cancel
+                    </ButtonComponents>
+                    <ButtonComponents disabled={loading} className="py-4">{loading ? <Spin indicator={antIcon} /> : "SUBMIT"} </ButtonComponents>
+                </div>
+            </form>
+        </ModalsComponent>
+    );
+};
 
 
 
@@ -103,7 +173,11 @@ export const NetDiscovery = () => {
     const API = GET_API_EHA.root([
         {
             active: "scan",
-            query: "type=host-discovery"
+            query: "type=host-discovery&status=pending"
+        },
+        {
+            active: "assetsList",
+            query: "is_unconfirmed_asset=true"
         },
     ])
 
@@ -134,77 +208,165 @@ export const NetDiscovery = () => {
                 </div>
 
             </CardBox>
-            <CardBox className={"flex-1"}>
-                <div className="flex-1 flex flex-col">
-                    <div className="flex flex-col flex-1 gap-4">
-                        <div className="flex flex-1 flex-col p-4 border border-border_second gap-4">
-                            <TitleContent subTitle={false}>
-                                <div className="flex items-center justify-between w-full">
-                                    <div className="text-[24px] uppercase text-blue">NETWORK DISCOVERY</div>
-                                </div>
-                            </TitleContent>
-                            {API.error ? <ErrorHtml></ErrorHtml> : <TableInline Loading={API.loading || API.isFetching} border hoverDisable data={API.data.scan?.result} columns={[
-                                {
-                                    title: "Target",
-                                    key: "target"
-                                },
-                              
-                                {
-                                    title: "SHCEDULED DATE",
-                                    key: "scheduled_start_date"
-                                },
-                                {
-                                    title: "PROTECTED SITE",
-                                    key: "protected"
-                                },
-                                {
-                                    title: "tool scanner",
-                                    key: "tool_scanner",
-                                    html: (data) => {
-                                        return data?.name
-                                    }
-                                },
-                                {
-                                    title: "STATUS",
-                                    key: "status"
-                                },
-                            
-                            ]}></TableInline>}
+            <div className="flex flex-1 flex-col">
+                <div className="grid grid-cols-2 gap-4 h-full">
 
-                        </div>
-                        {/* <div className="flex flex-1 flex-col p-4 border border-border_second gap-4">
-                            <TitleContent subTitle={false}>
-                                <div className="flex items-center justify-between w-full">
-                                    <div className="text-[24px] uppercase text-blue">PORT SCANS</div>
+                    <CardBox className={"flex-1 flex flex-col"}>
+                        <div className="flex-1 flex flex-col">
+                            <div className="flex flex-col flex-1 gap-4">
+                                <div className="flex flex-1 flex-col p-4 border border-border_second gap-4">
+                                    <TitleContent subTitle={false}>
+                                        <div className="flex items-center justify-between w-full">
+                                            <div className="text-[24px] uppercase text-blue">PROGRESS NETWORK DISCOVERY SCAN</div>
+                                        </div>
+                                    </TitleContent>
+                                    {API.error ? <ErrorHtml></ErrorHtml> : <TableInline Loading={API.loading || API.isFetching} border hoverDisable data={API.data.scan?.result} columns={[
+                                        {
+                                            title: "Target",
+                                            key: "target"
+                                        },
+
+                                        // {
+                                        //     title: "SHCEDULED DATE",
+                                        //     key: "scheduled_start_date"
+                                        // },
+                                        {
+                                            title: "Data Center",
+                                            key: "protected_site",
+                                            html: (data) => {
+                                                return data?.site_name
+                                            }
+                                        },
+                                        {
+                                            title: "tool scanner",
+                                            key: "tool_scanner",
+                                            html: (data) => {
+                                                return data?.name
+                                            }
+                                        },
+                                        {
+                                            title: "STATUS",
+                                            key: "status"
+                                        },
+                                        {
+                                            title: "Delete",
+                                            key: "id",
+                                            rowClass: "w-[100px] text-center",
+                                            columnClass: "w-[100px] text-center",
+                                            html: (id, data) => {
+                                                return <Popconfirm title="Are you sure to delete this data?" onConfirm={() => {
+                                                    data = {
+                                                        site_name: data.target,
+                                                        id
+                                                    }
+
+                                                    DELETE_API.deleteScanAssets(data, API.data.scan.refetch)
+                                                }}>
+                                                    <button>
+                                                        <DeleteOutlined></DeleteOutlined>
+                                                    </button>
+                                                </Popconfirm>
+                                            }
+                                        },
+
+                                    ]}></TableInline>}
+
                                 </div>
-                            </TitleContent>
-                            <TableInline border hoverDisable data={new Array(0).fill({
-                                target: "192.168.1.1",
-                                date: "2023-09-23 5:21pm",
-                                protected: "SITE A",
-                                ports: "135/TCP/EPMAP,139/TCP/SMB..."
-                            })} columns={[
-                                {
-                                    title: "Target",
-                                    key: "target"
-                                },
-                                {
-                                    title: "PROTECTED SITE",
-                                    key: "protected"
-                                },
-                                {
-                                    title: "OPEN PORTS",
-                                    key: "ports"
-                                },
-                                {
-                                    title: "DATE",
-                                    key: "date"
-                                },
-                            ]}></TableInline>
-                        </div> */}
-                    </div>
+
+                            </div>
+                        </div>
+                    </CardBox>
+                    <CardBox className={"flex-1 flex flex-col"}>
+                        <div className="flex-1 flex flex-col">
+                            <div className="flex flex-col flex-1 gap-4">
+                                <div className="flex flex-1 flex-col p-4 border border-border_second gap-4">
+                                    <TitleContent subTitle={false}>
+                                        <div className="flex items-center justify-between w-full">
+                                            <div className="text-[24px] uppercase text-blue">ASSETS NETWORK UNCONFIRMED</div>
+                                        </div>
+                                    </TitleContent>
+                                    {API.msg || API.error ? (
+                                        <ErrorHtml error={API.msg}></ErrorHtml>
+                                    ) : (
+                                        <TableInline
+                                            Loading={API.loading || API.isFetching}
+                                            isload
+                                            border
+                                            hoverDisable
+                                            columns={[
+                                                {
+                                                    title: "ID",
+                                                    key: "id",
+                                                    rowClass: "w-[50px]",
+                                                    columnClass: "w-[50px]",
+                                                },
+                                                {
+                                                    title: "ASSET NAME",
+                                                    key: "name",
+                                                },
+                                                {
+                                                    title: "Data Center",
+                                                    key: "site_name",
+                                                    rowClass: "w-[200px]",
+                                                    columnClass: "w-[200px]",
+                                                },
+                                                {
+                                                    title: "IP/DOMAIN",
+                                                    rowClass: "w-[200px]",
+                                                    columnClass: "w-[200px]",
+                                                    key: "url_ip",
+                                                },
+                                                {
+                                                    title: "DELETE",
+                                                    rowClass: "w-[100px] text-center",
+                                                    columnClass: "w-[100px] text-center",
+                                                    key: "id",
+                                                    html: (id, data) => {
+                                                        return <Popconfirm title="Are you sure to delete this data?" onConfirm={() => {
+                                                            data = {
+                                                                site_name: data.name,
+                                                                id
+                                                            }
+
+                                                            DELETE_API.deleteAssets(data, API.data.assetsList.refetch)
+                                                        }}>
+                                                            <button>
+                                                                <DeleteOutlined></DeleteOutlined>
+                                                            </button>
+                                                        </Popconfirm>
+                                                    }
+                                                },
+                                                {
+                                                    title: "CONFIRM",
+                                                    rowClass: "w-[100px] text-center flex justify-center",
+                                                    columnClass: "w-[100px] text-center",
+                                                    key: "id",
+                                                    html: (id, data) => {
+                                                        return <ButtonComponents className="!min-w-[50px]">
+                                                            <CheckOutlined></CheckOutlined>
+                                                        </ButtonComponents>
+                                                    }
+                                                },
+
+
+
+                                            ]}
+                                            data={API.data.assetsList?.result?.map((d) => ({
+                                                ...d.protected_site,
+                                                ...d.severity_count,
+                                                ...d,
+                                            })) || null}
+                                        ></TableInline>
+                                    )}
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </CardBox>
                 </div>
-            </CardBox>
+            </div>
+
         </div>
         <ModalDiscovery></ModalDiscovery>
     </LayoutDashboard>

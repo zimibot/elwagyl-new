@@ -7,13 +7,10 @@ module.exports = function ProfilePopup() {
         minWidth: 800,
         maxWidth: 800,
         width: 800,
-        minHeight: 300,
-        maxHeight: 300,
+        minHeight: 400,
+        maxHeight: 400,
         fullscreenable: false,
-        height: 300,
-        webPreferences: {
-            zoomFactor: 1.0
-        }
+        height: 400,
     })
 
     let pio = url.format({

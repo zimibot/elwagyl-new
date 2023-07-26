@@ -7,7 +7,7 @@ export const TabsMenu = ({
     Item = [
         {
             key: 1,
-            title: "protected site",
+            title: "Data Center",
             content: ""
         }
     ]
